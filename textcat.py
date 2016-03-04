@@ -1,11 +1,19 @@
 #!/usr/bin/python
 
-#Modified from fileprob for HW3.2
-#Katie Chang
-#Feb 25th 2016
+# Sample program for hw-lm
+# CS465 at Johns Hopkins University.
+
+# Converted to python by Eric Perlman <eric@cs.jhu.edu>
+
+# Updated by Jason Baldridge <jbaldrid@mail.utexas.edu> for use in NLP
+# course at UT Austin. (9/9/2008)
+
+# Modified by Mozhi Zhang <mzhang29@jhu.edu> to add the new log linear model
+# with word embeddings.  (2/17/2016)
 
 import math
 import sys
+import os
 
 import Probs
 
@@ -14,94 +22,143 @@ import Probs
 # the currently open corpus, and the smoothing method used by
 # prob() is specified by the global variable "smoother". 
 
-def filelogprob(filename, langmod):
-    infile = file(filename, "r")
-
-    logprob = 0.0
-    x = Probs.BOS
-    y = Probs.BOS
-
-    for line in infile:
-        for z in line.split():
-            prob = langmod.prob(x, y, z)
-            logprob += math.log(prob)
-            x = y
-            y = z
-    logprob += math.log(langmod.prob(x, y, Probs.EOS))
-    infile.close()
-    return logprob
-
-def textcat(filename, langmod):
-    print 'lol'
-
 def main():
     course_dir = '/usr/local/data/cs465/'
     argv = sys.argv[1:]
 
-    if len(argv) < 3:
+    if len(argv) < 2:
         print """
 Prints the log-probability of each file under a smoothed n-gram model.
 
-Usage:   %s smoother lexicon trainpath1 trainpath2 files...
-Example: %s add1 words-10.txt gen spam foo.txt bar.txt baz.txt
+Usage:   %s smoother lexicon trainpath files...
+Example: %s add0.01 %shw-lm/lexicons/words-10.txt switchboard-small %shw-lm/speech/sample*
 
 Possible values for smoother: uniform, add1, backoff_add1, backoff_wb, loglinear1
-""" % (sys.argv[0], sys.argv[0])
-    sys.exit(1)
+  (the \"1\" in add1/backoff_add1 can be replaced with any real lambda >= 0
+   the \"1\" in loglinear1 can be replaced with any C >= 0 )
+lexicon is the location of the word vector file, which is only used in the loglinear model
+trainpath is the location of the training corpus
+  (the search path for this includes "%s")
+""" % (sys.argv[0], sys.argv[0], course_dir, course_dir, Probs.DEFAULT_TRAINING_DIR)
+        sys.exit(1)
 
     smoother = argv.pop(0)
     lexicon = argv.pop(0)
-    train_file1 = argv.pop(0)
+    
+    train_file = argv.pop(0)
     train_file2 = argv.pop(0)
-
-    print argv
-  
-    #dynamically get files afterwards...? NAH MAN they're the only things left in argv so we can just loop through them later yasss
-
+    train1_probs = []
+    train2_probs = []
+    
     if not argv:
         print "warning: no input files specified"
 
+    #Initialize language model data
     lm = Probs.LanguageModel()
+    lm.set_vocab_size(train_file, train_file2)
     lm.set_smoother(smoother)
-
-#Will have to train the two files separately
-#call Probs.set_vocab_size() on the pair of training corpora
-#    
-#    train model from corpus 1
-#    for each file,
-#        compute its probability under model 1; save this in an array
-#    
-#    re-train model from corpus 2
-#    for each file,
-#        compute its probability under model 2; save this in an array
-#    
-#    finally, loop over the arrays to print the results
-
-    train_array1 = []
-    train_array2 = []
-
-    lm.train(train_file1)
-
+    lm.read_vectors(lexicon)
+    
+    
+    #Create list of files to iterate through.
+    files_list = []
+    
+    for arg in argv:
+        if arg[len(arg)-1] == '*':
+            for f in os.listdir(arg[0:len(arg)-1]):
+                files_list.append(arg[0:len(arg)-1] + f)
+        else:
+            files_list.append(arg)
+    
+    
+    #Attach log-2 probabilities for each training file
+    argv = files_list
+    lm.train(train_file)
     for testfile in argv:
-        train_array1.append(filelogprob(testfile, lm)/math.log(2))
-
+        train1_probs.append(lm.filelogprob(testfile) / math.log(2))
+    
     lm.train(train_file2)
-
     for testfile in argv:
-        train_array2.append(filelogprob(testfile, lm)/math.log(2))
-
-    for i in range(len(train_array1)):
-        print "train_array1 at index " + str(i) + ": " + str(train_array1[i])
-        print "train_array2 at index " + str(i) + ": " + str(train_array2[i])
-
-
-    # We use natural log for our internal computations and that's
-    # the kind of log-probability that fileLogProb returns.  
-    # But we'd like to print a value in bits: so we convert
-    # log base e to log base 2 at print time, by dividing by log(2).
-
-    for testfile in argv:
-        print "%g\t%s" % (filelogprob(testfile, lm)/math.log(2), testfile)
+        train2_probs.append(lm.filelogprob(testfile) / math.log(2))
+    
+    
+    train1_count = 0.0
+    train2_count = 0.0
+    accuracy_num = []
+    
+    for i in range(len(train1_probs)):
+        if (train1_probs[i] > train2_probs[i]):
+            train1_count += 1
+            if (os.path.split(train_file)[1][0:3] == os.path.split(argv[i])[1][0:3]):
+                accuracy_num.append(True)
+            else:
+                accuracy_num.append(False)
+                
+            print "%s\t%s" % (train_file, argv[i])
+        else:
+            train2_count += 1
+            if (os.path.split(train_file2)[1][0:3] == os.path.split(argv[i])[1][0:3]):
+                accuracy_num.append(True)
+            else:
+                accuracy_num.append(False)
+            print "%s\t%s" % (train_file2, argv[i])
+            
+    
+    #GENERATE FILE START
+    cmshit = open ("graph_output.txt", "w")
+    
+    ordered_file_list = []
+    for individual_file in argv:
+        ordered_file_list.append(int(os.path.split(individual_file)[1].split(".")[1]))
+    #print argv
+    
+    accuracy_num = [x for (y, x) in sorted(zip(ordered_file_list, accuracy_num))]
+    ordered_file_list = sorted(ordered_file_list)
+    
+    
+    lowerBounds = ordered_file_list[0]
+    currentBucket = []
+    for i in range(len(ordered_file_list)):
+        margin = (ordered_file_list[i] - lowerBounds)/((ordered_file_list[i] +lowerBounds)/2.0)
+        if (margin < .2):
+            currentBucket.append(accuracy_num[i])
+        else:
+            cmshit.write(str(lowerBounds) + "-" + str(ordered_file_list[i-1]) + "\t")
+            accuracy = 0.0
+            for num in currentBucket:
+                if (num):
+                    accuracy += 1
+            cmshit.write (str(accuracy/len(currentBucket)) + "\n")
+            
+            lowerBounds = ordered_file_list[i]
+            currentBucket = [lowerBounds]
+    
+    cmshit.write(str(lowerBounds) + "-" + str(ordered_file_list[i-1]) + "\t")
+    accuracy = 0.0
+    for num in currentBucket:
+        if (num):
+            accuracy += 1
+    cmshit.write (str(accuracy/len(currentBucket)) + "\n")
+    
+    lowerBounds = ordered_file_list[i]
+    currentBucket = [lowerBounds]
+    
+    cmshit.close()
+    #GENERATE FILE END
+    
+            
+            
+    #Print results
+    print str(train1_count) + " looked more like " + train_file + " (" + str(train1_count/(train1_count+train2_count)) + "%)"
+    print str(train2_count) + " looked more like " + train_file2 + " (" + str(train2_count/(train1_count+train2_count)) + "%)"
+    
+    accuracy = 0.0
+    for num in accuracy_num:
+        if (num):
+            accuracy +=1
+        
+    print "Accuracy: " + str(accuracy/len(argv))
+    print "Error: " + str(1-accuracy/len(argv))
 
 if __name__ ==  "__main__":
     main()
