@@ -15,7 +15,7 @@
 README
 
 \section{Perplexity per Word}
-First, we get that the log$_{2}$-probability of each of teh sample files is as follows:
+First, we get that the log$_{2}$-probability of each of the sample files is as follows:
 
 -12111.3	../../speech/sample1
 
@@ -35,25 +35,25 @@ Calculating the perplexity per word for each of the sample files:
 
 2$^{-\frac{1}{N}*log_{2}p(x)}$
 
-sample1: 2$^{\frac{-1}{1686} * (-14598.4)}$ = 2$^{8.6586}$ = 404.1089
+sample1: 2$^{\frac{-1}{1686} * (-12111.3)}$ = 2$^{7.18345}$ = 145.3565
 
-sample2: 2$^{\frac{-1}{978} * (-8649.61)}$ = 2$^{8.8442}$ = 459.5831
+sample2: 2$^{\frac{-1}{978} * (-7388.84)}$ = 2$^{7.55505}$ = 188.0602
 
-sample3: 2$^{\frac{-1}{985} * (-8941.65)}$ = 2$^{9.0778}$ = 540.3751
+sample3: 2$^{\frac{-1}{985} * (-7468.29)}$ = 2$^{7.58202}$ = 191.6088
 
 log2 probabilities on the bigger switchboard corpus...
 
--13754.4	../../speech/sample1
+-12561.5	../../speech/sample1
 
--8277.38	../../speech/sample2
+-7538.27	../../speech/sample2
 
--8617.64	../../speech/sample3
+-7938.95	../../speech/sample3
 
 A larger corpus results in a more positive value of the log2 probability. This shows that the larger corpus results in a better fitting model as it has a higher probability of predicting the future. Furthermore, this results in the perplexities per word decreases. This is due to the larger training corpus gives more training data . The perplexity going down means that the model is less confused on the sample text, and is able to choose from a smaller number of possibilities for each word.
 
 \section{textcat.py}
 
-Python file included in submission.
+textcat.py included in submission.
 
 \section{Categorizing}
 
@@ -68,6 +68,9 @@ The value of 0.00035 was used.
 \subsection{}
 
 An error rate of .13148... was observed when our value of lambda was used on the test data.
+
+\subsection{Graphs}
+Graphs are included in the submission. 
 
 \section{Questions}
 
@@ -112,6 +115,30 @@ BACKOFF ADDL estimate $\hat{p}(z | xy) = \frac{c(xyz) + \lambda V * \hat{p}(z|y)
 Increasing lambda will make it so that the trigram probabilities will be more like the corresponding bigram's probability because we're putting less weight on the trigram's count.
 
 \section{Other Smoothing}
+\subsection{add-l smoothing}
+Implemented
+
+\subsection{ADDL vs BACKOFF\_ADDL}
+
+%How does switching from ADDL to backoffaddl affect performance?
+
+With the same lambda value as in 3.c (0.00035), switching to BACKOFF\_ADDL improved the performance. This resulted in an error rate of 0.09444, smaller than our error rate of 0.13148 from 3.c.
+
+%Measure cross entropy for switchboard corpa like in Q1, and text cat error rates for gen/spam in 3c. 
+
+Basically running fileprob.py as in Q1, but using backoff\_add0.01 as the smoothing method.
+
+-9898.16	../../speech/sample1
+-6048.05	../../speech/sample2
+-6105.56	../../speech/sample3
+
+Calculating the perplexity per word for each of the sample files:
+
+sample1: 2$^{\frac{-1}{1686} * (-9898.16)}$ = 2$^{5.87079}$ = 58.5174
+
+sample2: 2$^{\frac{-1}{978} * (-6048.05)}$ = 2$^{6.1841}$ = 72.7109
+
+sample3: 2$^{\frac{-1}{985} * (-6105.56)}$ = 2$^{6.1985}$ = 73.4422
 
 \section{The Long Question}
 
@@ -172,15 +199,15 @@ add0.1 & 0.166 & 0.360\\
 \hline 
 add0.01 & 0.160 & 0.353\\
 \hline 
-backoff\_add10 & Y & 48\\
+backoff\_add10 & 0.184 & 0.358\\
 \hline 
-backoff\_add1 & Y & 48\\
+backoff\_add1 & 0.168 & 0.356\\
 \hline 
-backoff\_add0.1 & Y & 48\\
+backoff\_add0.1 & 0.156 & 0.363\\
 \hline 
-backoff\_add0.01 & Y & 48\\
+backoff\_add0.01 & 0.157 & 0.356\\
 \hline 
-loglin & Y & 48\\
+loglin & XXX & 000\\
 \hline
 \end{tabular}
 \end{center}
