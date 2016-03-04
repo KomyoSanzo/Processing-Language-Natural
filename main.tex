@@ -1,0 +1,195 @@
+\documentclass[12pt, letterpaper]{article}
+
+\usepackage{amsmath, amsthm, graphicx, float, verbatim, amssymb}
+
+\usepackage[]{algorithm2e}
+
+\title{Natural Language Processing Homework 3}
+
+\author{Katie Chang, Willis Wang}
+
+\begin{document}
+
+\maketitle
+
+README
+
+\section{Perplexity per Word}
+First, we get that the log$_{2}$-probability of each of teh sample files is as follows:
+
+-12111.3	../../speech/sample1
+
+-7388.84	../../speech/sample2
+
+-7468.29	../../speech/sample3
+
+Word count for each sample file (found with wc -w)
+
+sample1: 1686
+
+sample2: 978
+     
+sample3: 985
+
+Calculating the perplexity per word for each of the sample files:
+
+2$^{-\frac{1}{N}*log_{2}p(x)}$
+
+sample1: 2$^{\frac{-1}{1686} * (-14598.4)}$ = 2$^{8.6586}$ = 404.1089
+
+sample2: 2$^{\frac{-1}{978} * (-8649.61)}$ = 2$^{8.8442}$ = 459.5831
+
+sample3: 2$^{\frac{-1}{985} * (-8941.65)}$ = 2$^{9.0778}$ = 540.3751
+
+log2 probabilities on the bigger switchboard corpus...
+
+-13754.4	../../speech/sample1
+
+-8277.38	../../speech/sample2
+
+-8617.64	../../speech/sample3
+
+A larger corpus results in a more positive value of the log2 probability. This shows that the larger corpus results in a better fitting model as it has a higher probability of predicting the future. Furthermore, this results in the perplexities per word decreases. This is due to the larger training corpus gives more training data . The perplexity going down means that the model is less confused on the sample text, and is able to choose from a smaller number of possibilities for each word.
+
+\section{textcat.py}
+
+Python file included in submission.
+
+\section{Categorizing}
+
+\subsection{}
+
+Lowest error is 0.09259259..., or an accuracy of 0.90740740...
+
+\subsection{}
+
+The value of 0.00035 was used.
+
+\subsection{}
+
+An error rate of .13148... was observed when our value of lambda was used on the test data.
+
+\section{Questions}
+
+V the size of the vocabulary including $OOV$
+
+\subsection{}
+
+UNIFORM estimate $\hat{p}(z | xy) = 1 / V$
+
+ADDL estimate $\hat{p}(z | xy) = \frac{c(xyz) + \lambda}{c(xy) + \lambda V}$
+
+If we mistakenly take V to equal 19,999, then the UNIFORM estimate would be larger than it is suppose to be, since V is the denominator. Having a lower-than-expected denominator would give more weight to smaller, more novel events.
+
+For the ADDL estimate, having V equal 19,999 would result in a similar situation where the estimation would be larger than expected because V is in the denominator and give more weight to novel events. However, we would see less of an impact with ADDL estimation depending on what $\lambda$ is. 
+
+For both, by having V equal a smaller number than it is supposed to be means that the sum of all probabilities would not equal 1. 
+
+\subsection{}
+
+Setting $\lambda$ = 0 would give the naive historical estimate. This would mean that no smoothing is occurring at all. 
+
+Beyond that, if it happens that $c(xy)$ = 0, (in other words, we didn't see $xy$ in training) then we get that $\hat{p}(z|xy)$ has no value at all / is undefined.
+
+\subsection{}
+
+If c(xyz) = c(xyz') = 0, then:
+
+$\hat{p}(z|xy)$ = $\frac{\lambda V \hat{p}(z|y)}{c(xy) + \lambda V}$
+
+$\hat{p}(z'|xy)$ = $\frac{\lambda V \hat{p}(z'|y)}{c(xy) + \lambda V}$
+
+If c(xyz) = c(xyz') = 1, then:
+
+$\hat{p}(z|xy)$ = $\frac{1 + \lambda V \hat{p}(z|y)}{c(xy) + \lambda V}$
+
+$\hat{p}(z'|xy)$ = $\frac{1 + \lambda V \hat{p}(z'|y)}{c(xy) + \lambda V}$
+
+\subsection{}
+
+BACKOFF ADDL estimate $\hat{p}(z | xy) = \frac{c(xyz) + \lambda V * \hat{p}(z|y)}{c(xy) + \lambda V}$
+
+Increasing lambda will make it so that the trigram probabilities will be more like the corresponding bigram's probability because we're putting less weight on the trigram's count.
+
+\section{Other Smoothing}
+
+\section{The Long Question}
+
+\section{a-priori}
+%We know ahead of time that 1/3 of all test emails will be spam. How should this change textcat.c in how it does its classification?
+
+When adding the prior probability that P(spam) = 1/3, this obviously means that P(gen) = 2/3. Text categorizing is looking at the probability of the model (whether an email is $gen$ or $spam$) given the data (a test email text file), and looking for the data that has the greatest resulting probability.
+
+Using Bayes Theorem, this means that determining the maximum probability out of all of the models given the data = 
+
+$\frac{P(data | model) * P(model)}{P(data)}$ 
+
+= P(data | model) * P(model)
+
+Since P(data) doesn't help us to find the maximum probability. Rather, we use the a-priori that was given to us. 
+
+%Do you need to know the number 1/3 when training the model, or is it only used at test time?
+
+The number is used only at test time.
+
+\section{Speech Recognition}
+\subsection{}
+
+%How should you choose among the 9 candidates? What quantity are you trying to maximize, and how should you computer it? (bayes)
+
+We are trying to maximize the probability of the utterance $U$ given the intentional statement someone was trying to say $\overrightarrow{w}$. In other words, we want to maximize: 
+
+$P(U|\overrightarrow{w})$
+
+= $\frac{P(\overrightarrow{w}|U) P(U)}{P(\overrightarrow{w})}$, by Bayes'.
+
+We can get $P(\overrightarrow{w}|U) P(U)$ from the sample file, where the second column provides the value of log$_{2}(P(U|\overrightarrow{w})$ = $P(\overrightarrow{w}|U) P(U)$.
+
+We can get P(U) from the trigram model. 
+
+\subsection{}
+speechrec.py is included in the submission.
+
+\subsection{Error Rates}
+%What is overall error rate on the utterances in test/easy?
+%On utterances in test/unrestricted? Answer for 3-gram, 2-gram and 1-gram
+
+Chosen smoothing method, and why: We tested all of the smoothings that we had implemented (just on one n-gram model) and selected the one that gave us the best error rates. This experiment is described in $\ref{tableOne}$. We used the words-10 lexicon.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Smoothing & errorRate [Easy] & errorRate [unrestricted]\\
+\hline \hline
+Uniform & 0.202 & 0.360\\
+\hline 
+add10 & 0.187 & 0.362\\
+\hline 
+add1 & 0.183 & 0.355\\
+\hline 
+add0.1 & 0.166 & 0.360\\
+\hline 
+add0.01 & 0.160 & 0.353\\
+\hline 
+backoff\_add10 & Y & 48\\
+\hline 
+backoff\_add1 & Y & 48\\
+\hline 
+backoff\_add0.1 & Y & 48\\
+\hline 
+backoff\_add0.01 & Y & 48\\
+\hline 
+loglin & Y & 48\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Error Results from speechrec.py, used to decide which smoothing method to pick.}
+\label{tableOne}
+\end{table}
+
+\begin{center}
+\textit{Used overleaf.com to generate LaTeX document.}
+\end{center}
+\end{document}
+
