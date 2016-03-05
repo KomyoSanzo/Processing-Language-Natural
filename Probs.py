@@ -12,6 +12,8 @@ import math
 import random
 import re
 import sys
+import numpy
+from pip._vendor.requests.packages.urllib3.packages.six import itervalues
 
 # TODO for TA: Currently, we use the same token for BOS and EOS as we only have
 # one sentence boundary symbol in the word embedding file.  Maybe we should
@@ -54,7 +56,7 @@ class LanguageModel:
     # They are initialized in train() function and represented as two
     # dimensional lists.
     self.U, self.V = None, None  
-
+    
     # self.tokens[(x, y, z)] = # of times that xyz was observed during training.
     # self.tokens[(y, z)]    = # of times that yz was observed during training.
     # self.tokens[z]         = # of times that z was observed during training.
@@ -89,21 +91,41 @@ class LanguageModel:
       # as is required for any probability function.
 
     elif self.smoother == "BACKOFF_ADDL":
+        
+        
       if x not in self.vocab:
         x = OOV
       if y not in self.vocab:
         y = OOV
       if z not in self.vocab:
         z = OOV
-      
-      ayy = float(1)/(self.vocab_size)
+      ayy = (self.tokens.get(z, 0) + self.lambdap)/(self.tokens.get("",0) + self.lambdap * self.vocab_size)
       lmao = ((self.tokens.get((y, z), 0) + self.lambdap * self.vocab_size * ayy)/(self.tokens.get(y, 0) + self.lambdap * self.vocab_size))
       return ((self.tokens.get((x, y, z), 0) + self.lambdap * self.vocab_size * lmao)/(self.tokens.get((x, y), 0) + self.lambdap * self.vocab_size))
-      
+            
     elif self.smoother == "BACKOFF_WB":
       sys.exit("BACKOFF_WB is not implemented yet (that's your job!)")
     elif self.smoother == "LOGLINEAR":
-      sys.exit("LOGLINEAR is not implemented yet (that's your job!)")
+      
+      if x not in self.vectors:
+          x = OOL
+      if y not in self.vectors:
+          y = OOL
+      if z not in self.vectors:
+          z = OOL
+      vector_x = numpy.matrix(self.vectors[x])
+      vector_y = numpy.matrix(self.vectors[y])
+      vector_z = numpy.matrix(self.vectors[z])
+      
+      vector_u = numpy.matrix(self.U)
+      vector_v = numpy.matrix(self.V)
+      num = math.exp(float(vector_x*vector_u*vector_z.transpose() + vector_y*vector_v*vector_z.transpose()))
+
+      den = 0.0
+      for value in self.vectors.itervalues():
+          vector_z = numpy.matrix(value)
+          den += math.exp(float(vector_x*vector_u*vector_z.transpose() + vector_y*vector_v*vector_z.transpose()))
+      return num/den
     else:
       sys.exit("%s has some weird value" % self.smoother)
 
@@ -199,7 +221,7 @@ class LanguageModel:
       self.V = [[0.0 for _ in range(self.dim)] for _ in range(self.dim)]
 
       # Optimization parameters
-      gamma0 = 0.1  # initial learning rate, used to compute actual learning rate
+      gamma0 = 0.01  # initial learning rate, used to compute actual learning rate
       epochs = 10  # number of passes
 
       self.N = len(tokens_list) - 2  # number of training instances
@@ -222,6 +244,68 @@ class LanguageModel:
       # TODO: Implement your SGD here
       #####################
 
+      currentU = numpy.matrix(self.U)
+      currentV = numpy.matrix(self.V)
+      gamma = gamma0
+      t = 0
+      
+      #For 1..E
+      for e in range(epochs):
+          F = 0.0
+          prob_log = 0.0
+          
+          #For 1..N
+          for i in range(2, len(tokens_list)):
+              #UPDATE GAMMA
+              gamma = gamma0/(1+gamma0*t*self.lambdap/self.N)
+              
+              #READ IN NEW X Y Z
+              x, y, z = tokens_list[i-2], tokens_list[i - 1], tokens_list[i]
+              if x not in self.vectors:
+                  x = OOL
+              if y not in self.vectors:
+                  y = OOL
+              if z not in self.vectors:
+                  z = OOL
+              x = numpy.matrix(self.vectors[x])
+              y = numpy.matrix(self.vectors[y])
+              z = numpy.matrix(self.vectors[z])
+              
+              Z = 0.0
+              for value in self.vectors.itervalues():
+                  z_prime = numpy.matrix(value)
+                  Z += math.exp(float(x*currentU*z_prime.transpose() + y*currentV*z_prime.transpose()))
+              
+              #FOR each value in the matrices...
+              F_summ_part = 0.0
+              
+              for j in range(self.dim):
+                  for m in range(self.dim):
+                      deltaF_U_summ_part = 0
+                      deltaF_V_summ_part = 0
+                      
+                      for value in self.vectors.itervalues():
+                          z_prime = numpy.matrix(value)
+                          
+                          num = math.exp(float(x*currentU*z_prime.transpose() + y*currentV*z_prime.transpose()))
+                          deltaF_U_summ_part += (num/Z)*x[0,j]*z_prime[0,m]
+                          deltaF_V_summ_part += (num/Z)*y[0,j]*z_prime[0,m]
+                          if (numpy.array_equal(z_prime,z)):
+                              prob_log = math.log(num/Z)
+                      deltaF_U = x[0, j]*z[0,m] - deltaF_U_summ_part - 2*self.lambdap*currentU[j, m]/self.N
+                      deltaF_V = y[0, j]*z[0,m] - deltaF_V_summ_part - 2*self.lambdap*currentV[j, m]/self.N
+                      
+                      currentU[j, m] = currentU[j, m] + gamma*deltaF_U
+                      currentV[j, m] = currentV[j, m] + gamma*deltaF_V
+                      F_summ_part += currentU[j, m] * currentU[j,m] + currentV[j, m] * currentV[j, m]
+                      
+              F += prob_log - (self.lambdap/self.N)*F_summ_part
+              t += 1
+          print "finished one epoch: " + str(F)
+        
+      self.U = currentU
+      self.V = currentV        
+      
     sys.stderr.write("Finished training on %d tokens\n" % self.tokens[""])
 
   def count(self, x, y, z):
