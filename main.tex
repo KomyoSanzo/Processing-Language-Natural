@@ -6,7 +6,7 @@
 
 \title{Natural Language Processing Homework 3}
 
-\author{Watie Wang, Killi Cang}
+\author{Katie Chang, Willis Wang}
 
 \begin{document}
 
@@ -181,7 +181,7 @@ speechrec.py is included in the submission.
 %What is overall error rate on the utterances in test/easy?
 %On utterances in test/unrestricted? Answer for 3-gram, 2-gram and 1-gram
 
-Chosen smoothing method, and why: We tested all of the smoothings that we had implemented (just on one n-gram model) and selected the one that gave us the best error rates. This experiment is described in Table $\ref{tableOne}$. We used the words-10 lexicon.
+Chosen smoothing method, and why: We tested all of the smoothings (just on one n-gram model) and selected the one that gave us the best error rates. This experiment is described in Table $\ref{tableOne}$. We used the words-10 lexicon.
 
 \begin{table}
 \begin{center}
@@ -206,13 +206,31 @@ backoff\_add1 & 0.168 & 0.356\\
 backoff\_add0.1 & 0.156 & 0.363\\
 \hline 
 backoff\_add0.01 & 0.157 & 0.356\\
-\hline 
-loglin & XXX & 000\\
 \hline
 \end{tabular}
 \end{center}
 \caption{Error Results from speechrec.py, used to decide which smoothing method to pick.}
 \label{tableOne}
+\end{table}
+
+Table 2 shows the overall error rate on easy and unrestricted for each of the three N-gram models. We are using the smoothing $backoff\_add0.1$. 
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+N-Gram & Overall errorRate [Easy] & Overall errorRate [unrestricted]\\
+\hline \hline
+1-Gram & 0.203 & 0.390\\
+\hline
+2-Gram & 0.163 & 0.373\\
+\hline
+3-Gram & 0.150 & 0.362\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Overall error results for speechrec.py}
+\label{tableTwo}
 \end{table}
 
 \begin{center}
