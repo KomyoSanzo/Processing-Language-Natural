@@ -107,11 +107,11 @@ class LanguageModel:
       sys.exit("BACKOFF_WB is not implemented yet (that's your job!)")
     elif self.smoother == "LOGLINEAR":
       
-      if x not in self.vectors:
+      if x not in self.vocab:
           x = OOL
-      if y not in self.vectors:
+      if y not in self.vocab:
           y = OOL
-      if z not in self.vectors:
+      if z not in self.vocab:
           z = OOL
       vector_x = numpy.matrix(self.vectors[x])
       vector_y = numpy.matrix(self.vectors[y])
@@ -122,7 +122,10 @@ class LanguageModel:
       num = math.exp(float(vector_x*vector_u*vector_z.transpose() + vector_y*vector_v*vector_z.transpose()))
 
       den = 0.0
-      for value in self.vectors.itervalues():
+      for value in self.vocab:
+          if value not in self.vectors:
+              value = OOL
+          value = self.vectors[value]
           vector_z = numpy.matrix(value)
           den += math.exp(float(vector_x*vector_u*vector_z.transpose() + vector_y*vector_v*vector_z.transpose()))
       return num/den
@@ -239,21 +242,16 @@ class LanguageModel:
       # **************************
 
       sys.stderr.write("Start optimizing.\n")
-
+      
       #####################
       # TODO: Implement your SGD here
       #####################
 
-      currentU = numpy.matrix(self.U)
-      currentV = numpy.matrix(self.V)
       gamma = gamma0
       t = 0
       
       #For 1..E
-      for e in range(epochs):
-          F = 0.0
-          prob_log = 0.0
-          
+      for e in range(epochs):          
           #For 1..N
           for i in range(2, len(tokens_list)):
               #UPDATE GAMMA
@@ -261,51 +259,63 @@ class LanguageModel:
               
               #READ IN NEW X Y Z
               x, y, z = tokens_list[i-2], tokens_list[i - 1], tokens_list[i]
-              if x not in self.vectors:
-                  x = OOL
-              if y not in self.vectors:
-                  y = OOL
-              if z not in self.vectors:
-                  z = OOL
+              
               x = numpy.matrix(self.vectors[x])
               y = numpy.matrix(self.vectors[y])
               z = numpy.matrix(self.vectors[z])
               
-              Z = 0.0
-              for value in self.vectors.itervalues():
-                  z_prime = numpy.matrix(value)
-                  Z += math.exp(float(x*currentU*z_prime.transpose() + y*currentV*z_prime.transpose()))
+              currentU = numpy.matrix(self.U)
+              currentV = numpy.matrix(self.V)
+                      
               
+              #Calculate Z denominator and numerators
+              z_prime_nums = []
+              Z = 0.0              
+              for value in self.vocab:
+                  if value not in self.vectors:
+                      value = OOL
+                  z_prime = numpy.matrix(self.vectors[value])
+                  n = math.exp(float(x*currentU*z_prime.transpose() + y*currentV*z_prime.transpose()))
+                  Z += n
+                  z_prime_nums.append(n)
+                  
               #FOR each value in the matrices...
-              F_summ_part = 0.0
-              
               for j in range(self.dim):
                   for m in range(self.dim):
-                      deltaF_U_summ_part = 0
-                      deltaF_V_summ_part = 0
-                      
-                      for value in self.vectors.itervalues():
-                          z_prime = numpy.matrix(value)
+                      deltaF_U_summ_part = 0.0
+                      deltaF_V_summ_part = 0.0
+                                                 
+                      iterate = 0
+                      for value in self.vocab:
+                          if value not in self.vectors:
+                              value = OOL
+                          value = self.vectors[value]
                           
-                          num = math.exp(float(x*currentU*z_prime.transpose() + y*currentV*z_prime.transpose()))
-                          deltaF_U_summ_part += (num/Z)*x[0,j]*z_prime[0,m]
-                          deltaF_V_summ_part += (num/Z)*y[0,j]*z_prime[0,m]
-                          if (numpy.array_equal(z_prime,z)):
-                              prob_log = math.log(num/Z)
+                          num = z_prime_nums[iterate]
+                          iterate += 1
+                           
+                          deltaF_U_summ_part += (num/Z)*x[0,j]*value[m]
+                          deltaF_V_summ_part += (num/Z)*y[0,j]*value[m]
+                          
                       deltaF_U = x[0, j]*z[0,m] - deltaF_U_summ_part - 2*self.lambdap*currentU[j, m]/self.N
                       deltaF_V = y[0, j]*z[0,m] - deltaF_V_summ_part - 2*self.lambdap*currentV[j, m]/self.N
                       
-                      currentU[j, m] = currentU[j, m] + gamma*deltaF_U
-                      currentV[j, m] = currentV[j, m] + gamma*deltaF_V
-                      F_summ_part += currentU[j, m] * currentU[j,m] + currentV[j, m] * currentV[j, m]
-                      
-              F += prob_log - (self.lambdap/self.N)*F_summ_part
-              t += 1
+              
+                      self.U[j][m] = currentU[j, m] + gamma*deltaF_U
+                      self.V[j][m] = currentV[j, m] + gamma*deltaF_V
+	  
+              t += 1          
+          F = 0.0
+          val = 0.0
+          for i in range(self.dim):
+              for j in range(self.dim):
+                  val += self.U[i][j] * self.U[i][j] + self.V[i][j] * self.V[i][j]
+          for i in range (2, len(tokens_list)):
+              x, y, z = tokens_list[i-2], tokens_list[i - 1], tokens_list[i]
+              p = self.prob(x, y, z)
+              F += math.log(p) - self.lambdap*val/self.N
           print "finished one epoch: " + str(F)
-        
-      self.U = currentU
-      self.V = currentV        
-      
+          
     sys.stderr.write("Finished training on %d tokens\n" % self.tokens[""])
 
   def count(self, x, y, z):
