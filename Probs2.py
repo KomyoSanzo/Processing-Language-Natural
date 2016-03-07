@@ -106,15 +106,13 @@ class LanguageModel:
             
     elif self.smoother == "BACKOFF_WB":
       sys.exit("BACKOFF_WB is not implemented yet (that's your job!)")
-    elif "LOGLINEAR" in self.smoother:
-      num = 1
-      if self.smoother == "LOGLINEAR_F":
-          num = (((self.tokens.get(z,0) + 1.0)/(self.tokens.get("",0) + self.vocab_size)) ** self.beta)
-      if x not in self.vectors:
+    elif self.smoother == "LOGLINEAR":
+      
+      if x not in self.vocab:
           x = OOL
-      if y not in self.vectors:
+      if y not in self.vocab:
           y = OOL
-      if z not in self.vectors:
+      if z not in self.vocab:
           z = OOL
       vector_x = numpy.matrix(self.vectors[x])
       vector_y = numpy.matrix(self.vectors[y])
@@ -122,21 +120,15 @@ class LanguageModel:
       
       vector_u = numpy.matrix(self.U)
       vector_v = numpy.matrix(self.V)
-      num = num * math.exp(float(vector_x*vector_u*vector_z.transpose() + vector_y*vector_v*vector_z.transpose()))
-      
-      
+      num = math.exp(float(vector_x*vector_u*vector_z.transpose() + vector_y*vector_v*vector_z.transpose()))
+
       den = 0.0
       for value in self.vocab:
-          
-          f_check = 1
-          if self.smoother == "LOGLINEAR_F":
-              f_check = (((self.tokens.get(value,0) + 1.0)/(self.tokens.get("",0) + self.vocab_size)) ** self.beta)
-          
           if value not in self.vectors:
               value = OOL
           value = self.vectors[value]
           vector_z = numpy.matrix(value)
-          den += f_check*math.exp(float(vector_x*vector_u*vector_z.transpose() + vector_y*vector_v*vector_z.transpose()))
+          den += math.exp(float(vector_x*vector_u*vector_z.transpose() + vector_y*vector_v*vector_z.transpose()))
       return num/den
     else:
       sys.exit("%s has some weird value" % self.smoother)
@@ -214,7 +206,7 @@ class LanguageModel:
         if z not in self.vocab:
           z = OOV
         # substitute out-of-lexicon words with OOL symbol (only for log-linear models)
-        if 'LOGLINEAR' in self.smoother and z not in self.vectors:
+        if self.smoother == 'LOGLINEAR' and z not in self.vectors:
           z = OOL
         self.count(x, y, z)
         self.show_progress()
@@ -225,7 +217,7 @@ class LanguageModel:
     self.count(x, y, EOS)     # count EOS "end of sequence" token after the final context
     corpus.close()
 
-    if 'LOGLINEAR' in self.smoother: 
+    if self.smoother == 'LOGLINEAR': 
       # Train the log-linear model using SGD.
 
       # Initialize parameters
@@ -270,9 +262,9 @@ class LanguageModel:
               #READ IN NEW X Y Z
               x, y, z = tokens_list[i-2], tokens_list[i - 1], tokens_list[i]
               
-              x_vec = numpy.matrix(self.vectors[x])
-              y_vec = numpy.matrix(self.vectors[y])
-              z_vec = numpy.matrix(self.vectors[z])
+              x = numpy.matrix(self.vectors[x])
+              y = numpy.matrix(self.vectors[y])
+              z = numpy.matrix(self.vectors[z])
               
               currentU = numpy.matrix(self.U)
               currentV = numpy.matrix(self.V)
@@ -282,45 +274,19 @@ class LanguageModel:
               z_prime_nums = []
               Z = 0.0              
               for value in self.vocab:
-                  n = 1
-                  if (self.smoother == "LOGLINEAR_F"):
-                      n =   ((
-                              (self.tokens.get(value, 0)+1.0)/
-                              (self.tokens.get("", 0) + self.vocab_size))
-                             **currentBeta)
-                  
                   if value not in self.vectors:
                       value = OOL
                   z_prime = numpy.matrix(self.vectors[value])
-                  
-                  n = n*math.exp(float(x_vec*currentU*z_prime.transpose() + y_vec*currentV*z_prime.transpose()))
-                  
-                  
-                  
+                  n = math.exp(float(x*currentU*z_prime.transpose() + y*currentV*z_prime.transpose()))*((self.tokens.get(z_prime,0)+1)**currentBeta)
+                                    
                   Z += n
                   z_prime_nums.append(n)
-                  
-              #UPDATE each beta
-              if (self.smoother == "LOGLINEAR_F"):
-                  deltaBeta = math.log((self.tokens.get(z,0)+1.0)/
-                                       (self.tokens.get("",0) + self.vocab_size))
-                  deltaBeta -= 2*self.lambdap*currentBeta/self.N
-                  
-                  iterate = 0
-                  for value in self.vocab:
-                      num = z_prime_nums[iterate]
-                      iterate += 1
-                      
-                      deltaBeta -= (num/Z)* math.log((self.tokens.get(value,0)+1.0)/
-                                       (self.tokens.get("",0) + self.vocab_size))
-                  self.beta = currentBeta + gamma*deltaBeta
                   
               #FOR each value in the matrices...
               for j in range(self.dim):
                   for m in range(self.dim):
                       deltaF_U_summ_part = 0.0
                       deltaF_V_summ_part = 0.0
-                      
                                                  
                       iterate = 0
                       for value in self.vocab:
@@ -331,30 +297,27 @@ class LanguageModel:
                           num = z_prime_nums[iterate]
                           iterate += 1
                            
-                          deltaF_U_summ_part += (num/Z)*x_vec[0,j]*value[m]
-                          deltaF_V_summ_part += (num/Z)*y_vec[0,j]*value[m]
+                          deltaF_U_summ_part += (num/Z)*x[0,j]*value[m]
+                          deltaF_V_summ_part += (num/Z)*y[0,j]*value[m]
                           
-                      deltaF_U = x_vec[0, j]*z_vec[0,m] - deltaF_U_summ_part - 2*self.lambdap*currentU[j, m]/self.N
-                      deltaF_V = y_vec[0, j]*z_vec[0,m] - deltaF_V_summ_part - 2*self.lambdap*currentV[j, m]/self.N
+                      deltaF_U = x[0, j]*z[0,m] - deltaF_U_summ_part - 2*self.lambdap*currentU[j, m]/self.N
+                      deltaF_V = y[0, j]*z[0,m] - deltaF_V_summ_part - 2*self.lambdap*currentV[j, m]/self.N
                       
               
                       self.U[j][m] = currentU[j, m] + gamma*deltaF_U
                       self.V[j][m] = currentV[j, m] + gamma*deltaF_V
-                 
+	  
               t += 1          
           F = 0.0
           val = 0.0
           for i in range(self.dim):
               for j in range(self.dim):
                   val += self.U[i][j] * self.U[i][j] + self.V[i][j] * self.V[i][j]
-          if self.smoother == "LOGLINEAR_F":
-              val += self.beta*self.beta
           for i in range (2, len(tokens_list)):
               x, y, z = tokens_list[i-2], tokens_list[i - 1], tokens_list[i]
               p = self.prob(x, y, z)
               F += math.log(p) - self.lambdap*val/self.N
           print "finished one epoch: " + str(F)
-          print "beta: " + str(self.beta)
           
     sys.stderr.write("Finished training on %d tokens\n" % self.tokens[""])
 
@@ -438,8 +401,6 @@ class LanguageModel:
       self.smoother = "BACKOFF_WB"
     elif smoother_name.lower() == 'loglinear':
       self.smoother = "LOGLINEAR"
-    elif smoother_name.lower() == 'loglinear_f':
-      self.smoother = "LOGLINEAR_F"
     else:
       sys.exit("Don't recognize smoother name '%s'" % smoother_name)
     

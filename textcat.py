@@ -25,7 +25,6 @@ import Probs
 def main():
     course_dir = '/usr/local/data/cs465/'
     argv = sys.argv[1:]
-
     if len(argv) < 2:
         print """
 Prints the log-probability of each file under a smoothed n-gram model.
