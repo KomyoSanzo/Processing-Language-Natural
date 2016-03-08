@@ -15,6 +15,7 @@ import sys
 import numpy
 from pip._vendor.requests.packages.urllib3.packages.six import itervalues
 
+
 # TODO for TA: Currently, we use the same token for BOS and EOS as we only have
 # one sentence boundary symbol in the word embedding file.  Maybe we should
 # change them to two separate symbols?
@@ -57,6 +58,11 @@ class LanguageModel:
     # dimensional lists.
     self.U, self.V = None, None  
     self.beta = None
+    self.alpha = None
+    self.charlie = None
+    
+    self.back_words = 0
+    self.back_words_list = []
     
     # self.tokens[(x, y, z)] = # of times that xyz was observed during training.
     # self.tokens[(y, z)]    = # of times that yz was observed during training.
@@ -73,7 +79,6 @@ class LanguageModel:
     """Computes a smoothed estimate of the trigram probability p(z | x,y)
     according to the language model.
     """
-
     if self.smoother == "UNIFORM":
       return float(1) / self.vocab_size
     elif self.smoother == "ADDL":
@@ -108,8 +113,13 @@ class LanguageModel:
       sys.exit("BACKOFF_WB is not implemented yet (that's your job!)")
     elif "LOGLINEAR" in self.smoother:
       num = 1
-      if self.smoother == "LOGLINEAR_F":
-          num = (((self.tokens.get(z,0) + 1.0)/(self.tokens.get("",0) + self.vocab_size)) ** self.beta)
+      if "LOGLINEAR_F" in self.smoother:
+          num = num * (((self.tokens.get(z,0) + 1.0)/(self.tokens.get("",0) + self.vocab_size)) ** self.beta)
+      if "VI" in self.smoother:
+          if z in self.back_words_list:
+              num = num*math.exp(self.alpha)
+      if "V_II" in self.smoother:
+          num = num * (((self.tokens.get((x, y, z),0) + self.lambdap)/(self.tokens.get((x,y),0) + self.vocab_size*self.lambdap)) ** self.charlie)
       if x not in self.vectors:
           x = OOL
       if y not in self.vectors:
@@ -129,9 +139,14 @@ class LanguageModel:
       for value in self.vocab:
           
           f_check = 1
-          if self.smoother == "LOGLINEAR_F":
+          if "LOGLINEAR_F" in self.smoother:
               f_check = (((self.tokens.get(value,0) + 1.0)/(self.tokens.get("",0) + self.vocab_size)) ** self.beta)
-          
+          if "VI" in self.smoother:
+              if z in self.back_words_list:
+                  f_check = f_check * math.exp(self.alpha)
+          if "V_II" in self.smoother:
+              f_check = f_check * (((self.tokens.get((x, y, value), 0) + self.lambdap)/(self.tokens.get((x,y), 0) + self.lambdap*self.vocab_size))** self.charlie)
+              
           if value not in self.vectors:
               value = OOL
           value = self.vectors[value]
@@ -181,7 +196,7 @@ class LanguageModel:
     in some format.
     """
     sys.stderr.write("Training from corpus %s\n" % filename)
-
+    print self.smoother
     # Clear out any previous training
     self.tokens = { }
     self.types_after = { }
@@ -232,9 +247,11 @@ class LanguageModel:
       self.U = [[0.0 for _ in range(self.dim)] for _ in range(self.dim)]
       self.V = [[0.0 for _ in range(self.dim)] for _ in range(self.dim)]
       self.beta = 0.0
-
+      self.alpha = 0.0
+      self.charlie = 0.0
+      
       # Optimization parameters
-      gamma0 = 0.01  # initial learning rate, used to compute actual learning rate
+      gamma0 = 0.0001  # initial learning rate, used to compute actual learning rate
       epochs = 10  # number of passes
 
       self.N = len(tokens_list) - 2  # number of training instances
@@ -270,6 +287,17 @@ class LanguageModel:
               #READ IN NEW X Y Z
               x, y, z = tokens_list[i-2], tokens_list[i - 1], tokens_list[i]
               
+              
+              if "VI" in self.smoother:
+                  for xy in [x,y]:
+                      if len(self.back_words_list) < self.back_words:
+                          self.back_words_list.append(xy)
+                      else:
+                          self.back_words_list.pop(0)
+                          self.back_words_list.append(xy)
+                  
+              
+              
               x_vec = numpy.matrix(self.vectors[x])
               y_vec = numpy.matrix(self.vectors[y])
               z_vec = numpy.matrix(self.vectors[z])
@@ -277,18 +305,27 @@ class LanguageModel:
               currentU = numpy.matrix(self.U)
               currentV = numpy.matrix(self.V)
               currentBeta = self.beta
+              currentAlpha = self.alpha
+              currentCharlie = self.charlie
               
               #Calculate Z denominator and numerators
               z_prime_nums = []
               Z = 0.0              
               for value in self.vocab:
                   n = 1
-                  if (self.smoother == "LOGLINEAR_F"):
+                  if ("LOGLINEAR_F" in self.smoother):
                       n =   ((
-                              (self.tokens.get(value, 0)+1.0)/
+                              (self.tokens.get((x, y, value), 0)+1.0)/
                               (self.tokens.get("", 0) + self.vocab_size))
                              **currentBeta)
-                  
+
+                  if ("VI" in self.smoother):
+                      if z in self.back_words_list:
+                          n = n * math.exp(currentAlpha)
+                  if ("V_II" in self.smoother):
+                      n = n *(((self.tokens.get((x, y, value), 0) + self.lambdap)/
+                               (self.tokens.get((x, y), 0) + self.lambdap*self.vocab_size))
+                              ** currentCharlie)
                   if value not in self.vectors:
                       value = OOL
                   z_prime = numpy.matrix(self.vectors[value])
@@ -301,7 +338,7 @@ class LanguageModel:
                   z_prime_nums.append(n)
                   
               #UPDATE each beta
-              if (self.smoother == "LOGLINEAR_F"):
+              if ("LOGLINEAR_F" in self.smoother):
                   deltaBeta = math.log((self.tokens.get(z,0)+1.0)/
                                        (self.tokens.get("",0) + self.vocab_size))
                   deltaBeta -= 2*self.lambdap*currentBeta/self.N
@@ -314,7 +351,36 @@ class LanguageModel:
                       deltaBeta -= (num/Z)* math.log((self.tokens.get(value,0)+1.0)/
                                        (self.tokens.get("",0) + self.vocab_size))
                   self.beta = currentBeta + gamma*deltaBeta
+              #UPDATE each charlie
+              if ("V_II" in self.smoother):
+                  deltaCharlie = math.log((self.tokens.get((x, y, z),0) + self.lambdap)/
+                                          (self.tokens.get((x,y),0) + self.lambdap*self.vocab_size))
+                  deltaCharlie -= 2*self.lambdap*currentCharlie/self.N
                   
+                  iterate = 0
+                  for value in self.vocab:
+                      num = z_prime_nums[iterate]
+                      iterate += 1
+                      
+                      deltaCharlie -= (num/Z) * math.log((self.tokens.get((x, y, value), 0)+self.lambdap)/
+                                                         (self.tokens.get((x,y),0) + self.lambdap*self.vocab_size))
+                  self.charlie = currentCharlie + gamma*deltaCharlie
+              
+              #UPDATE each alpha
+              if ("VI" in self.smoother):
+                 deltaAlpha = 0
+                 if z in self.back_words_list:
+                     deltaAlpha = 1
+                 deltaAlpha -= 2*self.lambdap*currentAlpha/self.N
+                 
+                 iterate = 0
+                 for value in self.vocab:
+                     num = z_prime_nums[iterate]
+                     iterate += 1
+                     if value in self.back_words_list:
+                         deltaAlpha -= (num/Z) * 1
+                 self.alpha = currentAlpha + gamma*deltaAlpha
+              
               #FOR each value in the matrices...
               for j in range(self.dim):
                   for m in range(self.dim):
@@ -347,15 +413,20 @@ class LanguageModel:
           for i in range(self.dim):
               for j in range(self.dim):
                   val += self.U[i][j] * self.U[i][j] + self.V[i][j] * self.V[i][j]
-          if self.smoother == "LOGLINEAR_F":
+          if "LOGLINEAR_F" in self.smoother:
               val += self.beta*self.beta
+          if "VI" in self.smoother:
+              val += self.alpha*self.alpha
+          if "V_II" in self.smoother:
+              val += self.charlie*self.charlie
           for i in range (2, len(tokens_list)):
               x, y, z = tokens_list[i-2], tokens_list[i - 1], tokens_list[i]
               p = self.prob(x, y, z)
               F += math.log(p) - self.lambdap*val/self.N
           print "finished one epoch: " + str(F)
           print "beta: " + str(self.beta)
-          
+          print "alpha: " + str(self.alpha)
+          print "charlie: " + str (self.charlie)
     sys.stderr.write("Finished training on %d tokens\n" % self.tokens[""])
 
   def count(self, x, y, z):
@@ -440,6 +511,11 @@ class LanguageModel:
       self.smoother = "LOGLINEAR"
     elif smoother_name.lower() == 'loglinear_f':
       self.smoother = "LOGLINEAR_F"
+    elif smoother_name.lower() == 'loglinear_f_vi':
+      self.smoother = "LOGLINEAR_F_VI"
+      self.back_words = input("Enter the backword size: ")
+    elif smoother_name.lower() == 'loglinear_f_vii':
+      self.smoother = "LOGLINEAR_F_V_II"
     else:
       sys.exit("Don't recognize smoother name '%s'" % smoother_name)
     
