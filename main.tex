@@ -31,6 +31,14 @@ sample2: 978
      
 sample3: 985
 
+Cross-Entropy for each sample:
+
+sample1: 7.18345
+
+sample2: 7.55505
+
+sample3: 7.58202
+
 Calculating the perplexity per word for each of the sample files:
 
 2$^{-\frac{1}{N}*log_{2}p(x)}$
@@ -63,7 +71,7 @@ Lowest error is 0.09259259..., or an accuracy of 0.90740740...
 
 \subsection{}
 
-The value of 0.00035 was used.
+The value of 0.00035 was used for lambda.
 
 \subsection{}
 
@@ -71,6 +79,10 @@ An error rate of .13148... was observed when our value of lambda was used on the
 
 \subsection{Graphs}
 Graphs are included in the submission. 
+One graph shows a comparison between the length of the test file and its accuracy rate. The second graph shows a comparison between the size of the training corpus with its resulting accuracy rate.
+
+\subsection{Increasing training size}
+Graph is included. 
 
 \section{Questions}
 
@@ -120,8 +132,6 @@ Implemented
 
 \subsection{ADDL vs BACKOFF\_ADDL}
 
-%How does switching from ADDL to backoffaddl affect performance?
-
 With the same lambda value as in 3.c (0.00035), switching to BACKOFF\_ADDL improved the performance. This resulted in an error rate of 0.09444, smaller than our error rate of 0.13148 from 3.c.
 
 %Measure cross entropy for switchboard corpa like in Q1, and text cat error rates for gen/spam in 3c. 
@@ -131,6 +141,14 @@ Basically running fileprob.py as in Q1, but using backoff\_add0.01 as the smooth
 -9898.16	../../speech/sample1
 -6048.05	../../speech/sample2
 -6105.56	../../speech/sample3
+
+Cross Entropy: 
+
+sample1: 5.87079
+
+sample2: 6.1841
+
+sample3: 6.1985
 
 Calculating the perplexity per word for each of the sample files:
 
@@ -142,7 +160,7 @@ sample3: 2$^{\frac{-1}{985} * (-6105.56)}$ = 2$^{6.1985}$ = 73.4422
 
 \section{The Long Question}
 
-\susbection{}
+\subsection{}
 
 See code
 
@@ -185,7 +203,19 @@ Finished training on 992 tokens
 
 \subsection{}
 
+Command: python textcat.py loglinear1 lexicons/chars-10.txt speech/train/switchboard All\_Training/en.1K All\_Training/sp.1K
 
+Results:
+
+Command: 
+
+Results: 
+
+When loglinear5,
+
+When loglinear.05,
+
+Of course, with more training (a larger lexicon), the accuracy would improve.
 
 \section{a-priori}
 %We know ahead of time that 1/3 of all test emails will be spam. How should this change textcat.c in how it does its classification?
@@ -202,12 +232,10 @@ Since P(data) doesn't help us to find the maximum probability. Rather, we use th
 
 %Do you need to know the number 1/3 when training the model, or is it only used at test time?
 
-The number is used only at test time.
+The number is used only at test time, where it's used to help predict the test file. 
 
 \section{Speech Recognition}
 \subsection{}
-
-%How should you choose among the 9 candidates? What quantity are you trying to maximize, and how should you computer it? (bayes)
 
 We are trying to maximize the probability of the utterance $U$ given the intentional statement someone was trying to say $\overrightarrow{w}$. In other words, we want to maximize: 
 
@@ -223,8 +251,6 @@ We can get P(U) from the trigram model.
 speechrec.py is included in the submission.
 
 \subsection{Error Rates}
-%What is overall error rate on the utterances in test/easy?
-%On utterances in test/unrestricted? Answer for 3-gram, 2-gram and 1-gram
 
 Chosen smoothing method, and why: We tested all of the smoothings (just on one n-gram model) and selected the one that gave us the best error rates. This experiment is described in Table $\ref{tableOne}$. We used the words-10 lexicon.
 
@@ -282,4 +308,3 @@ N-Gram & Overall errorRate [Easy] & Overall errorRate [unrestricted]\\
 \textit{Used overleaf.com to generate LaTeX document.}
 \end{center}
 \end{document}
-
