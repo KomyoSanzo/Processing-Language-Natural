@@ -85,9 +85,13 @@ trainpath is the location of the training corpus
     train2_count = 0.0
     accuracy_num = []
     
+    
+    average_cross = 0.0
+    
     for i in range(len(train1_probs)):
         if (train1_probs[i] > train2_probs[i]):
             train1_count += 1
+            average_cross += train1_probs[i]/int(os.path.split(argv[i])[1].split(".")[1])
             if (os.path.split(train_file)[1][0:3] == os.path.split(argv[i])[1][0:3]):
                 accuracy_num.append(True)
             else:
@@ -96,6 +100,7 @@ trainpath is the location of the training corpus
             print "%s\t%s" % (train_file, argv[i])
         else:
             train2_count += 1
+            average_cross += train2_probs[i]/int(os.path.split(argv[i])[1].split(".")[1])
             if (os.path.split(train_file2)[1][0:3] == os.path.split(argv[i])[1][0:3]):
                 accuracy_num.append(True)
             else:
@@ -158,6 +163,6 @@ trainpath is the location of the training corpus
         
     print "Accuracy: " + str(accuracy/len(argv))
     print "Error: " + str(1-accuracy/len(argv))
-
+    print "Cross Entropy: " + str(-1*average_cross/len(train1_probs))
 if __name__ ==  "__main__":
     main()

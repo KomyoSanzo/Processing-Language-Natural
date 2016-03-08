@@ -196,7 +196,6 @@ class LanguageModel:
     in some format.
     """
     sys.stderr.write("Training from corpus %s\n" % filename)
-    print self.smoother
     # Clear out any previous training
     self.tokens = { }
     self.types_after = { }
@@ -252,6 +251,7 @@ class LanguageModel:
       
       # Optimization parameters
       gamma0 = 0.0001  # initial learning rate, used to compute actual learning rate
+      gamma0 = 0.05
       epochs = 10  # number of passes
 
       self.N = len(tokens_list) - 2  # number of training instances
@@ -315,7 +315,7 @@ class LanguageModel:
                   n = 1
                   if ("LOGLINEAR_F" in self.smoother):
                       n =   ((
-                              (self.tokens.get((x, y, value), 0)+1.0)/
+                              (self.tokens.get(value, 0)+1.0)/
                               (self.tokens.get("", 0) + self.vocab_size))
                              **currentBeta)
 
@@ -424,9 +424,12 @@ class LanguageModel:
               p = self.prob(x, y, z)
               F += math.log(p) - self.lambdap*val/self.N
           print "finished one epoch: " + str(F)
-          print "beta: " + str(self.beta)
-          print "alpha: " + str(self.alpha)
-          print "charlie: " + str (self.charlie)
+          if "LOGLINEAR_F" in self.smoother:
+              print "beta: " + str(self.beta)
+          if "VI" in self.smoother:
+              print "alpha: " + str(self.alpha)
+          if "VII" in self.smoother:
+              print "charlie: " + str (self.charlie)
     sys.stderr.write("Finished training on %d tokens\n" % self.tokens[""])
 
   def count(self, x, y, z):

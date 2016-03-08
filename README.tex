@@ -63,11 +63,14 @@ A larger corpus results in a more positive value of the log2 probability. This s
 
 textcat.py included in submission.
 
-\section{Categorizing}
+\section{Categorizing with spam detection problem}
 
 \subsection{}
 
 Lowest error is 0.09259259..., or an accuracy of 0.90740740...
+195 of the files were categorized as gen and 75 were categorized as spam.
+
+textcat was modified so that it automatically calculates the accuracy of categorization when dealing with two training files. 
 
 \subsection{}
 
@@ -132,7 +135,7 @@ Implemented
 
 \subsection{ADDL vs BACKOFF\_ADDL}
 
-With the same lambda value as in 3.c (0.00035), switching to BACKOFF\_ADDL improved the performance. This resulted in an error rate of 0.09444, smaller than our error rate of 0.13148 from 3.c.
+With the same lambda value as in 3.c (0.00035), switching to BACKOFF\_ADDL improved the performance. This resulted in an error rate of 0.072222, smaller than our error rate of 0.13148 from 3.c.
 
 %Measure cross entropy for switchboard corpa like in Q1, and text cat error rates for gen/spam in 3c. 
 
@@ -158,6 +161,11 @@ sample2: 2$^{\frac{-1}{978} * (-6048.05)}$ = 2$^{6.1841}$ = 72.7109
 
 sample3: 2$^{\frac{-1}{985} * (-6105.56)}$ = 2$^{6.1985}$ = 73.4422
 
+As can be seen here, there is also a marked decrease in the perplexity and cross entropy per word for the speech sample files. 
+
+
+For 
+
 \section{The Long Question}
 
 \subsection{}
@@ -169,6 +177,13 @@ See code
 See code
 
 \subsection{}
+
+Using the code:
+
+python fileprob.py loglinear1 chars-10.txt en.1K
+
+Output:
+
 Training from corpus en.1K
 
 .
@@ -203,19 +218,63 @@ Finished training on 992 tokens
 
 \subsection{}
 
-Command: python textcat.py loglinear1 lexicons/chars-10.txt speech/train/switchboard All\_Training/en.1K All\_Training/sp.1K
+Running the program with a value of C = 1 and maintaining the same lambda of 0.01 as before, we used the following input command:
 
-Results:
+python textcat.py loglinear1 chars-10.txt sp.1K en.1K  [included all the dev spanish and engilsh data]
 
-Command: 
+It should be noted that [included all the dev spanish and english data] in all future uses refers to the fact that when we had initially coded the program, we had done it in a windows environment. 
 
-Results: 
+As a result, a directories to include all files had to be more explicitly written. Therefore, to add the files one has to go directly to the subfolder and add a star in the place of the file. This was done for all file lengths for both english and spanish. 
 
-When loglinear5,
+The output resulted in a 75.342 percent accuracy of categorization with 113 categorized as sp.1K and 106 categorized as en.1K. Addtionally, and average cross entropy was measured at 4.827. Compared to a AddL smoothing with lambda = 1 which resulted in a cross entropy amount of 5.27 and an accuracy of 89.50%, there is a lower accuracy and lower cross entropy.
 
-When loglinear.05,
+Using a C = 0.05, an accuracy of 73.5 percent and an average cross entropy level of 4.847 was measured. 
 
-Of course, with more training (a larger lexicon), the accuracy would improve.
+Using a C = .5, an accuracy of 74 percent and an average cross entropy level of 4.837 was measured.
+
+Using a C = 2, an accuracy of 75.3 percent and an average cross entropy level of 4.812 was measured.
+
+Using a C = 5, an accuracy of 75.799 percent and an average cross entropy level of 4.783 was measured.
+
+Using a C = 8, an accuracy of 78.54 percent and an average cross entropy of 4.768 was measured.
+
+Using a C = 10, an accuracy of  78.082 percent and an average cross entropy of 4.76
+
+Using a C = 12, an accuracy of 77.62 percent and an average cross entropy of 4.757 was measured.
+
+Therefore, we will set C* = 8.
+
+
+
+Using a learning rate of 0.05 and larger lexicon dimensions....
+
+Using chars-10.txt with the new learning rate: 78.08 percent accuracy with cross entropy of 4.8
+
+Using chars-20.txt with the new learning rate: 81.735 percent accuracy with cross entropy of 4.5448
+
+Using chars-40.txt with the new learning rate: 81.278 percent accuracy with cross entropy 4.383
+
+The higher dimension lexicon yields a higher accuracy percentage.
+
+
+\subsection{}
+Using a learning rate of 0.01 and C = 8 with the command: python textcat.py loglinear\_f8 chars-10.txt sp.1K en.1K [all english and spanish files from dev]
+
+An accuracy of 80.40 percent is measured with an average cross entropy of 4.54. This is an improvement over 78.54 as seen with C = 8 with the same hyperparameters and files.
+As can be seen, cross-entropy decreases and accuracy increases. Additionally, on epoch 10 we have a value of 1.1295 and 1.371 for beta in sp.1K and en.1K, respectively. 
+
+\subsection{}
+We improved the model by adding both an "ensemble" model with a log-trigram implementation and a recurring word model (vii and vi, respectively).
+
+Testing was only performed on the ensemble model, but both can be performed depending on the training task. To run the ensemble, the command the smoothing command  is "loglinear\_f\_vii". To run the recurring word model, the smoothing command is "loglinear\_f\_vi".
+
+Additionally, in some instances, to run the ensemble model the learning rate had to be radically reduced to .0001 to prevent overfitting and a gradient descent behavior as opposed to ascent. 
+
+Using the command python textcat.py loglinear\_f\_vii1 chars-10.txt sp.1K en.1K [include all english and spanish test files from dev]. For this particular run, C = 1 and the learning remained at 0.01
+
+The result was an accuracy of 87.86 percent. A very marked improvement over the previous seen  numbers. The Cross entropy was found to be 4.5783. 
+It should be noted that some of the largest (closest to 0) values of F were seen while running this ensemble system. 
+
 
 \section{a-priori}
 %We know ahead of time that 1/3 of all test emails will be spam. How should this change textcat.c in how it does its classification?

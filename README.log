@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2016.2.12)  6 MAR 2016 19:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2016.2.12)  8 MAR 2016 18:14
 entering extended mode
 **"C:/Users/Willis Wang/workspace/NLPhw3/Processing-Language-Natural/main.tex"
 ("C:/Users/Willis Wang/workspace/NLPhw3/Processing-Language-Natural/main.tex"
@@ -274,19 +274,20 @@ b.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
-{C:/Users/Willis Wang/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}] [2]
-Overfull \hbox (12.5217pt too wide) in paragraph at lines 125--126
+{C:/Users/Willis Wang/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}] [2] [
+3]
+Overfull \hbox (12.5217pt too wide) in paragraph at lines 138--139
 \OT1/cmr/m/n/12 With the same lambda value as in 3.c (0.00035), switch-ing to B
 ACK-OFF[]ADDL
  []
 
-[3]
-Overfull \hbox (83.65063pt too wide) in paragraph at lines 131--134
+
+Overfull \hbox (83.65063pt too wide) in paragraph at lines 144--147
 []\OT1/cmr/m/n/12 -9898.16 ../../speech/sample1 -6048.05 ../../speech/sample2 -
 6105.56 ../../speech/sample3 
  []
 
-[4] [5] [6] (main.aux) )
+[4] [5] [6] [7] [8] [9] (main.aux) )
 (\end occurred inside a group at level 1)
 
 ### simple group (level 1) entered at line 1061 ({)
@@ -314,9 +315,9 @@ sfonts/cm/cmsy10.pfb><C:/Users/Willis Wang/AppData/Local/Programs/MiKTeX 2.9/fo
 nts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/Willis Wang/AppData/Local/Prog
 rams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/Willis Wang/
 AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on main.pdf (6 pages, 150408 bytes).
+Output written on main.pdf (9 pages, 156630 bytes).
 PDF statistics:
- 69 PDF objects out of 1000 (max. 8388607)
+ 80 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
