@@ -1,1 +1,0 @@
-SUBJECT: &NAME EMAIL &NAME This is a test . I hope it works ! ! gav &NAME 
