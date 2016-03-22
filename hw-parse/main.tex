@@ -25,8 +25,7 @@ Using the Berkeley parser.
 
 (c) Can you stump it with a grammatical sentence that you make up? With a grammatical sentence that you find in an online document?
 
-%Extra credit: Not all parsers produce parse trees of the sort we’ve been studying in class! They may produce other kinds of sentence diagrams. For your interest, here are some other good parsers with online demos. Play with them as well and report on what you find.
-
+\subsection{Extra Credit}
 TurboParser does not give us a tree that is rooted at a root node. Instead, the tree separates phrases and seems to use the end words of each phrase to connect each phrase. In Figure \ref{turboParser}, there is no tree root, and the nodes VB, NNS, and VBP are in between each distinct phrase. 
 
 The Link Grammar Parser does something interesting, as shown in Figure \ref{lgParser}: it parses the sentence and identifies links between phrases / words in the sentence. Using this parse, the software creates a constituent tree, which looks much like the trees that we produced in homework 1.
