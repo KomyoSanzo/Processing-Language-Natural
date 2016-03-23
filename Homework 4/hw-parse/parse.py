@@ -11,6 +11,7 @@ HW4
 
 import sys
 import random
+import math
 
 class dottedRule:
     rule = None # will be a Rule instance
@@ -40,12 +41,16 @@ def parseGrammar(file):
 
         if (len(splitLine) > 0):
             LHS = splitLine[1]
-            prob = float(splitLine[0])
+            prob = 0 - math.log(float(splitLine[0]) / math.log(2)) #change from prob to weight
         
+            #if this tree has this key already (?)
             if (not tree.ruleDict.has_key(LHS)):
                 tree.ruleDict[LHS] = []
                 tree.probDict[LHS] = 0.0
-            
+        
+
+
+        
             ########
             #Will need to make changes HERE for dotted / non dotted rules yee...
             newRule = dottedRule()
@@ -54,6 +59,24 @@ def parseGrammar(file):
         
             tree.probDict[LHS] = newRule.prob
             tree.ruleDict[LHS].append(newRule)
+
+    print "doing something"
+    #return grammar
+    return 0
+
+def parseSentenceFile(file, grammar):
+    sentenceFile = open(file)
+
+    for line in sentenceFile:
+        if line == "\n":
+            #skip empty line
+            continue
+        print line
+        parseSentence(line, grammar)
+
+def parseSentence(sentence, gram):
+    print "ACTUALLY parse sentence here"
+
 
 ##Printing Pretty stuffs
 
@@ -88,8 +111,10 @@ if __name__ == '__main__':
         print "Error"
     else:
         file = sys.argv[1]
-        sentence = sys.argv[2]
+        sentenceFile = sys.argv[2]
         gram = parseGrammar(file)
+        parseSentenceFile(sentenceFile, gram)
+        
         if ("-t" in sys.argv):
             output = prettyPrint('ROOT', "")
             formatPretty(output)
