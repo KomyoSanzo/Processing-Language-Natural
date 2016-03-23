@@ -1,20 +1,20 @@
 '''
 Created on Mar 21, 2016
 
-@author: Willis Wang.. QQ
+@author: Willis Wang & Katie Chang
 HW4
 '''
+
+#change probabilities to weights
+#want MINIMUM total weighted parse tree
+
 
 import sys
 import random
 
 class dottedRule:
-    prob = 0.0 #double
-    RHS = []
-    dot = 0 #location of dot
-    doneRule = None
-    ruleToAttach = None
-#merp
+    rule = None # will be a Rule instance
+    dot = 0 #int indicating index where dot is
 
 class Rule:
     prob = 0.0
@@ -25,7 +25,6 @@ class grammarTree:
     probDict = dict()
 
 #class Chart:
-
 
 #Parser
 def parseGrammar(file):
@@ -91,6 +90,9 @@ if __name__ == '__main__':
         file = sys.argv[1]
         sentence = sys.argv[2]
         gram = parseGrammar(file)
+        if ("-t" in sys.argv):
+            output = prettyPrint('ROOT', "")
+            formatPretty(output)
 
         #prettyprint here
 
