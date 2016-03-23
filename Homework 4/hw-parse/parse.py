@@ -1,7 +1,7 @@
 '''
 Created on Mar 21, 2016
 
-@author: Willis Wang
+@author: Willis Wang.. QQ
 HW4
 '''
 
@@ -9,8 +9,12 @@ import sys
 import random
 
 class dottedRule:
-    prob = 0.0
+    prob = 0.0 #double
     RHS = []
+    dot = 0 #location of dot
+    doneRule = None
+    ruleToAttach = None
+#merp
 
 class Rule:
     prob = 0.0
@@ -42,7 +46,8 @@ def parseGrammar(f):
             if (not tree.ruleDict.has_key(LHS)):
                 tree.ruleDict[LHS] = []
                 tree.probDict[LHS] = 0.0
-
+            
+            ########
 #Will need to make changes HERE for dotted / non dotted rules yee...
             newRule = dottedRule()
             newRule.RHS = splitLine[2:len(splitLine)]
