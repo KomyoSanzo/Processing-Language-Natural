@@ -26,14 +26,14 @@ class grammarTree:
 
 #class Chart:
 
+
 #Parser
-def parseGrammar(f):
-    
+def parseGrammar(file):
+    f = open(file)
     tree = grammarTree()
     
     for line in f:
         splitLine = line.split()
-        print splitLine
         for i in range(len(splitLine)):
             if '#' in splitLine[i] :
                 splitLine = splitLine[0:i]
@@ -48,7 +48,7 @@ def parseGrammar(f):
                 tree.probDict[LHS] = 0.0
             
             ########
-#Will need to make changes HERE for dotted / non dotted rules yee...
+            #Will need to make changes HERE for dotted / non dotted rules yee...
             newRule = dottedRule()
             newRule.RHS = splitLine[2:len(splitLine)]
             newRule.prob = prob + tree.probDict[LHS]
@@ -90,8 +90,7 @@ if __name__ == '__main__':
     else:
         file = sys.argv[1]
         sentence = sys.argv[2]
-        f = open(file)
-        parseGrammar(f)
+        gram = parseGrammar(file)
 
         #prettyprint here
 
