@@ -47,7 +47,6 @@ class Parser:
         for value in gram.ruleDict["ROOT"]:
             newRule = dottedRule("ROOT", value.prob, value.RHS, 0, 0, -1)
             c.enqueue(newRule, 0)
-            print newRule.toString();
             
         for i in range(c.getColSize()):
             print "Processing Column: " + str(i)
@@ -57,7 +56,6 @@ class Parser:
             
             while (entry < len(column)):
                 if(column[entry].isComplete()):
-                    print "IS COMPLETED"
                     #ATTACH
                     column[entry].endIndex = i
                     back_column = c.column_list[column[entry].startIndex]
@@ -68,11 +66,9 @@ class Parser:
                                                  value.startIndex, value.endIndex)
                             if not c.hashed_columns[i].has_key(newRule.toString()):
                                 c.enqueue(newRule, i)
-                                print newRule.toString()
                     
                 elif gram.ruleDict.has_key(column[entry].symbolAfterDot()) and i  < len(c.column_list):
                     #PREDICT
-                    print "IS PREDICTED: " + str(column[entry].symbolAfterDot())
                     for value in gram.ruleDict[column[entry].symbolAfterDot()]:
                         newRule = dottedRule(column[entry].symbolAfterDot(),
                                              value.prob,
@@ -82,9 +78,8 @@ class Parser:
                                              -1)
                         if not c.hashed_columns[i].has_key(newRule.toString()):
                             c.enqueue(newRule, i)
-                            print newRule.toString()
                 else:
-                    print "IS SCANNED"
+                    #Scan
                     if i < len(sentence) and str(column[entry].symbolAfterDot()) == str(sentence[i]):
                         newRule = dottedRule(column[entry].header, 
                                              column[entry].weight,
@@ -93,7 +88,6 @@ class Parser:
                                              column[entry].startIndex,
                                              column[entry].endIndex)
                         c.enqueue(newRule, i+1)
-                        print newRule.toString()
                 
                 entry += 1
         c.printC()
