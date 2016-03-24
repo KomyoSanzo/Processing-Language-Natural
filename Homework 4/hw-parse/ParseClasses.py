@@ -75,6 +75,12 @@ class Chart:
     def getColSize(self):
         return len(self.column_list)
 
+    def printC(self):
+        for i in range(len(self.column_list)):
+            toPrint = ""
+            for j in self.column_list[i]:
+                toPrint = toPrint + " " + j.toString()
+            print toPrint + "\n"
     
 
         

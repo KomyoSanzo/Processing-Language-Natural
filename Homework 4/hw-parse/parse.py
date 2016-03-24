@@ -88,8 +88,11 @@ class Parser:
                                                  column[entry].startIndex,
                                                  column[entry].endIndex)
                             c.enqueue(newRule)
-                        
                     entry += 1
+            c.printC()
+                
+                
+
 
 
 
