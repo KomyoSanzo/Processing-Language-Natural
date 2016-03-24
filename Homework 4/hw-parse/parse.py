@@ -66,11 +66,11 @@ class Parser:
                             newRule = dottedRule(value.header, value.weight,
                                                  value.rule, value.dot+1,
                                                  value.startIndex, value.endIndex)
-                            
-                            c.enqueue(newRule, i)
-                            print newRule.toString()
+                            if not c.hashed_columns[i].has_key(newRule.toString()):
+                                c.enqueue(newRule, i)
+                                print newRule.toString()
                     
-                elif gram.ruleDict.has_key(column[entry].symbolAfterDot()) and i + 1 < len(c.column_list):
+                elif gram.ruleDict.has_key(column[entry].symbolAfterDot()) and i  < len(c.column_list):
                     #PREDICT
                     print "IS PREDICTED: " + str(column[entry].symbolAfterDot())
                     for value in gram.ruleDict[column[entry].symbolAfterDot()]:
