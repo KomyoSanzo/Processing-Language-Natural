@@ -60,9 +60,11 @@ def parseGrammar(file):
 
 ##Printing Pretty stuffs
 
-def prettyPrint(LHS, ret):
+def prettyPrint(LHS, ret, tree):
     if (tree.ruleDict.has_key(LHS)):
         ret += ("(" + LHS + "\t")
+        
+        print ret
         
         rng = random.random()
         for node in tree.ruleDict[LHS]:
@@ -98,10 +100,13 @@ if __name__ == '__main__':
         p.parseSentenceFile(sentenceFile, gram)
         
         if ("-t" in sys.argv):
-            output = prettyPrint('ROOT', "")
+            output = prettyPrint('ROOT', "", gram)
             formatPretty(output)
 
         #prettyprint here
 
+
+##test stuff here
+    print "(" + grammarTree.ruleDict.keys()[-1]
 
 
