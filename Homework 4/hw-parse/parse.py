@@ -47,51 +47,58 @@ class Parser:
         for value in gram.ruleDict["ROOT"]:
             newRule = dottedRule("ROOT", value.prob, value.RHS, 0, 0, -1)
             c.enqueue(newRule, 0)
+            print newRule.toString();
             
-            for i in range(c.getColSize()):
-                print "Processing Column: " + str(i)
-                print str(c.getColSize())
-                column = c.column_list[i]
+        for i in range(c.getColSize()):
+            print "Processing Column: " + str(i)
+            column = c.column_list[i]
+            
+            entry = 0
+            
+            while (entry < len(column)):
+                if(column[entry].isComplete()):
+                    print "IS COMPLETED"
+                    #ATTACH
+                    column[entry].endIndex = i
+                    back_column = c.column_list[column[entry].startIndex]
+                    for value in back_column:
+                        if not value.isComplete() and value.symbolAfterDot() == column[entry].header:
+                            newRule = dottedRule(value.header, value.weight,
+                                                 value.rule, value.dot+1,
+                                                 value.startIndex, value.endIndex)
+                            
+                            c.enqueue(newRule, i)
+                            print newRule.toString()
+                    
+                elif gram.ruleDict.has_key(column[entry].symbolAfterDot()) and entry + 1 < len(c.column_list):
+                    #PREDICT
+                    print "IS PREDICTED: " + str(column[entry].symbolAfterDot())
+                    for value in gram.ruleDict[column[entry].symbolAfterDot()]:
+                        newRule = dottedRule(column[entry].symbolAfterDot(),
+                                             value.prob,
+                                             value.RHS,
+                                             0, 
+                                             i,
+                                             -1)
+                        if not c.hashed_columns[i].has_key(newRule.toString()):
+                            c.enqueue(newRule, i)
+                            print newRule.toString()
+                else:
+                    print "IS SCANNED"
+                    if str(column[entry].symbolAfterDot()) == str(sentence[i]):#SCAN
+                        newRule = dottedRule(column[entry].header, 
+                                             column[entry].weight,
+                                             column[entry].rule,
+                                             column[entry].dot+1,
+                                             column[entry].startIndex,
+                                             column[entry].endIndex)
+                        c.enqueue(newRule, i+1)
+                        print newRule.toString()
                 
-                entry = 0
-                
-                while (entry < len(column)):
-                    if(column[entry].isComplete()):
-                        #ATTACH
-                        column[entry].endIndex = i
-                        back_column = c.column_list[column[entry].startIndex]
-                        for value in back_column:
-                            if value.symbolAfterDot() == column[entry].header:
-                                newRule = dottedRule(value.header, value.weight,
-                                                     value.rule, value.dot+1,
-                                                     value.startindex, value.endIndex)
-                                
-                            c.enqueue(newRule)
-                        
-                    elif gram.ruleDict.has_key(column[entry].header) and entry + 1 == len(column):
-                        #PREDICT
-                        for value in gram.ruleDict[column[entry].header]:
-                            newRule = dottedRule(column[entry].header,
-                                                 value.prob,
-                                                 value.RHS,
-                                                 0, 
-                                                 i,
-                                                 -1)
-                            if not c.hashed_columns[i].has_key(newRule.toString()):
-                                c.enqueue(newRule, i)
-                    else:
-                        if str(column[entry].symbolAfterDot()) == str(sentence[i]):#SCAN
-                            newRule = dottedRule(column[entry].header, 
-                                                 column[entry].weight,
-                                                 column[entry].rule,
-                                                 column[entry].dot+1,
-                                                 column[entry].startIndex,
-                                                 column[entry].endIndex)
-                            c.enqueue(newRule)
-                    entry += 1
-            c.printC()
-                
-                
+                entry += 1
+        c.printC()
+            
+            
 
 
 

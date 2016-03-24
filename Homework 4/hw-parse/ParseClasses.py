@@ -28,7 +28,7 @@ class dottedRule:
         return (self.dot == len(self.rule))
     
     def toString(self):
-        return str(self.header) + ' ' + str(self.dot) + ' ' + str(self.endIndex) + ' ' + str(self.startIndex)
+        return str(self.header) + ' ' + str(self.dot) + ' ' + str(self.endIndex) + ' ' + str(self.startIndex) + ' ' + str(self.rule)
 
     def symbolAfterDot(self):
         return self.rule[self.dot]
@@ -52,7 +52,7 @@ class Chart:
         
         self.column_list = [] 
         self.hashed_columns = []
-        for i in range(len(sentence)+1):
+        for i in range(len(sentence)):
             self.column_list.append([])
             self.hashed_columns.append({})
         
@@ -79,8 +79,8 @@ class Chart:
         for i in range(len(self.column_list)):
             toPrint = ""
             for j in self.column_list[i]:
-                toPrint = toPrint + " " + j.toString()
-            print toPrint + "\n"
+                toPrint = toPrint + "||" + j.toString()
+            print "Column " + str(i) + ":" + toPrint
     
 
         
