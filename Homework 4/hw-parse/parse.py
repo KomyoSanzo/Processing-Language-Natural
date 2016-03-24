@@ -70,7 +70,7 @@ class Parser:
                             c.enqueue(newRule, i)
                             print newRule.toString()
                     
-                elif gram.ruleDict.has_key(column[entry].symbolAfterDot()) and entry + 1 < len(c.column_list):
+                elif gram.ruleDict.has_key(column[entry].symbolAfterDot()) and i + 1 < len(c.column_list):
                     #PREDICT
                     print "IS PREDICTED: " + str(column[entry].symbolAfterDot())
                     for value in gram.ruleDict[column[entry].symbolAfterDot()]:
@@ -85,7 +85,7 @@ class Parser:
                             print newRule.toString()
                 else:
                     print "IS SCANNED"
-                    if str(column[entry].symbolAfterDot()) == str(sentence[i]):#SCAN
+                    if i < len(sentence) and str(column[entry].symbolAfterDot()) == str(sentence[i]):
                         newRule = dottedRule(column[entry].header, 
                                              column[entry].weight,
                                              column[entry].rule,

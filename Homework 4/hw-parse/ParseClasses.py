@@ -52,7 +52,7 @@ class Chart:
         
         self.column_list = [] 
         self.hashed_columns = []
-        for i in range(len(sentence)):
+        for i in range(len(sentence)+1):
             self.column_list.append([])
             self.hashed_columns.append({})
         
