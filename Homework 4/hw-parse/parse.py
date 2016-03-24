@@ -11,8 +11,6 @@ HW4
 
 import sys
 import random
-import math
-import GrammarParsers
 import ParseClasses  
   
         
@@ -34,7 +32,7 @@ class Parser:
                 #skip empty line
                 continue
             print line
-            parseSentence(line, grammar)
+            self.parseSentence(line, grammar)
     
     def parseSentence(self, sentence, gram):
         print "ACTUALLY parse sentence here"
@@ -43,21 +41,18 @@ class Parser:
         
         #INITIALIZE EVERYTHING (and burn all the babies)
         listOfWords = sentence.split()
+        print listOfWords
         chart = []
-        for i in len(listOfWords):
+        for i in listOfWords:
             chart.append([])
         
-        for value in grammar["ROOT"]:
+        print gram
+        
+        for value in gram["ROOT"]:
             chart[0].append(value)
             
         #predict
         
-        
-        
-
-
-
-
 
 
 

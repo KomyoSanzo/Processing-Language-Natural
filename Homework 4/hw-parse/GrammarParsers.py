@@ -6,7 +6,12 @@ The purpose of this module is to parse in grammar rules into the relevant dictio
 @author: Willis Wang, Hamster
 '''
 
-        
+import sys
+import random
+import math
+from parse import Parser
+import ParseClasses
+
         
 #NECESSARY CLASSES FOR GRAMMAR PARSING
 class grammarTree:
@@ -38,9 +43,6 @@ def parseGrammar(file):
                 tree.ruleDict[LHS] = []
                 tree.probDict[LHS] = 0.0
         
-            
-
-        
             ########
             #Will need to make changes HERE for dotted / non dotted rules yee...
             newRule = Rule()
@@ -52,7 +54,7 @@ def parseGrammar(file):
 
     print "doing something"
     #return grammar
-    return 0
+    return tree #lol
 
 
 
@@ -88,10 +90,12 @@ if __name__ == '__main__':
     if (len(sys.argv) < 2):
         print "Error"
     else:
+       
         file = sys.argv[1]
         sentenceFile = sys.argv[2]
         gram = parseGrammar(file)
-        parseSentenceFile(sentenceFile, gram)
+        p = Parser(gram)
+        p.parseSentenceFile(sentenceFile, gram)
         
         if ("-t" in sys.argv):
             output = prettyPrint('ROOT', "")
