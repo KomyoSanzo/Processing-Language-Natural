@@ -37,8 +37,7 @@ class Parser:
 #            print "I is code monkey"
 
         #INITIALIZE EVERYTHING (and burn all the babies)
-        listOfWords = sentence.split()
-        print listOfWords
+        sentence = sentence.split()
         
         c = Chart(gram, sentence)
         
@@ -49,10 +48,9 @@ class Parser:
             newRule = dottedRule("ROOT", value.prob, value.RHS, 0, 0, -1)
             c.enqueue(newRule, 0)
             
-            for i in range(len(c.getColSize())):
-                for i in range(10):
-                    print "I is coding monkey"
-                print "Processing Column: " + i
+            for i in range(c.getColSize()):
+                print "Processing Column: " + str(i)
+                print str(c.getColSize())
                 column = c.column_list[i]
                 
                 entry = 0
@@ -79,7 +77,7 @@ class Parser:
                                                  0, 
                                                  i,
                                                  -1)
-                            if not c.hashed_columns.has_key(newRule.toString()):
+                            if not c.hashed_columns[i].has_key(newRule.toString()):
                                 c.enqueue(newRule, i)
                     else:
                         if str(column[entry].symbolAfterDot()) == str(sentence[i]):#SCAN

@@ -28,7 +28,7 @@ class dottedRule:
         return (self.dot == len(self.rule))
     
     def toString(self):
-        return str(self.head) + ' ' + str(self.dot) + ' ' + str(self.endIndex) + ' ' + str(self.startIndex)
+        return str(self.header) + ' ' + str(self.dot) + ' ' + str(self.endIndex) + ' ' + str(self.startIndex)
 
     def symbolAfterDot(self):
         return self.rule[self.dot]
