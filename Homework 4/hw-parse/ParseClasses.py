@@ -25,13 +25,15 @@ class dottedRule:
         
     
     def isComplete(self):
-        return (dot == len(rule))
+        return (self.dot == len(self.rule))
     
     def toString(self):
         return str(self.head) + ' ' + str(self.dot) + ' ' + str(self.endIndex) + ' ' + str(self.startIndex)
 
     def symbolAfterDot(self):
-        return rule[dot+1]
+        return self.rule[self.dot]
+
+
 class columnEntry:
     rule = None
     index = 0
@@ -46,12 +48,11 @@ class Chart:
     hashed_columns = None
     
     
-    def __init__ (self, grammar, snentence):
-        for i in range(100):
-            print "I is code monkey"
+    def __init__ (self, grammar, sentence):
+        
         self.column_list = [] 
         self.hashed_columns = []
-        for i in range(len(listOfWords)):
+        for i in range(len(sentence)):
             self.column_list.append([])
             self.hashed_columns.append({})
         
@@ -66,7 +67,8 @@ class Chart:
             else:
                 indexedColumn[rule.symbolAfterDot()] = [rule]
             
-    
+
+
     
     
 
