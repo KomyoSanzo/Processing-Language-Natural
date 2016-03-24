@@ -54,7 +54,7 @@ def parseGrammar(file):
 
     print "doing something"
     #return grammar
-    return tree #lol
+    return tree
 
 
 

@@ -76,6 +76,5 @@ class Chart:
         return len(self.column_list)
 
     
-    
 
         
