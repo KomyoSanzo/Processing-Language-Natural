@@ -15,6 +15,8 @@ class dottedRule:
     startIndex = 0
     endIndex = -1
     weight = 0.0
+    leftPointer = None
+    upPointer = None
     
     def __init__(self, nHeader = "", weight = 0.0, nRule  = [], nDot = -1, nStart = 0, nEnd = -1):
         self.header = nHeader
@@ -22,7 +24,7 @@ class dottedRule:
         self.dot = nDot
         self.startIndex = nStart
         self.endIndex = nEnd
-        
+        self.weight = weight
     
     def isComplete(self):
         return (self.dot == len(self.rule))
@@ -34,14 +36,6 @@ class dottedRule:
         return self.rule[self.dot]
 
 
-class columnEntry:
-    rule = None
-    index = 0
-
-    def isComplete(self):
-        return self.rule.isComplete()
-    
-    
 class Chart:
     
     column_list = None
@@ -55,7 +49,7 @@ class Chart:
         for i in range(len(sentence)+1):
             self.column_list.append([])
             self.hashed_columns.append({})
-        
+    
     def enqueue(self, rule, column):
         #if not c.hashed_columns.has_key(newRule.toString()):
         #    pass

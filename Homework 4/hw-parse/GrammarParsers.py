@@ -16,7 +16,6 @@ import ParseClasses
 #NECESSARY CLASSES FOR GRAMMAR PARSING
 class grammarTree:
     ruleDict = dict()
-    probDict = dict()
 
 class Rule:
     prob = 0.0
@@ -41,18 +40,13 @@ def parseGrammar(file):
             #if this tree does not have this key already 
             if (not tree.ruleDict.has_key(LHS)):
                 tree.ruleDict[LHS] = []
-                tree.probDict[LHS] = 0.0
         
             ########
             #Will need to make changes HERE for dotted / non dotted rules yee...
             newRule = Rule()
             newRule.RHS = splitLine[2:len(splitLine)]
-            newRule.prob = prob + tree.probDict[LHS]
-        
-            tree.probDict[LHS] = newRule.prob
+            newRule.prob = prob
             tree.ruleDict[LHS].append(newRule)
-
-    print "doing something"
     #return grammar
     return tree
 
@@ -105,8 +99,5 @@ if __name__ == '__main__':
 
         #prettyprint here
 
-
-##test stuff here
-    print "(" + grammarTree.ruleDict.keys()[-1]
 
 
