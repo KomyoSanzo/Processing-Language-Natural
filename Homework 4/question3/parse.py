@@ -26,6 +26,7 @@ class Parser:
     def parseSentenceFile(self, file, grammar):
         sentenceFile = open(file)
 
+        overallStartTime = datetime.datetime.now()
         for line in sentenceFile:
             startTime = datetime.datetime.now()
             if line == "\n":
@@ -35,7 +36,7 @@ class Parser:
             self.parseSentence(line, grammar)
             print "Time Elapsed: " + str(datetime.datetime.now()-startTime)
             print "\n\n"
-            
+        print "Finished Time Elapsed: " + str(datetime.datetime.now() - startTime)
         
         
         
