@@ -1,0 +1,146 @@
+\documentclass[12pt, letterpaper]{article}
+
+\usepackage{amsmath, amsthm, graphicx, float, verbatim, amssymb}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+\usepackage[]{algorithm2e}
+
+\title{Natural Language Processing Homework 4}
+
+\author{Katie Chang, Willis Wang}
+
+\begin{document}
+
+\maketitle
+
+README
+
+\section{State of the Art Parser}
+$Discussion$
+
+It is interesting to see how the different parsers from this question and the extra credit question deal with semantically ambiguous sentences. Let us take the sentence that we have all grown fond of:
+
+\begin{quote}
+That the president ate the pickle perplexed Sally.
+\end{quote}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=5in]{images/1BerkeleyParser.png}
+\end{center}
+\caption{Berkeley Parser on a sentence.}
+\label{BParser}
+\end{figure}
+
+In Figure \ref{BParser}, we can see that this is wrong because "That" cannot be a NP. Ambiguity in a sentence's semantics will often stump a parser and lead to an incorrect parse. The Stanford parser gives us the same parse tree.
+
+We also tested with the sentence 
+\begin{quote}
+The plans to raise income tax the imagination.
+\end{quote}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=5in]{images/1StanfordParserImagination.png}
+\end{center}
+\caption{Stanford Parser on a second sentence.}
+\label{SParserImagination}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=5in]{images/1BerkeleyParserImagination.png}
+\end{center}
+\caption{Berkeley Parser on a second sentence.}
+\label{BParserImagination}
+\end{figure}
+
+Here, the two parsers came up with a slightly different parse tree. Stanford's parser (Figure \ref{SParserImagination}) correctly took "The plans" to be a noun phrase, whereas the Berkeley parser (Figure \ref{BParserImagination}) took the word "plans" to be a verb phrase. 
+
+\subsection{Extra Credit}
+TurboParser does not give us a tree that is rooted at a root node. Instead, the tree separates phrases and seems to use the end words of each phrase to connect each phrase. In Figure \ref{turboParser}, there is no tree root, and the nodes VB, NNS, and VBP are in between each distinct phrase. 
+
+The Link Grammar Parser does something interesting, as shown in Figure \ref{lgParser}: it parses the sentence and identifies links between phrases / words in the sentence. Using this parse, the software creates a constituent tree, which looks much like the trees that we produced in homework 1.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=5in]{images/EC1TurboParser.png}
+\end{center}
+\caption{TurboParser Tree Diagram of a sample sentence.}
+\label{turboParser}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=5in]{images/EC1LinkGrammarParser.png}
+\end{center}
+\caption{LinkGrammarParser Tree Diagram of a sample sentence.}
+\label{lgParser}
+\end{figure}
+
+\section{Earley Parser Part 1}
+Run:
+
+python GrammarParsers.py papa.gr papa.sen
+
+Our output is like so:
+
+Processing: Papa ate the caviar with a spoon
+
+(ROOT	(S	(NP	Papa)
+
+$\tab \tab$(VP	(VP	(V	ate)
+        
+$\tab \tab$$\tab \tab$(NP	(Det	the)
+                
+$\tab \tab \tab$$\tab \tab$(N	caviar)))
+                    
+$\tab \tab \tab$(PP	(P	with)
+            
+$\tab \tab \tab \tab$(NP	(Det	a)
+                
+$\tab \tab \tab$$\tab \tab$(N	spoon))))))
+                    
+10.2173230517
+Time Elapsed: 0:00:00.002555
+
+Duplicate check in O(1): We are checking within the relevant hashed column to see if it has the key we want to enqueue yet. If it already exists in our chart, then we do not enqueue this rule to our chart.
+
+Adding entry in O(1): We have an enqueue method inside our Chart class. Here, we keep track of what column we are in currently. When we initialize our Chart, we keep a list of columns. It appends the current rule we want to add, to the column list with an append method call.
+
+We are constantly checking for weight updates in our parseSentence method, when attaching constituents with customers.
+
+\section{Earley Parser 2.0}
+
+Speedups used: 
+
+1. Using Pypy
+2. Keeping track of categories already predicted
+
+Processing: Papa ate the caviar with a spoon
+
+(ROOT	(S	(NP	Papa)
+
+$\tab \tab$(VP	(VP	(V	ate)
+        
+$\tab \tab$$\tab \tab$(NP	(Det	the)
+                
+$\tab \tab \tab$$\tab \tab$(N	caviar)))
+                    
+$\tab \tab \tab$(PP	(P	with)
+            
+$\tab \tab \tab \tab$(NP	(Det	a)
+                
+$\tab \tab \tab$$\tab \tab$(N	spoon))))))
+                    
+10.2173230517
+Time Elapsed: 0:00:00.002718
+
+wallstreet.sen took ????%
+many seconds to run with this sped-up Earley Parser.
+
+
+\begin{center}
+\textit{Used overleaf.com to generate LaTeX document.}
+\end{center}
+\end{document}
