@@ -76,8 +76,15 @@ class Parser:
                             newRule.upPointer = column[entry]
                             newRule.leftPointer = value
                             
-                            if not c.hashed_columns[i].has_key(newRule.toString()):
-                                c.enqueue(newRule, i)
+                            if (c.hashed_columns[column[entry].startIndex].has_key(newRule)):
+                                existing = c.hashed_columns[newRule]
+                                if (existing.weight > newRule.weight):
+                                    existing.weight = newRule.weight
+                                    existing.upPointer = newRule.upPointer
+                                    existing.leftPointer = value
+                            else:
+                                if not c.hashed_columns[i].has_key(newRule.toString()):
+                                    c.enqueue(newRule, i)
                     
                 elif gram.ruleDict.has_key(column[entry].symbolAfterDot()) and i  < len(c.column_list):
                     #PREDICT
