@@ -42,28 +42,26 @@ class Parser:
         
     
     def parseSentence(self, sentence, gram):
-#        print "ACTUALLY parse sentence here"
-#        for i in range(5):
-#            print "I is code monkey"
-
         #INITIALIZE EVERYTHING (and burn all the babies)
         sentence = sentence.split()
         
         c = Chart(gram, sentence)
         
-#        for value in gram.ruleDict["ROOT"]:
-#            print value.RHS
 
         for value in gram.ruleDict["ROOT"]:
             newRule = dottedRule("ROOT", value.prob, value.RHS, 0, 0, -1)
             c.enqueue(newRule, 0)
         
         for i in range(c.getColSize()):
-            #print "Processing Column: " + str(i)
             column = c.column_list[i]
             
             entry = 0
             columnHistory = set([])
+            
+            left_ancestor_pair_table = None
+            if (i < len(sentence)):
+                left_ancestor_pair_table = self.createLeftAncestorTable(gram, sentence[i])
+            
             while (entry < len(column)):
                 
                 if(column[entry].isComplete()):
@@ -85,16 +83,32 @@ class Parser:
                     #PREDICT
                     if column[entry].symbolAfterDot() not in columnHistory:
                         columnHistory.add(column[entry].symbolAfterDot())
-                        for value in gram.ruleDict[column[entry].symbolAfterDot()]:
-                            newRule = dottedRule(column[entry].symbolAfterDot(),
-                                                 value.prob,
-                                                 value.RHS,
-                                                 0, 
-                                                 i,
-                                                 -1)
-                            
-                            if not c.hashed_columns[i].has_key(newRule.toString()):
-                                c.enqueue(newRule, i)
+                        
+                        
+                        if (left_ancestor_pair_table is not None):
+                            if (left_ancestor_pair_table.has_key(column[entry].symbolAfterDot())):
+                                left_ancestors = left_ancestor_pair_table[column[entry].symbolAfterDot()]
+                                for value in left_ancestors:
+                                    for r in gram.prefixTable[(column[entry].symbolAfterDot(), value)]:
+                                        newRule = dottedRule(column[entry].symbolAfterDot(),
+                                                             r.prob,
+                                                             r.RHS,
+                                                             0,
+                                                             i,
+                                                             -1)
+                                        if not c.hashed_columns[i].has_key(newRule.toString()):
+                                            c.enqueue(newRule, i)
+                        else:
+                            for value in gram.ruleDict[column[entry].symbolAfterDot()]:
+                                newRule = dottedRule(column[entry].symbolAfterDot(),
+                                                     value.prob,
+                                                     value.RHS,
+                                                     0, 
+                                                     i,
+                                                     -1)
+                                
+                                if not c.hashed_columns[i].has_key(newRule.toString()):
+                                    c.enqueue(newRule, i)
                 else:
                     #Scan
                     if i < len(sentence) and str(column[entry].symbolAfterDot()) == str(sentence[i]):
@@ -174,7 +188,25 @@ class Parser:
             return ret
             
 
-
+    def createLeftAncestorTable(self, grammar, Y):
+        ancestors = dict()
+        processed = set([])
+        self.process_Y(grammar, ancestors, processed, Y)
+        return ancestors
+    
+    def process_Y(self, grammar, ancestors, processed, Y):
+        processed.add(Y)
+        
+        if (grammar.left_parent_table.has_key(Y)):
+            parents = grammar.left_parent_table[Y]
+            for value in parents:
+                if (ancestors.has_key(value)):
+                    ancestors[value].add(Y)
+                else:
+                    ancestors[value] = set([Y])
+                if(value not in processed):
+                    self.process_Y(grammar, ancestors, processed, value)
+                    
 
 
 

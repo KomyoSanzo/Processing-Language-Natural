@@ -16,6 +16,10 @@ import ParseClasses
 #NECESSARY CLASSES FOR GRAMMAR PARSING
 class grammarTree:
     ruleDict = dict()
+    prefixTable = dict()
+    left_parent_table = dict()
+    
+
 
 class Rule:
     prob = 0.0
@@ -40,13 +44,21 @@ def parseGrammar(file):
             #if this tree does not have this key already 
             if (not tree.ruleDict.has_key(LHS)):
                 tree.ruleDict[LHS] = []
-        
-            ########
-            #Will need to make changes HERE for dotted / non dotted rules yee...
+            if (not tree.prefixTable.has_key((LHS, splitLine[2]))):
+                tree.prefixTable[(LHS, splitLine[2])] = []
+            if (not tree.left_parent_table.has_key(splitLine[2])):
+                tree.left_parent_table[splitLine[2]] = set([])
+                
+            
             newRule = Rule()
             newRule.RHS = splitLine[2:len(splitLine)]
             newRule.prob = prob
+        
+            
             tree.ruleDict[LHS].append(newRule)
+            tree.prefixTable[(LHS, splitLine[2])].append(newRule)
+            tree.left_parent_table[splitLine[2]].add(LHS)
+            
     #return grammar
     return tree
 
