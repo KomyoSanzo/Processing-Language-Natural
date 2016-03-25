@@ -1,0 +1,52 @@
+\documentclass[12pt, letterpaper]{article}
+
+\usepackage{amsmath, amsthm, graphicx, float, verbatim, amssymb}
+
+\usepackage[]{algorithm2e}
+
+\title{Natural Language Processing Homework 4}
+
+\author{Katie Chang, Willis Wang}
+
+\begin{document}
+
+\maketitle
+
+README
+
+\section{State of the Art Parser}
+Discussion
+
+Using the Berkeley parser.
+
+(a) Was there anything interesting or surprising about the style of trees produced by the parser?
+
+(b) What were some things that the parser got wrong? What were some hard things that it managed to get right?
+
+(c) Can you stump it with a grammatical sentence that you make up? With a grammatical sentence that you find in an online document?
+
+\subsection{Extra Credit}
+TurboParser does not give us a tree that is rooted at a root node. Instead, the tree separates phrases and seems to use the end words of each phrase to connect each phrase. In Figure \ref{turboParser}, there is no tree root, and the nodes VB, NNS, and VBP are in between each distinct phrase. 
+
+The Link Grammar Parser does something interesting, as shown in Figure \ref{lgParser}: it parses the sentence and identifies links between phrases / words in the sentence. Using this parse, the software creates a constituent tree, which looks much like the trees that we produced in homework 1.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=5in]{images/EC1TurboParser.png}
+\end{center}
+\caption{TurboParser Tree Diagram of a sample sentence.}
+\label{turboParser}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=5in]{images/EC1LinkGrammarParser.png}
+\end{center}
+\caption{LinkGrammarParser Tree Diagram of a sample sentence.}
+\label{lgParser}
+\end{figure}
+
+\begin{center}
+\textit{Used overleaf.com to generate LaTeX document.}
+\end{center}
+\end{document}
