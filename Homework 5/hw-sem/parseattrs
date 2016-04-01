@@ -1,0 +1,12 @@
+#!/bin/bash
+# Usage: parseattrs foo.gra foo.sen
+# where foo.gra is a grammar file and foo.sen is a file of sentences
+#
+# Creates temporary files foo.gr and foo.par.  These are not deleted,
+# in case you want to look at them.
+
+FOO=${1%.gra}                    # base name of file (remove .gra suffix)
+./delattrs $1 > $FOO.gr &&       # produce an attributeless version of the grammar
+./checkvocab $FOO.gr $2 &&       # warn user and stop if input has out-of-vocab words
+./parse $FOO.gr $2 > $FOO.par && # parse sentences using this attributeless grammar
+./buildattrs $1 $FOO.par         # attach attributes to the parses

@@ -1,0 +1,462 @@
+#!/usr/bin/env perl
+
+# Usage: buildattrs foo.gra [foo.par]
+#
+# Used to compute attributes for parse trees (or smaller constituents,
+# which may be useful when you're testing your rules).  For example,
+# checks agreement and builds semantics.  Builds from the bottom up.
+#
+# foo.gra is a grammar file.  See arith.gra, arith-real.gra, and 
+# arith-infix.gra for commented examples of the file format.
+#
+# foo.par (or if omitted, the standard input) is a set of parses that
+# are legal under foo.gra when the attributes are ignored.  Ordinarily
+# this will be the output of your parser, which works with an attributeless
+# version of the grammar (produced with "delattrs foo.gra > foo.gr").
+#
+# The output for each parse is an indented trace, showing how the
+# attributes are built bottom-up.  At the end of the trace (before
+# "---" and not indented) are the attributes for the parse as a whole.
+#
+# WARNING: Unification is not deep: complex expressions like f(x) can
+# unify with variables but not with one another (unless
+# string-identical after simplification).  Moreover, only attribute
+# values and NOT unification relationships are preserved during the
+# bottom-up computation.  For example, the following will not work as
+# a rule for "the": 
+#    Det[num=n sem="%x the(n,x)"] the
+# Since nothing in this rule constrains n, the determiner will emerge
+# from it with no restriction on either num or sem.  The relation
+# between those two variables is then forgotten, so a later rule that
+# unifies the determiner's unrestricted num with "plural" (in a phrase
+# like "the pickles") will NOT make its sem into "%x the(plural,x)" as
+# intended.
+
+# Author: Jason Eisner <jason@cs.jhu.edu>, 2001-10-21, to support 600.465 HW3.
+
+# !!!TO DO SOMEDAY:
+# - Prettyprinting of attribute values, since the semantics gets complicated.  
+#   This requires support from the LambdaTerm module.
+# - Macros would be easy to implement and extremely helpful, both for
+#   constants (which are then treated as variables that start out
+#   bound) and for sets of attribute=value pairs (although these
+#   can already be simulated via inheritance through a unary rule).
+# - It would be nice to allow comments in foo.par, and to pass them
+#   through when they fall between parses.
+# - Maybe fix the limitation on unification discussed above.
+
+use warnings;
+use strict 'vars';
+use LambdaTerm qw(simplify simplify_safe freevars);
+
+my $grammarfile;
+sub BEGIN { $grammarfile = (@ARGV ? shift(@ARGV) : undef); }   # do this in BEGIN before -n tries to read $grammarfile
+
+die "Usage: $0 foo.gra [foo.par]\n" unless defined $grammarfile;
+
+$/="\0777";      # no input line separator
+my $trees = <>;  # slurp all input trees into one string
+
+$/ = "\n";       # back to normal input line separator
+my %grammar;     # global grammar
+my $indent = 0;  # global indentation level for output (measured in spaces)
+&readgrammar($grammarfile);
+
+&tokenize($trees);
+while (!&eotok) { # While there's something more to read
+  if (&peektok =~ /-?[0-9.]+/) {   #  a weight following a parse
+    &gettok;
+  } else {
+    if (&peektok =~ /NONE/i) {   # no parse found
+      print &gettok, "\n";
+    } else {
+      &constit;               # Do all the work and print the output.  (We'll just throw away return value.)
+    }
+    print "---\n";            # Print separator
+  }
+}                 # That's all folks
+
+# ----------------------------------------------------------------------
+# RECURSIVELY READ AND PROCESS TREE
+# ----------------------------------------------------------------------
+
+# Reads (and removes) a constituent from the front of @tokens.
+# Returns a list (category, fringe, attributes)
+# where category is the nonterminal category,
+#       fringe is a string representing the terminal fringe (plus a space)
+#       attributes is a reference to a hash table encoding the attributes.
+# 
+# Actually in general the result has the form
+#    (category, fringe, attributes1, attributes2, attributes3, ...)
+# since there may be different possible attribute assignments
+# (reflecting differently attributed versions of the same context-free rule)
+# or no assignments (if the attributes don't match and a rule can't be used).
+
+sub constit {
+
+  # Call constit1 to do the work.
+  $indent += 3;
+  my($cat, $fringe, @attrlist) = &constit1;
+  $indent -= 3;
+
+  # Print the result.
+  print " "x$indent, "$cat: $fringe\n";
+  if (@attrlist==0) {
+    print " "x$indent, "No consistent way to assign attributes!  (Maybe another parse?)\n";
+  } else {
+    my $header = "Attributes:";
+    foreach my $attr (@attrlist) {
+      print " "x$indent, $header;
+      while (my ($name,$val) = each %$attr) {
+	print " $name=$val";
+      }
+      print "\n";
+      $header = "Or:      ";   # for next time through, if any
+    }
+  }
+
+  return($cat, $fringe, @attrlist);
+}
+
+sub constit1 {
+  if (&peektok eq ")") {
+    die "$0: unexpected right parenthesis in parse\n";
+  } elsif (&peektok eq "(") {
+
+    &gettok;
+    my $rule = my $cat = &gettok;   # left-hand side category
+    die "$0: each constituent in parse must start with a nonterminal label\n" if $cat eq "(" || $cat eq ")";
+    my $fringe = "";
+    my @attrseqrefs = ([]);  # a cross-product of possibilities: if we have seen k RHS subconstits so far, each element is a ref to a length-k list giving possible attribute assignments to those k subconstits
+
+    # recurse on right-hand side
+    while (&peektok ne ")") {
+      # Read another subconstit
+      my($subcat,$subfringe,@subattrlist) = &constit;
+
+      # Extend rule and fringe with the new subconstit
+      $rule .= " ".$subcat;
+      $fringe .= $subfringe;
+
+      # Extend every attrseq we have so far in @attrseqrefs with 
+      # each possible attribute assignment on the new subconstit
+      my @newattrseqrefs = ();
+      foreach my $attrseqref (@attrseqrefs) {
+	foreach my $subattr (@subattrlist) {
+	  push(@newattrseqrefs, [@$attrseqref, $subattr]);
+	}
+      }
+      @attrseqrefs = @newattrseqrefs;
+    }
+    die "$0: missing right parenthesis\n" unless &gettok eq ")";
+
+    # Build result.
+    my @result = ($cat, $fringe);
+    foreach my $attrseqref (@attrseqrefs) {     # possible attribute assignments to subconstits
+      push @result, build($rule,@$attrseqref);  # build 0 or more resulting attribute assignments for main constit
+    }
+    return @result;
+
+  } else { # simple terminal symbol
+    my $token = &gettok;
+    if (defined simplify_safe($token)) {   # a well-formed lambda term that we can use as an attribute value?
+      return ($token, $token." ", {'head' => $token, 'sem' => $token});
+    } else {
+      return ($token, $token." ", +{});    # just return an empty attribute assignment in this case
+    }
+  }
+}
+
+# ----------------------------------------------------------------------
+# READ THE GRAMMAR
+# ----------------------------------------------------------------------
+
+sub readgrammar {    # reads into global %grammar
+  open(GRAMMAR,$_[0]) || die "$0: Can't open grammar file $_[0]\n";
+
+  print STDERR "$0: Reading grammar from $_[0] ... ";
+  while (<GRAMMAR>) {
+    chop;
+    s/#.*//;                   	   # kill comments (including end-of-line comments)
+    next unless /\S/;          	   # skip blank lines
+    s/^\s*[0-9]+\s+// || die "$0: grammar rule doesn't have a weight: $_\n";
+
+    # Quickly extract just the nonterminals from $frule.
+    my $frule = $_;        	   # full rule with attributes
+    s/"[^"]*"//g;                  # delete any quoted material (even if it contains unbalanced brackets)
+    while (s/\[[^][]*\]//g) {}     # repeatedly remove minimal balanced bracket pairs until all gone.  The outermost of these is the whole attribute spec.
+    my @rule = split;              # break into nonterminals
+    my $rule = join(" ",@rule);    # simple form of the rule, which we'll use for lookup
+
+    # parse the rule (and warn user of errors!) and store parsed version
+    # into our global %grammar.
+    push @{$grammar{$rule}}, parsefrule($frule,scalar @rule);  
+  }
+  print STDERR "done\n";
+}
+
+# For each nonterminal in $frule, turns the name-to-value mapping into
+# a "specref" (a pointer to a hash table).  $length is the rule length
+# including the left-hand side.  
+#
+# Also makes a hash table %varcount that records which symbols in
+# $frule are constants (because they appeared only once in the rule):
+# %varcount{"x"}==1 iff "x" is a constant.  (Constants may also appear
+# in the values to be substituted into $frule, but we don't count those!)
+#
+# Returns a ref to a list, consisting of a ref to %varcount followed by
+# all the specrefs.
+#
+# Tries to check syntax of the rule thoroughly to avoid problems later.
+  
+sub parsefrule {
+  my($frule, $length) = @_;
+  local($_) = $frule;
+  my(%varcount);       # counts number of times each variable or constant has appeared in rule
+  my(@specrefs);       # the answer: a list of name-to-value mappings, one for each nonterminal token in the rule
+  until (/^\s*$/) {    # for each nonterminal token
+    my %spec;                    # name-to-value mapping will go in here
+    s/^\s*([^][()\s]+)//         # eat leading nonterminal
+      || die "\n$0: grammar rule $frule is missing a nonterminal at $_\n";  
+    s/^\s*\[// || ($_ = (@specrefs==0 && $length==2) ? "=1]$_" : "]$_");  # eat [    (if there is none, pretend [] or [=1] was there; the latter case iff we are the LHS of a unary rule)
+
+    # read pairs until we find a close bracket
+    until (s/^\s*\]//) {       
+      # Read a name=expr pair.  The expr ends when we get to a space or close bracket,
+      # except that it (or arbitrary substrings of it) can be protected by single
+      # quotes, between which anything is allowed.   
+      s/^\s*([^][()\s=]*)\s*=\s*([^]"\s]*("[^"]*"[^]"\s]*)*)// || die "\n$0: grammar rule $frule\n     doesn't have expected attribute=value pair at $_\n     (you must put double quotes around values containing spaces or brackets)\n";
+      my ($name,$expr) = ($1,$2);
+      $expr =~ s/"//g;      # remove any quotes
+
+      # Store the name=expr pair into the hash table.
+      die "\n$0: two distinct specifications for same nonterminal's attribute $name in rule $frule\n" if defined $spec{$name} && $spec{$name} ne $expr;
+          # The only reason for this check is that since we're using a simple
+          # hash table here, we can't list two values for the same attribute --
+          # the unification code would happily process two values.
+          #
+          # The above disallows NP[foo=x foo=y] but not NP[foo=x foo=x].
+          # The latter has a kludgy use: to "mention" foo so that it will
+          # not be propagated to the parent along with unmentioned attributes.
+          # Simply doing NP[foo=x] won't cut it in this case because x is
+          # interpreted as a constant if only mentioned once.  One could
+          # invent a dummy attribute for this purpose, I guess ...
+      $spec{$name}=$expr;
+
+      # Check that pair is ok.
+      if ($name eq "") {    # =foo is not okay but =0 is
+	die "\n$0: =$expr is not allowed (only =i where i is a nonterminal index) in grammar rule $frule\n"
+	  unless $expr =~ /^[0-9]+$/ && $expr >= 0 && $expr < $length;
+      }
+
+      # Check syntax of $expr and keep track of how many times variables are mentioned.
+      # We do not count dummy variables in lambda terms!
+      # Numbers (which are references to attribute values of other nonterminals) 
+      #   are counted twice so that we will recognize them as variables.
+      my @freevars = eval { freevars($expr) };   # catch any error
+      if ($@) {                                  # freevars died; we caught the errmsg in $@
+	$@ =~ s/simplify: //;
+	die "\nError in attribute value \"$expr\" in rule $frule:\n   $@\n";
+      }
+      foreach my $var (@freevars) {
+	if ($var =~ /^[0-9]+$/) {
+	  die "\n$0: $name=$expr mentions number $var which is not a nonterminal index in grammar rule $frule\n"
+	    unless $var >= 0 && $var < $length;
+	  $varcount{$var}+=2;
+	} else {
+	  $varcount{$var}++;
+	}
+      }
+    }
+    push @specrefs,\%spec;
+  }
+
+  return [\%varcount,@specrefs];
+}
+
+# ----------------------------------------------------------------------
+# BUILDING ATTRIBUTES!
+# ----------------------------------------------------------------------
+
+# Given a rule and attribute assignments for the RHS, build and return
+# zero or more attribute assignments for the LHS (each expressed as a hash ref).
+#
+# The grammar may include multiple versions of the rule with different
+# attribute assignments, so try them all.  Any subset could succeed and
+# we return all the results.
+
+sub build {
+  my($rule,@attrs) = @_;
+  die "$0: grammar has no rule to do \"$rule\"\n" unless defined $grammar{$rule};
+
+  my @results;
+  my $i=0;
+  foreach my $pspecrefs (@{$grammar{$rule}}) {        # for each parsed full rule in grammar that specifies attributes for $rule
+    my @copiedattrs = map {copyhashref($_)} @attrs;   # copy the attrs first since build1 is destructive
+    my $result = build1($pspecrefs,+{},@copiedattrs); # see if we can get it to unify
+    if (defined $result) {
+      push @results, $result;
+    }
+  }
+  return @results;
+}
+
+# Given a single rule with attribute specifications, and initial attribute
+# assignments for all the nonterminals (including an empty set of
+# assignments for the LHS), perform unification and evaluation on the
+# attribute assignments according to the rule.  Return the LHS assignments.
+
+sub build1 {
+  my($pspecrefs,@attrs) = @_;
+  my @specrefs = @$pspecrefs;   
+  my $pvarcount = shift(@specrefs);
+  die "$0: internal error" unless @specrefs == @attrs;   # same length: number of nonterminals (including LHS)
+
+
+  # Find attribute names that are mentioned explicitly in the rule.
+  # We use this for specifications like =2, which inherits
+  # only attributes that are not mentioned explicitly anywhere in the rule.
+
+  my %explicitnames;
+  foreach (@specrefs) {
+    foreach (keys %$_) {
+      $explicitnames{$_} = 1;
+    }
+  }
+
+  # Go through rule and do the real work of unifying values --
+  # this both checks agreement and propagates attributes.
+  #
+  # The undefined value unifies with anything.  An expression such as
+  # x(y) is undefined if either x or y is.
+  #
+  # To avoid doing "real" unification, we just do it by propagation --
+  # repeatedly process all the equations until the values stop changing.  This is a 
+  # bit slow but is perfectly valid.
+  #
+  # Interesting cases that demonstrate the necessity of repeated processing
+  # (here foo is assumed NOT to be specified in @attrs passed up from below):
+  #  A[foo=1] --> B[foo=2] C[foo=3] D[foo=bar]
+  #  A --> B[foo=2] C[foo=1]
+  #
+  # parsefrule has already checked that the numeric references were in bounds.
+
+  my %binding;    # variable bindings
+  my @evaluated;  # same structure as @specrefs; maps a name to 1 if we've already bound it to some evaluated expression and we don't want to worry about it anymore
+  my $unicount;   
+  do {
+    $unicount = 0;
+    foreach my $i (0..$#specrefs) {   # both LHS and RHS
+      while (my($name,$expr)=each %{$specrefs[$i]}) {
+	if ($name eq "") {                 # =number
+	  # Do subname=number for all appropriate subnames.
+	  foreach my $subname (keys %{$attrs[$expr]}) {  # attributes of the constituent with that number
+	    unless ($explicitnames{$subname}) {
+	      $unicount += unify(${$attrs[$i]}{$subname}, ${$attrs[$expr]}{$subname});
+	    }
+	  }
+	} elsif ($expr =~ /^[0-9]+$/){     # name=number
+	  $unicount += unify(${$attrs[$i]}{$name}, ${$attrs[$expr]}{$name});
+	} elsif ($expr !~ /[^A-Za-z_']/) { # name=variable or name=constant -- simple case of epxression; if spelled funny we might not catch it here but it would fall through to general expression case below
+	  if ($$pvarcount{$expr}==1) {       # name=constant
+	    $unicount += unify(${$attrs[$i]}{$name}, $expr);
+	  } else {                           # name=variable
+	    $unicount += unify(${$attrs[$i]}{$name}, $binding{$expr});
+	  }
+	} elsif (defined ${$evaluated[$i]}{$name}) {  # name=expression that we already processed
+	  # do nothing
+	} else {	  	           # name=expression that has not yet been processed
+
+	  # Find variables in the expression and their current values.
+	  my @vars = grep($$pvarcount{$_}!=1, freevars($expr));       # select only variables among the free vars, not constants
+	  my @vals = map { /^[0-9]+$/ ? ${$attrs[$_]}{$name} : $binding{$_} } @vars;  # handle numeric variables specially
+
+	  # If they all have values, bind the variables in $expr to the values
+	  # and simplify.  We implement this directly by lambda binding; if we
+	  # were to use replacement, only PARALLEL replacement would be adequate,
+	  # since @vars and @vals are not necessarily disjoint sets.
+	  unless (grep(!defined($_), @vals)) {
+	    
+	    $expr = join(" ", map("%$_",@vars), $expr);  # make the free vars into formal args
+	    $expr = join("", map("($_)", $expr, @vals)); # give $expr all the values as arguments
+	    $expr = simplify($expr);                     # go ahead and substitute!  Any errors that happen here are probably bugs in simplify since parsefrule already checked the syntax of all the expressions in the grammar.
+	    $unicount += unify(${$attrs[$i]}{$name}, $expr);  # just as if $expr were constant.  In principle this could be used to constrain the evaluated value of $expr to equal some string (another attribute's value, maybe).
+
+	    # The result of evaluation will not change when we go
+	    # round the loop again (since all vars are instantiated),
+	    # so we don't want to have to reevaluate it next time
+	    # around, or print tracing info about the reevaluation.
+	    # So we'll just remember that we handled this one.
+	    # Note that this is a property not of the expression itself,
+	    # which might appear multiple times, but of this particular
+	    # INSTANCE of the expression.  We could just delete this
+	    # instance from @specrefs, but @specrefs shares structure
+	    # with %grammar so we'd have to copy stuff first.
+	    
+	    ${$evaluated[$i]}{$name} = 1;
+	  }
+	}
+      }
+    }
+    return undef if $unicount >= 1e6;   # something failed to unify
+  } until ($unicount==0);  # try again until nothing has changed
+
+  return $attrs[0];   # LHS attributes
+}
+
+
+# Tries to unify two lvalues.  Returns the number of values that
+# changed -- usually 0 or 1, but 1e6 on unification failure.
+
+sub unify {
+  if (defined $_[0]) {
+    if (defined $_[1]) {
+      return ($_[0] eq $_[1]) ? 0 : 1e6;
+    } else {
+      $_[1]=$_[0];
+      return 1;
+    }
+  } else {
+    if (defined $_[1]) {
+      $_[0]=$_[1];
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+}
+
+sub copyhashref {    # given a ref to a hash, returns a ref to a copy of the hash.  I can't find a way to do this without an assignment!
+  my($h) = @_;
+  my(%copy) = %$h;
+  \%copy;
+}
+
+
+# ----------------------------------------------------------------------
+# TOKENIZATION OF INPUT PARSE
+# ----------------------------------------------------------------------
+
+{
+  my @tokens;     # static variable used by following routines
+
+  sub tokenize {
+    my($string) = @_;
+    $string =~ s/[()]/ $& /g;    # put space around parens so they get treated as tokens
+    @tokens=split(" ",$string);  # tokenize input by splitting at spaces
+  }
+
+  sub peektok {
+    die "$0: unexpected end of input" unless @tokens;
+    return $tokens[0];
+  }
+
+  sub gettok {
+    die "$0: unexpected end of input" unless @tokens;
+    return shift(@tokens);
+  }
+  
+  sub eotok {
+    return (@tokens==0);
+  }
+}
