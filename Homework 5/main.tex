@@ -1,0 +1,104 @@
+\documentclass[12pt, letterpaper]{article}
+
+\usepackage{amsmath, amsthm, graphicx, float, verbatim, amssymb}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+\usepackage[]{algorithm2e}
+
+\title{Natural Language Processing Homework 5}
+
+\author{Katie Chang}
+
+\begin{document}
+
+\maketitle
+
+README
+
+\section{Simplify (Q2, no need to turn in)}
+Mostly just notes for myself
+
+check out d) ($\lambda$a a)($\lambda$b f(b))
+
+f), simplifying ($\lambda$x green(x))(y) = green(y).
+Since the result holds for any y, what can you conclude about the relation between $\lambda x green(x)$ and $green$?
+
+Same? $\lambda x green(x)$ applied to anything $y$ means that that something $y$ is green. Similarly, $green$ as a function can be applied to anything $z$ that is green. In any case, they refer to the same set of things??
+
+wait i don't get o)
+
+\section{(Q3) Simplify}
+
+\subsection{John and Mary**}
+Given $f(John = loves(Mary, John)$
+
+\begin{itemize}  
+\item ($\lambda x loves(Mary,x)$)(John)
+\item $loves(Mary, John)$ or alternatively, depending on semantics, "Mary loves John" or "John loves Mary".
+\ldots 
+\end{itemize}
+
+\subsection{John loves Mary***}
+%In our semantics, loves(Mary,John) will be the interpretation of “John loves Mary,” not vice-versa. This is just more convenient because then the VP in that sentence has a nice, compact semantics. Namely, what?
+
+\subsection{***}
+%f(John) = (∀x woman(x) ⇒ loves(x,John))
+
+\begin{itemize}  
+\item %what is f?
+($\lambda j \forall x woman(x) \Rightarrow loves(x,j)$) 
+\item %Translate f and f(John) into English.
+Assuming that we will continue with the given semantic that loves(Mary, John) means that John loves Mary.
+f : for all x, if x is a woman, then j loves x.
+f(John) : for all x, if x is a woman, then John loves x.
+\ldots 
+\end{itemize}
+
+\subsection{***}
+%Suppose f (λx loves(Mary, x)) = (λx Obviously(loves(M ary, x))). What is f and how would you use it in constructing the semantics of “Sue obviously loves Mary?” Hint: Review the pop/push slide near the end of the semantics lecture.
+
+f = $\lambda y$ Obviously(y)
+
+how to construct? use push/pop thing
+
+\subsection{part e}
+f = $\lambda m ( \lambda j ( \lambda e$ act(e, loving), lovee(e, m), lover(e, j)))
+
+\subsection{part f}
+%Suppose g(f(Mary))(John) = (λe act(e,loving),lovee(e,Mary),lover(e,John),manner(e,passionate)). What is g? Hint: Write out f(Mary), which is the meaning of “loves Mary.” g(f(Mary)) will be the meaning of “passionately loves Mary.” Again, think about the pop/push trick.
+
+\subsection{part g}
+
+
+
+
+\section{}
+I altered the parseattrs file to call
+$python parse$
+instead of $./parse$
+In order
+
+
+\section{english-fullquant.gra}
+\subsection{attr}
+%The new grammar gives pretty complicated semantic attributes to two and to singular and plural the. Justify the attributes it uses (i.e., explain what those lambda-terms mean). The ! symbol means “not.”
+
+%1 Det[=1 num=pl sem="%dom %pred E%first E%second [first!=second ^ dom(first)^dom(second)] ^ pred(first) ^ pred(second)"] two
+
+For $two$, we are ensuring that the two things that we are quantifying are not the same thing, with the $first$ and $second$ variables. Otherwise, we can end up counting a given something twice, which in reality then doesn't mean that we have two, but rather that we just counted one thing twice. 
+
+%1 Det[=1 num=sing sem="%dom %pred E%t [dom(t) ^ !E%u u!=t ^ dom(u)] ^ pred(t)"] the
+
+The singular $the$ idek
+"the book"
+
+%1 Det[=1 num=pl sem="%dom %pred E%T [exhaustive(T,dom)] ^ pred(T)"] the
+exhaustive 
+"the books"
+
+\subsection{???}
+
+\begin{center}
+\textit{Used overleaf.com to generate LaTeX document.}
+\end{center}
+\end{document}
