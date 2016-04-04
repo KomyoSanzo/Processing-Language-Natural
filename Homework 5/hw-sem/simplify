@@ -1,0 +1,38 @@
+#!/usr/bin/env perl
+
+# This program reads lambda terms from the standard input and prints
+# their simplifications on the standard output.  It's an easy way to
+# experiment with the lambda calculus.  You can type lambda as %.
+#
+# For example, if you type in "(%x x*x)(3)", the program will print "3*3".
+# What if you type in "(%x %y x*x + y*y)(3)"?
+# How about "(%x %y x*x + y*y)(3)(4+5)"?
+#
+# Here's a really, really complicated one to try out: 
+# You could represent the list "a,b,c" by the term %list list(a)(b)(c).
+# The term [%1 %2 %list 2(1(list))] is really a concatenation function
+# for such lists.  Try applying it to two of them as follows:
+#   [%1 %2 %list 2(1(list))] (%list list(a)(b)(c), %list list(x)(y))
+
+# If you want to type in expressions at the keyboard, try starting up a shell
+# in Emacs (by typing "ESC x shell RETURN") and running this program from there.
+# This will make it easier to edit your input, and to recall previous inputs
+# using ESC p ("previous") and ESC n ("next").
+
+# Please read the top of LambdaTerm.pm for more information about
+# what kinds of expressions are allowed and how they are evaluated.
+
+use warnings;
+use LambdaTerm 'simplify_safe';
+use bytes;
+
+while (<>) {
+  chomp;
+  my($result) = simplify_safe($_);
+  if (defined $result) {
+    print "Answer: $result\n";
+  } else {
+    print STDERR "Error: $@";
+  }
+}
+
