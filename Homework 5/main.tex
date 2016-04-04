@@ -29,7 +29,7 @@ wait i don't get o)
 
 \section{(Q3) Simplify}
 
-\subsection{John and Mary**}
+\subsection{John and Mary}
 Given $f(John = loves(Mary, John)$
 
 \begin{itemize}  
@@ -38,10 +38,12 @@ Given $f(John = loves(Mary, John)$
 \ldots 
 \end{itemize}
 
-\subsection{John loves Mary***}
+\subsection{John loves Mary}
 %In our semantics, loves(Mary,John) will be the interpretation of “John loves Mary,” not vice-versa. This is just more convenient because then the VP in that sentence has a nice, compact semantics. Namely, what?
 
-\subsection{***}
+Since loves(Mary, John) can equally mean "John loves Mary" OR "Mary loves John", we pick one interpretation to simplify the semantics. If we allow both meanings, then we end up with branching, which means twice as many ambiguous parses. 
+
+\subsection{}
 %f(John) = (∀x woman(x) ⇒ loves(x,John))
 
 \begin{itemize}  
@@ -49,17 +51,21 @@ Given $f(John = loves(Mary, John)$
 ($\lambda j \forall x woman(x) \Rightarrow loves(x,j)$) 
 \item %Translate f and f(John) into English.
 Assuming that we will continue with the given semantic that loves(Mary, John) means that John loves Mary.
+
 f : for all x, if x is a woman, then j loves x.
+
 f(John) : for all x, if x is a woman, then John loves x.
+
 \ldots 
 \end{itemize}
 
-\subsection{***}
-%Suppose f (λx loves(Mary, x)) = (λx Obviously(loves(M ary, x))). What is f and how would you use it in constructing the semantics of “Sue obviously loves Mary?” Hint: Review the pop/push slide near the end of the semantics lecture.
+\subsection{}
+%Suppose f (λx loves(Mary, x)) = (λx Obviously(loves(Mary, x))). What is f and how would you use it in constructing the semantics of “Sue obviously loves Mary” Hint: Review the pop/push slide near the end of the semantics lecture.
 
 f = $\lambda y$ Obviously(y)
 
-how to construct? use push/pop thing
+In order to construct "Sue obviously loves Mary", let y = ($\lambda x loves(Mary, x)$). Then we get 
+
 
 \subsection{part e}
 f = $\lambda m ( \lambda j ( \lambda e$ act(e, loving), lovee(e, m), lover(e, j)))
