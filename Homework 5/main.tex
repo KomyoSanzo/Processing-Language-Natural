@@ -35,13 +35,12 @@ Given $f(John = loves(Mary, John)$
 \begin{itemize}  
 \item ($\lambda x loves(Mary,x)$)(John)
 \item $loves(Mary, John)$ or alternatively, depending on semantics, "Mary loves John" or "John loves Mary".
-\ldots 
 \end{itemize}
 
 \subsection{John loves Mary}
 %In our semantics, loves(Mary,John) will be the interpretation of “John loves Mary,” not vice-versa. This is just more convenient because then the VP in that sentence has a nice, compact semantics. Namely, what?
 
-Since loves(Mary, John) can equally mean "John loves Mary" OR "Mary loves John", we pick one interpretation to simplify the semantics. If we allow both meanings, then we end up with branching, which means twice as many ambiguous parses. 
+With the parse tree given for this sentence (as it's in in the semantics slideshow page 52), $\lambda x$ represents "John" and is the NP and $\lambda y$ represents Mary in the VP "loves Mary". If it is flipped, then the parse tree would be different. Furthermore, we'd have to deal with a change in the order we parse. If the meaning is flipped, we'd have to handle $\lambda y$ first, however that is impossible because $\lambda x$ is outside and thus has to be handled first.
 
 \subsection{}
 %f(John) = (∀x woman(x) ⇒ loves(x,John))
@@ -56,15 +55,16 @@ f : for all x, if x is a woman, then j loves x.
 
 f(John) : for all x, if x is a woman, then John loves x.
 
-\ldots 
 \end{itemize}
 
-\subsection{}
+\subsection{***part d}
 %Suppose f (λx loves(Mary, x)) = (λx Obviously(loves(Mary, x))). What is f and how would you use it in constructing the semantics of “Sue obviously loves Mary” Hint: Review the pop/push slide near the end of the semantics lecture.
 
 f = $\lambda y$ Obviously(y)
 
 In order to construct "Sue obviously loves Mary", let y = ($\lambda x loves(Mary, x)$). Then we get 
+
+f($\lambda x loves(Mary, x)$) = 
 
 
 \subsection{part e}
@@ -78,20 +78,18 @@ f = $\lambda m ( \lambda j ( \lambda e$ act(e, loving), lovee(e, m), lover(e, j)
 
 
 
-\section{}
-I altered the parseattrs file to call
-$python parse$
-instead of $./parse$
-In order
+\section{Q4}
+
+\section{Q5}
 
 
-\section{english-fullquant.gra}
+\section{Q6 : english-fullquant.gra}
 \subsection{attr}
 %The new grammar gives pretty complicated semantic attributes to two and to singular and plural the. Justify the attributes it uses (i.e., explain what those lambda-terms mean). The ! symbol means “not.”
 
 %1 Det[=1 num=pl sem="%dom %pred E%first E%second [first!=second ^ dom(first)^dom(second)] ^ pred(first) ^ pred(second)"] two
 
-For $two$, we are ensuring that the two things that we are quantifying are not the same thing, with the $first$ and $second$ variables. Otherwise, we can end up counting a given something twice, which in reality then doesn't mean that we have two, but rather that we just counted one thing twice. 
+For $two$, we are ensuring that the two things that we are quantifying are not the same thing, with the $first$ and $second$ quantifiers on the $dom$ and $pred$ variables. Otherwise, we can end up counting a given something twice, which in reality then doesn't mean that we have two, but rather that we just counted one thing twice. 
 
 %1 Det[=1 num=sing sem="%dom %pred E%t [dom(t) ^ !E%u u!=t ^ dom(u)] ^ pred(t)"] the
 
