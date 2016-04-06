@@ -130,7 +130,7 @@
 1 V[=1 tense=presp]	V[tense=stem] -ing
 1 V[=1 tense=pres num=sing]	V[tense=stem] -s
 1 V[=1 tense=pres num=pl]	V[tense=stem] -0   # -0 is an "empty morpheme"
-1 V[=2 tense=inf num=pl]	to V[tense=stem]
+1 V[=2 tense=inf]	to V[tense=stem]
 
 # For the auxiliary verbs "have" and "be," we'll also put all the
 # (3rd-person) inflected forms directly into the grammar, so that the
@@ -177,8 +177,8 @@
 1 V[=1 tense=stem arg=sbar sem="%prop %subj 1(prop, subj)"] say         # that ...
 1 V[=1 tense=stem arg=sbar sem="%prop %subj 1(prop, subj)"] understand  # that ...
 1 V[=1 tense=stem arg=np sem="%obj %subj 1(obj,subj)"]	   understand   # the president
-1 V[=1 tense=stem arg=np num=sing sem="%obj %subj 1(obj,subj)"]		entice
-1 V[=1 tense=stem arg=none num=sing sem="%subj 1(SOMETHING,subj)"]	entice
+1 V[=1 tense=stem arg=np sem="%obj %subj 1(obj,subj)"]		entice
+1 V[=1 tense=stem arg=none sem="%subj 1(SOMETHING,subj)"]	entice
 
 
 # Some NPs, including both proper names and (3rd-person) pronouns.  We treat 
@@ -192,8 +192,8 @@
 1 NP[=1 num=sing case=subj sem=her] she        
 1 NP[=1 num=sing case=obj] him
 1 NP[=1 num=sing case=subj sem=him] he
-1 NP[=1 num=pl case=subj] it
-1 NP[=1 num=pl case=obj] it
+1 NP[=1 num=sing case=subj] it
+1 NP[=1 num=sing case=obj] it
 1 NP[=1 num=pl case=subj] they
 1 NP[=1 num=pl case=obj head=them sem=them] them
 
