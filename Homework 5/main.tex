@@ -15,17 +15,17 @@
 
 README
 
-\section{Simplify (Q2, no need to turn in)}
-Mostly just notes for myself
+%\section{Simplify (Q2, no need to turn in)}
+%Mostly just notes for myself
 
-check out d) ($\lambda$a a)($\lambda$b f(b))
+%check out d) ($\lambda$a a)($\lambda$b f(b))
 
-f), simplifying ($\lambda$x green(x))(y) = green(y).
-Since the result holds for any y, what can you conclude about the relation between $\lambda x green(x)$ and $green$?
+%f), simplifying ($\lambda$x green(x))(y) = green(y).
+%Since the result holds for any y, what can you conclude about the relation between $\lambda x green(x)$ and $green$?
 
-Same? $\lambda x green(x)$ applied to anything $y$ means that that something $y$ is green. Similarly, $green$ as a function can be applied to anything $z$ that is green. In any case, they refer to the same set of things??
+%Same? $\lambda x green(x)$ applied to anything $y$ means that that something $y$ is green. Similarly, $green$ as a function can be applied to anything $z$ that is green. In any case, they refer to the same set of things??
 
-wait i don't get o)
+%wait i don't get o)
 
 \section{(Q3) Simplify}
 
@@ -37,12 +37,14 @@ Given $f(John = loves(Mary, John)$
 \item $loves(Mary, John)$ or alternatively, depending on semantics, "Mary loves John" or "John loves Mary".
 \end{itemize}
 
-\subsection{John loves Mary}
+\subsection{part b}
 %In our semantics, loves(Mary,John) will be the interpretation of “John loves Mary,” not vice-versa. This is just more convenient because then the VP in that sentence has a nice, compact semantics. Namely, what?
 
-With the parse tree given for this sentence (as it's in in the semantics slideshow page 52), $\lambda x$ represents "John" and is the NP and $\lambda y$ represents Mary in the VP "loves Mary". If it is flipped, then the parse tree would be different. Furthermore, we'd have to deal with a change in the order we parse. If the meaning is flipped, we'd have to handle $\lambda y$ first, however that is impossible because $\lambda x$ is outside and thus has to be handled first.
+%With the parse tree given for this sentence (as it's in in the semantics slideshow page 52), $\lambda x$ represents "John" and is the NP and $\lambda y$ represents Mary in the VP "loves Mary". If it is flipped, then the parse tree would be different. Furthermore, we'd have to deal with a change in the order we parse. If the meaning is flipped, we'd have to handle $\lambda y$ first, however that is impossible because $\lambda x$ is outside and thus has to be handled first.
 
-\subsection{}
+$\lambda y$ loves(Mary, y)
+
+\subsection{part c}
 %f(John) = (∀x woman(x) ⇒ loves(x,John))
 
 \begin{itemize}  
@@ -57,35 +59,60 @@ f(John) : for all x, if x is a woman, then John loves x.
 
 \end{itemize}
 
-\subsection{***part d}
-%Suppose f (λx loves(Mary, x)) = (λx Obviously(loves(Mary, x))). What is f and how would you use it in constructing the semantics of “Sue obviously loves Mary” Hint: Review the pop/push slide near the end of the semantics lecture.
+\subsection{part d}
 
-f = $\lambda y$ Obviously(y)
+f = $\lambda y$ $\lambda x$ Obviously(y(x))
 
-In order to construct "Sue obviously loves Mary", let y = ($\lambda x loves(Mary, x)$). Then we get 
-
-f($\lambda x loves(Mary, x)$) = 
-
+In order to construct "Sue obviously loves Mary", let y = ($\lambda x loves(Mary, x)$). This maintains the encapsulation of the $\lambda x$ within the Obviously() semantic. 
 
 \subsection{part e}
 f = $\lambda m ( \lambda j ( \lambda e$ act(e, loving), lovee(e, m), lover(e, j)))
 
 \subsection{part f}
-%Suppose g(f(Mary))(John) = (λe act(e,loving),lovee(e,Mary),lover(e,John),manner(e,passionate)). What is g? Hint: Write out f(Mary), which is the meaning of “loves Mary.” g(f(Mary)) will be the meaning of “passionately loves Mary.” Again, think about the pop/push trick.
+
+g = $\lambda f \lambda y \lambda e$ $f(y)(e)$, manner(e, passionate)
 
 \subsection{part g}
 
+i. f = $\lambda x \forall y$ woman(y) $\Rightarrow$ x(y)
 
+ii. 
 
+For all y, if y is a woman then y loves Mary.
+
+x loves Mary.
+
+For all y, if y is a woman then x(y).
+
+\subsection{part h}
+
+i. g = $\lambda f \lambda x \forall y$ f(y) $\Rightarrow$ x(y)
+
+ii. "Every"
+
+\subsection{part i}
+
+i. $\lambda y$ y(Papa)
+
+ii. %funny semantics?
 
 \section{Q4}
 
 \section{Q5}
+Included in the submission is the file
 
+question5english.gra
+
+which includes the changes to accommodate for mass nouns.
+
+Also included is a small sentence file (question5english.sen) with three sentences that can be built with buildattrs and one that cannot. 
+
+We are able to say that "someone ate the caviar". However, due to semantics, we can't say "someone ate caviar", since mass nouns do have to be able to represent both single and plural nouns in a way. While this sentence works grammatically for plural nouns, it doesn't work for singular nouns. 
+
+This grammar works with the sentence "All caviar is delicious".
 
 \section{Q6 : english-fullquant.gra}
 \subsection{attr}
-%The new grammar gives pretty complicated semantic attributes to two and to singular and plural the. Justify the attributes it uses (i.e., explain what those lambda-terms mean). The ! symbol means “not.”
 
 %1 Det[=1 num=pl sem="%dom %pred E%first E%second [first!=second ^ dom(first)^dom(second)] ^ pred(first) ^ pred(second)"] two
 
@@ -93,14 +120,18 @@ For $two$, we are ensuring that the two things that we are quantifying are not t
 
 %1 Det[=1 num=sing sem="%dom %pred E%t [dom(t) ^ !E%u u!=t ^ dom(u)] ^ pred(t)"] the
 
-The singular $the$ idek
-"the book"
+The singular $the$ has semantics that ensure that, while there are two objects $t$ and $u$, the object that this 'the' determinant is operating on is $t$ and not on $u$. 
+
+For example, let t = a book, and let u = a book, where t != u. We want to identify a specific book $t$, and no other book. 
 
 %1 Det[=1 num=pl sem="%dom %pred E%T [exhaustive(T,dom)] ^ pred(T)"] the
-exhaustive 
-"the books"
+
+The plural $the$ has semantics that states that the determinant applies to the exhaustive set of objects of which we want to apply $the$ on. 
+
+Taking the book example again, we are applying $the$ to a whole set of books (within reason, ie. all of the books on a bookshelf). 
 
 \subsection{???}
+Edited in english-fullquant.par. %BUT NOT YET
 
 \begin{center}
 \textit{Used overleaf.com to generate LaTeX document.}
