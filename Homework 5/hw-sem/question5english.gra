@@ -133,6 +133,7 @@
 1 V[=1 tense=pastp]	V[tense=stem] -ed 
 1 V[=1 tense=presp]	V[tense=stem] -ing
 1 V[=1 tense=pres num=sing]	V[tense=stem] -s
+1 V[=1 tense=pres num=mass]     V[tense=stem] -s
 1 V[=1 tense=pres num=pl]	V[tense=stem] -0   # -0 is an "empty morpheme"
 1 V[=2 tense=inf num=pl]	to V[tense=stem]
 
@@ -151,13 +152,16 @@
 1 V[head=have arg=np sem=possess tense=presp]		having
 1 V[head=have arg=np sem=possess tense=pres num=sing]	has
 1 V[head=have arg=np sem=possess tense=pres num=pl]	have
+1 V[head=have arg=np sem=possess tense=pres num=mass]     have   #added for mass N
 
 1 V[head=be arg=pred sem="%pred %subj pred(subj)" tense=stem] 		be
 1 V[head=be arg=pred sem="%pred %subj pred(subj)" tense=past num=sing] 	was
+1 V[head=be arg=pred sem="%pred %subj pred(subj)" tense=past num=mass]  was   # added for mass N
 1 V[head=be arg=pred sem="%pred %subj pred(subj)" tense=past num=pl] 	were
 1 V[head=be arg=pred sem="%pred %subj pred(subj)" tense=pastp] 		been
 1 V[head=be arg=pred sem="%pred %subj pred(subj)" tense=presp] 		being
 1 V[head=be arg=pred sem="%pred %subj pred(subj)" tense=pres num=sing] 	is
+1 V[head=be arg=pred sem="%pred %subj pred(subj)" tense=pres num=mass]  is  # added for mass N
 1 V[head=be arg=pred sem="%pred %subj pred(subj)" tense=pres num=pl] 	are
 
 1 V[=1 arg=none tense=stem sem="%subj 1(subj)"] go    
@@ -205,6 +209,7 @@
 # For nouns, we need a little morphology to handle plurals.
 
 1 N[=1 num=pl] N[num=sing] -s     # morphology
+1 N[=1 num=pl] N[num=mass] -s	  # added for mass N?
 
 1 N[=1 num=sing] bonbon
 1 N[=1 num=sing] spoon
@@ -234,7 +239,7 @@
 1 Det[=1 num=sing sem=some]      some  # same as "a"
 1 Det[=1 num=pl sem=some_plural] some  # different sem from singular some, 
 	                               #   since "some cat" != "some cats"
-1 Det[=1 num=mass sem=some_mass  some  # add for mass N
+1 Det[=1 num=mass sem=some_mass]  some  # add for mass N
 1 Det[=1 num=sing sem=the]       the   
 1 Det[=1 num=pl sem=the_plural]  the   # different semantics from singular the
 1 Det[=1 num=mass sem=the_mass]  the   # add for mass N

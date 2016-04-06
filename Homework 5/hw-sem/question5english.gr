@@ -24,32 +24,32 @@
 0.125	Modal	might
 0.125	Modal	may
 0.125	Modal	must
-0.0588	V	V -ed
-0.0294	V	V -ing
-0.0294	V	V -s
-0.0294	V	V -0
-0.0294	V	to V
-0.0588	V	have
-0.0588	V	had
-0.0294	V	having
-0.0294	V	has
-0.0294	V	be
-0.0294	V	was
-0.0294	V	were
-0.0294	V	been
-0.0294	V	being
-0.0294	V	is
-0.0294	V	are
-0.0294	V	go
-0.0294	V	sleep
-0.0294	V	kiss
-0.0294	V	love
-0.0294	V	spoon
-0.0588	V	eat
-0.0882	V	want
-0.0294	V	say
-0.0588	V	understand
-0.0588	V	entice
+0.0541	V	V -ed
+0.027	V	V -ing
+0.027	V	V -s
+0.027	V	V -0
+0.027	V	to V
+0.0811	V	have
+0.0541	V	had
+0.027	V	having
+0.027	V	has
+0.027	V	be
+0.0541	V	was
+0.027	V	were
+0.027	V	been
+0.027	V	being
+0.0541	V	is
+0.027	V	are
+0.027	V	go
+0.027	V	sleep
+0.027	V	kiss
+0.027	V	love
+0.027	V	spoon
+0.0541	V	eat
+0.0811	V	want
+0.027	V	say
+0.0541	V	understand
+0.0541	V	entice
 0.0667	NP	Papa
 0.0667	NP	George
 0.0667	NP	Laura

@@ -1,0 +1,12 @@
+(ROOT	(S	(NP	(Det	the )(N	caviar ))(VP	(V	(V	entice )-s ))). )
+
+23.8867390934
+(ROOT	(S	(NP	he )(VP	(V	(V	eat )-ed )(NP	(Det	the )(N	caviar )))). )
+
+26.790239335
+(ROOT	(S	(NP	he )(VP	(V	(V	eat )-ed )(N	caviar ))). )
+
+21.5248947684
+(ROOT	(S	(NP	(Det	all )(N	caviar ))(VP	(V	is )(Adj	delicious ))). )
+
+22.0611795759
