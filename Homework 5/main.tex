@@ -44,6 +44,8 @@ Given $f(John = loves(Mary, John)$
 
 $\lambda y$ loves(Mary, y)
 
+V NP
+
 \subsection{part c}
 %f(John) = (∀x woman(x) ⇒ loves(x,John))
 
@@ -53,9 +55,9 @@ $\lambda y$ loves(Mary, y)
 \item %Translate f and f(John) into English.
 Assuming that we will continue with the given semantic that loves(Mary, John) means that John loves Mary.
 
-f : for all x, if x is a woman, then j loves x.
+f : loves every woman.
 
-f(John) : for all x, if x is a woman, then John loves x.
+f(John) : John loves every woman.
 
 \end{itemize}
 
@@ -63,7 +65,7 @@ f(John) : for all x, if x is a woman, then John loves x.
 
 f = $\lambda y$ $\lambda x$ Obviously(y(x))
 
-In order to construct "Sue obviously loves Mary", let y = ($\lambda x loves(Mary, x)$). This maintains the encapsulation of the $\lambda x$ within the Obviously() semantic. 
+In order to construct "Sue obviously loves Mary", let y = ($\lambda x loves(Mary, x)$)(Sue). This maintains the encapsulation of the $\lambda x$ within the Obviously() semantic. 
 
 \subsection{part e}
 f = $\lambda m ( \lambda j ( \lambda e$ act(e, loving), lovee(e, m), lover(e, j)))
@@ -78,11 +80,11 @@ i. f = $\lambda x \forall y$ woman(y) $\Rightarrow$ x(y)
 
 ii. 
 
-For all y, if y is a woman then y loves Mary.
+Every woman loves Mary.
 
-x loves Mary.
+Loves Mary.
 
-For all y, if y is a woman then x(y).
+Every woman.
 
 \subsection{part h}
 
@@ -94,7 +96,7 @@ ii. "Every"
 
 i. $\lambda y$ y(Papa)
 
-ii. %funny semantics?
+ii. Giving Papa these funny semantics specifies exactly how we will use Papa in a consistent way. This way, we won't have to worry about having separate rules such as NP goes to Det Noun that end in Papa as a terminal without a Det.
 
 \section{Q4}
 
@@ -116,22 +118,22 @@ This grammar works with the sentence "All caviar is delicious".
 
 %1 Det[=1 num=pl sem="%dom %pred E%first E%second [first!=second ^ dom(first)^dom(second)] ^ pred(first) ^ pred(second)"] two
 
-For $two$, we are ensuring that the two things that we are quantifying are not the same thing, with the $first$ and $second$ quantifiers on the $dom$ and $pred$ variables. Otherwise, we can end up counting a given something twice, which in reality then doesn't mean that we have two, but rather that we just counted one thing twice. 
+For $two$, we are ensuring that the two things that we are quantifying are not the same thing, with the $first$ and $second$ quantifiers on the $domain$ restriction, and that the $predicate$ applies to both things. Otherwise, we can end up counting a given something twice, which in reality then doesn't mean that we have two, but rather that we just counted one thing twice. 
 
 %1 Det[=1 num=sing sem="%dom %pred E%t [dom(t) ^ !E%u u!=t ^ dom(u)] ^ pred(t)"] the
 
-The singular $the$ has semantics that ensure that, while there are two objects $t$ and $u$, the object that this 'the' determinant is operating on is $t$ and not on $u$. 
+The singular $the$ has semantics that ensure that, while there are two different objects $t$ and $u$, the object that this $predicate$ is operating on is $t$ and not on $u$. 
 
 For example, let t = a book, and let u = a book, where t != u. We want to identify a specific book $t$, and no other book. 
 
 %1 Det[=1 num=pl sem="%dom %pred E%T [exhaustive(T,dom)] ^ pred(T)"] the
 
-The plural $the$ has semantics that states that the determinant applies to the exhaustive set of objects of which we want to apply $the$ on. 
+The plural $the$ has semantics that states that the determinant applies to the exhaustive set of objects on which the $predicate$ applies.
 
 Taking the book example again, we are applying $the$ to a whole set of books (within reason, ie. all of the books on a bookshelf). 
 
 \subsection{???}
-Edited in english-fullquant.par. %BUT NOT YET
+Edited in english-fullquant.par.
 
 \begin{center}
 \textit{Used overleaf.com to generate LaTeX document.}
