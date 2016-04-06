@@ -1,346 +1,66 @@
-Processing: George love -s Laura .
-(ROOT	(S	(NP	George)
-		(VP	(V	(V	love)
-				-
-				s)
-			(NP	Laura)))
-	.
-	)
+(ROOT	(S	(NP	George )(VP	(V	(V	love )-s )(NP	Laura ))). )
+
 22.9721632857
-Time Elapsed: 0:00:00.018810
+(ROOT	(S	(NP	he )(VP	(V	(V	love )-s )(NP	her ))). )
 
-
-
-Processing: he love -s her .
-(ROOT	(S	(NP	he)
-		(VP	(V	(V	love)
-				-
-				s)
-			(NP	her)))
-	.
-	)
 22.9721632857
-Time Elapsed: 0:00:00.013981
+(ROOT	(S	(NP	him )(VP	(V	(V	love )-s )(NP	she ))). )
 
-
-
-Processing: him love -s she .
-(ROOT	(S	(NP	him)
-		(VP	(V	(V	love)
-				-
-				s)
-			(NP	she)))
-	.
-	)
 22.9721632857
-Time Elapsed: 0:00:00.012067
+(ROOT	(S	(NP	Papa )(VP	(VP	(V	(V	sleep )-s ))(PP	(P	with )(NP	(Det	a )(N	spoon ))))). )
 
-
-
-Processing: Papa sleep -s with a spoon .
-(ROOT	(S	(NP	Papa)
-		(VP	(VP	(V	(V	sleep)
-					-
-					s))
-			(PP	(P	with)
-				(NP	(Det	a)
-					(N	spoon)))))
-	.
-	)
 36.8909361224
-Time Elapsed: 0:00:00.010057
+(ROOT	(S	(NP	Papa )(VP	(VP	(V	(V	eat )-ed ))(PP	(P	with )(NP	(Det	a )(N	spoon ))))). )
 
-
-
-Processing: Papa eat -ed with a spoon .
-(ROOT	(S	(NP	Papa)
-		(VP	(VP	(V	(V	eat)
-					-
-					ed))
-			(PP	(P	with)
-				(NP	(Det	a)
-					(N	spoon)))))
-	.
-	)
 34.8909361224
-Time Elapsed: 0:00:00.012106
+(ROOT	(S	(NP	Papa )(VP	(VP	(V	(V	sleep )-s )(NP	(Det	every )(N	bonbon )))(PP	(P	with )(NP	(Det	a )(N	spoon ))))). )
 
-
-
-Processing: Papa sleep -s every bonbon with a spoon .
-(ROOT	(S	(NP	Papa)
-		(VP	(VP	(V	(V	sleep)
-					-
-					s)
-				(NP	(Det	every)
-					(N	bonbon)))
-			(PP	(P	with)
-				(NP	(Det	a)
-					(N	spoon)))))
-	.
-	)
 48.3807213403
-Time Elapsed: 0:00:00.014946
+(ROOT	(S	(NP	Papa )(VP	(VP	(V	(V	eat )-ed )(NP	(Det	every )(N	bonbon )))(PP	(P	with )(NP	(Det	a )(N	spoon ))))). )
 
-
-
-Processing: Papa eat -ed every bonbon with a spoon .
-(ROOT	(S	(NP	Papa)
-		(VP	(VP	(V	(V	eat)
-					-
-					ed)
-				(NP	(Det	every)
-					(N	bonbon)))
-			(PP	(P	with)
-				(NP	(Det	a)
-					(N	spoon)))))
-	.
-	)
 46.3807213403
-Time Elapsed: 0:00:00.020604
+(ROOT	(VP	(V	have )(NP	(Det	a )(N	bonbon )))! )
 
-
-
-Processing: have a bonbon !
-(ROOT	(VP	(V	have)
-		(NP	(Det	a)
-			(N	bonbon)))
-	!
-	)
 20.9721632857
-Time Elapsed: 0:00:00.008329
+(ROOT	(S	(NP	(Det	a )(N	(N	bonbon )(PP	(P	on )(NP	(Det	the )(N	spoon )))))(VP	(V	(V	entice )-s ))). )
 
-
-
-Processing: a bonbon on the spoon entice -s .
-(ROOT	(S	(NP	(Det	a)
-			(N	(N	bonbon)
-				(PP	(P	on)
-					(NP	(Det	the)
-						(N	spoon)))))
-		(VP	(V	(V	entice)
-				-
-				s)))
-	.
-	)
 42.5678904254
-Time Elapsed: 0:00:00.013474
+(ROOT	(S	(NP	(Det	a )(N	(N	bonbon )(PP	(P	on )(NP	(Det	the )(N	spoon )))))(VP	(V	(V	entice )-0 ))). )
 
-
-
-Processing: a bonbon on the spoon entice -0 .
-(ROOT	(S	(NP	(Det	a)
-			(N	(N	bonbon)
-				(PP	(P	on)
-					(NP	(Det	the)
-						(N	spoon)))))
-		(VP	(V	(V	entice)
-				-
-				0)))
-	.
-	)
 42.5678904254
-Time Elapsed: 0:00:00.017019
+(ROOT	(S	(NP	(Det	the )(N	(N	(N	bonbon )-s )(PP	(P	on )(NP	(Det	the )(N	spoon )))))(VP	(V	(V	entice )-0 ))). )
 
-
-
-Processing: the bonbon -s on the spoon entice -0 .
-(ROOT	(S	(NP	(Det	the)
-			(N	(N	(N	bonbon)
-					-
-					s)
-				(PP	(P	on)
-					(NP	(Det	the)
-						(N	spoon)))))
-		(VP	(V	(V	entice)
-				-
-				0)))
-	.
-	)
 45.2638642176
-Time Elapsed: 0:00:00.017413
+(ROOT	(S	(NP	George )(VP	(V	(V	kiss )-ed )(NP	(Det	every )(N	chief of staff )))). )
 
-
-
-Processing: George kiss -ed every chief of staff .
-(ROOT	(S	(NP	George)
-		(VP	(V	(V	kiss)
-				-
-				ed)
-			(NP	(Det	every)
-				(N	chiefofstaff))))
-	.
-	)
 29.761075912
-Time Elapsed: 0:00:00.014399
+(ROOT	(S	(NP	Laura )(VP	(VP	(V	(V	say )-s )(SBAR	that (S	(NP	George )(VP	(Modal	might )(VP	(V	sleep ))))))(PP	(P	on )(NP	(Det	the )(N	floor )))))! )
 
-
-
-Processing: Laura say -s that George might sleep on the floor !
-(ROOT	(S	(NP	Laura)
-		(VP	(VP	(V	(V	say)
-					-
-					s)
-				(SBAR	that(S	(NP	George)
-						(VP	(Modal	might)
-							(VP	(V	sleep))))))
-			(PP	(P	on)
-				(NP	(Det	the)
-					(N	floor)))))
-	!
-	)
 55.2908141803
-Time Elapsed: 0:00:00.018149
+(ROOT	(S	(NP	(Det	the )(N	(Adj	perplexed )(N	president )))(VP	(V	(V	eat )-ed )(NP	(Det	a )(N	pickle )))). )
 
-
-
-Processing: the perplexed president eat -ed a pickle .
-(ROOT	(S	(NP	(Det	the)
-			(N	(Adj	perplexed)
-				(N	president)))
-		(VP	(V	(V	eat)
-				-
-				ed)
-			(NP	(Det	a)
-				(N	pickle))))
-	.
-	)
 42.0518752784
-Time Elapsed: 0:00:00.017515
+(ROOT	(S	(NP	Papa )(VP	(V	is )(Adj	perplexed ))). )
 
-
-
-Processing: Papa is perplexed .
-(ROOT	(S	(NP	Papa)
-		(VP	(V	is)
-			(Adj	perplexed)))
-	.
-	)
 16.9891636073
-Time Elapsed: 0:00:00.007061
+(ROOT	(S	(NP	Papa )(VP	(V	is )(N	chief of staff ))). )
 
-
-
-Processing: Papa is chief of staff .
-(ROOT	(S	(NP	Papa)
-		(VP	(V	is)
-			(N	chiefofstaff)))
-	.
-	)
 17.884123251
-Time Elapsed: 0:00:00.006598
+(ROOT	(S	(NP	Papa )(VP	(V	(V	want )-ed )(NP	(Det	a )(N	sandwich )))). )
 
-
-
-Processing: Papa want -ed a sandwich .
-(ROOT	(S	(NP	Papa)
-		(VP	(V	(V	want)
-				-
-				ed)
-			(NP	(Det	a)
-				(N	sandwich))))
-	.
-	)
 28.1761134113
-Time Elapsed: 0:00:00.011119
+(ROOT	(S	(NP	Papa )(VP	(V	(V	want )-ed )(VP	(V	to (V	eat ))(NP	(Det	a )(N	sandwich ))))). )
 
-
-
-Processing: Papa want -ed to eat a sandwich .
-(ROOT	(S	(NP	Papa)
-		(VP	(V	(V	want)
-				-
-				ed)
-			(VP	(V	to(V	eat))
-				(NP	(Det	a)
-					(N	sandwich)))))
-	.
-	)
 38.8381975014
-Time Elapsed: 0:00:00.014901
+(ROOT	(S	(NP	Papa )(VP	(V	(V	want )-ed )(NP	George )(VP	(V	to (V	eat ))(NP	(Det	a )(N	pickle ))))). )
 
-
-
-Processing: Papa want -ed George to eat a pickle .
-(ROOT	(S	(NP	Papa)
-		(VP	(V	(V	want)
-				-
-				ed)
-			(NP	George)
-			(VP	(V	to(V	eat))
-				(NP	(Det	a)
-					(N	pickle)))))
-	.
-	)
 44.8609981878
-Time Elapsed: 0:00:00.021403
+(ROOT	(S	(NP	Papa )(VP	(Modal	would )(VP	(V	have )(VP	(V	(V	eat )-ed )(NP	(Det	his )(N	(N	sandwich )-s )))))). )
 
-
-
-Processing: Papa would have eat -ed his sandwich -s .
-(ROOT	(S	(NP	Papa)
-		(VP	(Modal	would)
-			(VP	(V	have)
-				(VP	(V	(V	eat)
-						-
-						ed)
-					(NP	(Det	his)
-						(N	(N	sandwich)
-							-
-							s))))))
-	.
-	)
 43.8390258751
-Time Elapsed: 0:00:00.019220
+(ROOT	(S	(NP	(Det	every )(N	sandwich ))(VP	(V	was )(VP	(V	(V	go )-ing )(VP	(V	to (V	have ))(VP	(V	been )(Adj	delicious )))))). )
 
-
-
-Processing: every sandwich was go -ing to have been delicious .
-(ROOT	(S	(NP	(Det	every)
-			(N	sandwich))
-		(VP	(V	was)
-			(VP	(V	(V	go)
-					-
-					ing)
-				(VP	(V	to(V	have))
-					(VP	(V	been)
-						(Adj	delicious))))))
-	.
-	)
 53.6762884691
-Time Elapsed: 0:00:00.020009
+(ROOT	(S	(NP	(NP	(Det	the )(N	(Adj	(Adj	fine )and (Adj	blue ))(N	woman )))and (NP	(Det	every )(N	man )))(VP	(VP	(VP	(Modal	must )(VP	(V	have )(VP	(V	(V	eat )-ed )(NP	(Det	two )(N	(N	sandwich )-s )))))and (VP	(V	(V	sleep )-ed )))(PP	(P	on )(NP	(Det	the )(N	floor ))))). )
 
-
-
-Processing: the fine and blue woman and every man must have eat -ed two sandwich -s and sleep -ed on the floor .
-(ROOT	(S	(NP	(NP	(Det	the)
-				(N	(Adj	(Adj	fine)
-						a
-						nd(Adj	blue))
-					(N	woman)))
-			a
-			nd(NP	(Det	every)
-				(N	man)))
-		(VP	(VP	(VP	(Modal	must)
-					(VP	(V	have)
-						(VP	(V	(V	eat)
-								-
-								ed)
-							(NP	(Det	two)
-								(N	(N	sandwich)
-									-
-									s)))))
-				a
-				nd(VP	(V	(V	sleep)
-						-
-						ed)))
-			(PP	(P	on)
-				(NP	(Det	the)
-					(N	floor)))))
-	.
-	)
 112.343898675
-Time Elapsed: 0:00:00.033588
-
-
-

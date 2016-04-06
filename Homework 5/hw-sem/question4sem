@@ -1,0 +1,1007 @@
+         George: George 
+         Attributes: sem=George head=George
+      NP: George 
+      Attributes: sem=George head=George num=sing
+               love: love 
+               Attributes: sem=love head=love
+            V: love 
+            Attributes: sem=%obj %subj love(obj,subj) tense=stem head=love arg=np
+            -s: -s 
+            Attributes: sem=-s head=-s
+         V: love -s 
+         Attributes: num=sing arg=np head=love tense=pres sem=%obj %subj love(obj,subj)
+            Laura: Laura 
+            Attributes: head=Laura sem=Laura
+         NP: Laura 
+         Attributes: head=Laura num=sing sem=Laura
+      VP: love -s Laura 
+      Attributes: tense=pres head=love num=sing sem=%subj love(Laura,subj)
+   S: George love -s Laura 
+   Attributes: sem=Pres(love(Laura,George)) head=love
+   .: . 
+   Attributes: head=. sem=.
+ROOT: George love -s Laura . 
+Attributes: sem=Assert(Speaker, Pres(love(Laura,George))) head=love
+---
+         he: he 
+         Attributes: sem=he head=he
+      NP: he 
+      Attributes: sem=him case=subj num=sing head=he
+               love: love 
+               Attributes: sem=love head=love
+            V: love 
+            Attributes: tense=stem head=love arg=np sem=%obj %subj love(obj,subj)
+            -s: -s 
+            Attributes: sem=-s head=-s
+         V: love -s 
+         Attributes: sem=%obj %subj love(obj,subj) num=sing arg=np head=love tense=pres
+            her: her 
+            Attributes: sem=her head=her
+         NP: her 
+         Attributes: sem=her case=obj num=sing head=her
+      VP: love -s her 
+      Attributes: num=sing tense=pres head=love sem=%subj love(her,subj)
+   S: he love -s her 
+   Attributes: head=love sem=Pres(love(her,him))
+   .: . 
+   Attributes: head=. sem=.
+ROOT: he love -s her . 
+Attributes: head=love sem=Assert(Speaker, Pres(love(her,him)))
+---
+         him: him 
+         Attributes: head=him sem=him
+      NP: him 
+      Attributes: num=sing head=him sem=him case=obj
+               love: love 
+               Attributes: sem=love head=love
+            V: love 
+            Attributes: head=love tense=stem arg=np sem=%obj %subj love(obj,subj)
+            -s: -s 
+            Attributes: sem=-s head=-s
+         V: love -s 
+         Attributes: sem=%obj %subj love(obj,subj) head=love tense=pres arg=np num=sing
+            she: she 
+            Attributes: sem=she head=she
+         NP: she 
+         Attributes: case=subj sem=her head=she num=sing
+      VP: love -s she 
+      Attributes: num=sing head=love tense=pres sem=%subj love(her,subj)
+   S: him love -s she 
+   Attributes: head=love sem=Pres(love(her,him))
+   .: . 
+   Attributes: head=. sem=.
+ROOT: him love -s she . 
+Attributes: head=love sem=Assert(Speaker, Pres(love(her,him)))
+---
+         Papa: Papa 
+         Attributes: head=Papa sem=Papa
+      NP: Papa 
+      Attributes: sem=Papa head=Papa num=sing
+                  sleep: sleep 
+                  Attributes: head=sleep sem=sleep
+               V: sleep 
+               Attributes: sem=%subj sleep(subj) head=sleep tense=stem arg=none
+               -s: -s 
+               Attributes: sem=-s head=-s
+            V: sleep -s 
+            Attributes: sem=%subj sleep(subj) head=sleep tense=pres arg=none num=sing
+         VP: sleep -s 
+         Attributes: num=sing tense=pres head=sleep sem=%subj sleep(subj)
+               with: with 
+               Attributes: sem=with head=with
+            P: with 
+            Attributes: sem=with head=with
+                  a: a 
+                  Attributes: sem=a head=a
+               Det: a 
+               Attributes: num=sing head=a sem=some
+                  spoon: spoon 
+                  Attributes: head=spoon sem=spoon
+               N: spoon 
+               Attributes: sem=spoon head=spoon num=sing
+            NP: a spoon 
+            Attributes: sem=some(spoon) num=sing head=spoon
+         PP: with a spoon 
+         Attributes: sem=%x with(some(spoon),x) head=with
+      VP: sleep -s with a spoon 
+      Attributes: num=sing tense=pres head=sleep sem=%subj with(some(spoon),sleep(subj))
+   S: Papa sleep -s with a spoon 
+   Attributes: sem=Pres(with(some(spoon),sleep(Papa))) head=sleep
+   .: . 
+   Attributes: head=. sem=.
+ROOT: Papa sleep -s with a spoon . 
+Attributes: head=sleep sem=Assert(Speaker, Pres(with(some(spoon),sleep(Papa))))
+---
+         Papa: Papa 
+         Attributes: head=Papa sem=Papa
+      NP: Papa 
+      Attributes: num=sing head=Papa sem=Papa
+                  eat: eat 
+                  Attributes: head=eat sem=eat
+               V: eat 
+               Attributes: arg=np head=eat tense=stem sem=%obj %subj eat(obj,subj)
+               Or:       sem=%subj eat(SOMETHING,subj) head=eat tense=stem arg=none
+               -ed: -ed 
+               Attributes: head=-ed sem=-ed
+            V: eat -ed 
+            Attributes: tense=past head=eat arg=np sem=%obj %subj eat(obj,subj)
+            Or:       sem=%obj %subj eat(obj,subj) arg=np tense=pastp head=eat
+            Or:       sem=%subj eat(SOMETHING,subj) head=eat tense=past arg=none
+            Or:       sem=%subj eat(SOMETHING,subj) arg=none head=eat tense=pastp
+         VP: eat -ed 
+         Attributes: head=eat tense=past sem=%subj eat(SOMETHING,subj)
+         Or:       sem=%subj eat(SOMETHING,subj) tense=pastp head=eat
+               with: with 
+               Attributes: sem=with head=with
+            P: with 
+            Attributes: head=with sem=with
+                  a: a 
+                  Attributes: sem=a head=a
+               Det: a 
+               Attributes: num=sing head=a sem=some
+                  spoon: spoon 
+                  Attributes: head=spoon sem=spoon
+               N: spoon 
+               Attributes: sem=spoon num=sing head=spoon
+            NP: a spoon 
+            Attributes: num=sing head=spoon sem=some(spoon)
+         PP: with a spoon 
+         Attributes: sem=%x with(some(spoon),x) head=with
+      VP: eat -ed with a spoon 
+      Attributes: tense=past head=eat sem=%subj with(some(spoon),eat(SOMETHING,subj))
+      Or:       sem=%subj with(some(spoon),eat(SOMETHING,subj)) head=eat tense=pastp
+   S: Papa eat -ed with a spoon 
+   Attributes: sem=Past(with(some(spoon),eat(SOMETHING,Papa))) head=eat
+   .: . 
+   Attributes: head=. sem=.
+ROOT: Papa eat -ed with a spoon . 
+Attributes: sem=Assert(Speaker, Past(with(some(spoon),eat(SOMETHING,Papa)))) head=eat
+---
+         Papa: Papa 
+         Attributes: sem=Papa head=Papa
+      NP: Papa 
+      Attributes: head=Papa num=sing sem=Papa
+                  sleep: sleep 
+                  Attributes: head=sleep sem=sleep
+               V: sleep 
+               Attributes: sem=%subj sleep(subj) arg=none head=sleep tense=stem
+               -s: -s 
+               Attributes: head=-s sem=-s
+            V: sleep -s 
+            Attributes: num=sing arg=none tense=pres head=sleep sem=%subj sleep(subj)
+                  every: every 
+                  Attributes: sem=every head=every
+               Det: every 
+               Attributes: head=every num=sing sem=all
+                  bonbon: bonbon 
+                  Attributes: sem=bonbon head=bonbon
+               N: bonbon 
+               Attributes: head=bonbon num=sing sem=bonbon
+            NP: every bonbon 
+            Attributes: head=bonbon num=sing sem=all(bonbon)
+         VP: sleep -s every bonbon 
+         No consistent way to assign attributes!  (Maybe another parse?)
+               with: with 
+               Attributes: head=with sem=with
+            P: with 
+            Attributes: sem=with head=with
+                  a: a 
+                  Attributes: head=a sem=a
+               Det: a 
+               Attributes: head=a num=sing sem=some
+                  spoon: spoon 
+                  Attributes: head=spoon sem=spoon
+               N: spoon 
+               Attributes: sem=spoon num=sing head=spoon
+            NP: a spoon 
+            Attributes: head=spoon num=sing sem=some(spoon)
+         PP: with a spoon 
+         Attributes: head=with sem=%x with(some(spoon),x)
+      VP: sleep -s every bonbon with a spoon 
+      No consistent way to assign attributes!  (Maybe another parse?)
+   S: Papa sleep -s every bonbon with a spoon 
+   No consistent way to assign attributes!  (Maybe another parse?)
+   .: . 
+   Attributes: head=. sem=.
+ROOT: Papa sleep -s every bonbon with a spoon . 
+No consistent way to assign attributes!  (Maybe another parse?)
+---
+         Papa: Papa 
+         Attributes: sem=Papa head=Papa
+      NP: Papa 
+      Attributes: num=sing head=Papa sem=Papa
+                  eat: eat 
+                  Attributes: sem=eat head=eat
+               V: eat 
+               Attributes: tense=stem head=eat arg=np sem=%obj %subj eat(obj,subj)
+               Or:       sem=%subj eat(SOMETHING,subj) tense=stem head=eat arg=none
+               -ed: -ed 
+               Attributes: head=-ed sem=-ed
+            V: eat -ed 
+            Attributes: sem=%obj %subj eat(obj,subj) head=eat tense=past arg=np
+            Or:       sem=%obj %subj eat(obj,subj) arg=np head=eat tense=pastp
+            Or:       sem=%subj eat(SOMETHING,subj) arg=none head=eat tense=past
+            Or:       sem=%subj eat(SOMETHING,subj) tense=pastp head=eat arg=none
+                  every: every 
+                  Attributes: head=every sem=every
+               Det: every 
+               Attributes: sem=all num=sing head=every
+                  bonbon: bonbon 
+                  Attributes: sem=bonbon head=bonbon
+               N: bonbon 
+               Attributes: num=sing head=bonbon sem=bonbon
+            NP: every bonbon 
+            Attributes: sem=all(bonbon) head=bonbon num=sing
+         VP: eat -ed every bonbon 
+         Attributes: head=eat tense=past sem=%subj eat(all(bonbon),subj)
+         Or:       head=eat tense=pastp sem=%subj eat(all(bonbon),subj)
+               with: with 
+               Attributes: sem=with head=with
+            P: with 
+            Attributes: head=with sem=with
+                  a: a 
+                  Attributes: sem=a head=a
+               Det: a 
+               Attributes: sem=some num=sing head=a
+                  spoon: spoon 
+                  Attributes: head=spoon sem=spoon
+               N: spoon 
+               Attributes: sem=spoon num=sing head=spoon
+            NP: a spoon 
+            Attributes: num=sing head=spoon sem=some(spoon)
+         PP: with a spoon 
+         Attributes: sem=%x with(some(spoon),x) head=with
+      VP: eat -ed every bonbon with a spoon 
+      Attributes: head=eat tense=past sem=%subj with(some(spoon),eat(all(bonbon),subj))
+      Or:       tense=pastp head=eat sem=%subj with(some(spoon),eat(all(bonbon),subj))
+   S: Papa eat -ed every bonbon with a spoon 
+   Attributes: sem=Past(with(some(spoon),eat(all(bonbon),Papa))) head=eat
+   .: . 
+   Attributes: sem=. head=.
+ROOT: Papa eat -ed every bonbon with a spoon . 
+Attributes: sem=Assert(Speaker, Past(with(some(spoon),eat(all(bonbon),Papa)))) head=eat
+---
+         have: have 
+         Attributes: sem=have head=have
+      V: have 
+      Attributes: sem=possess arg=np tense=stem head=have
+      Or:       sem=possess arg=np num=pl tense=pres head=have
+            a: a 
+            Attributes: sem=a head=a
+         Det: a 
+         Attributes: sem=some head=a num=sing
+            bonbon: bonbon 
+            Attributes: sem=bonbon head=bonbon
+         N: bonbon 
+         Attributes: sem=bonbon head=bonbon num=sing
+      NP: a bonbon 
+      Attributes: sem=some(bonbon) num=sing head=bonbon
+   VP: have a bonbon 
+   Attributes: sem=possess(some(bonbon)) head=have tense=stem
+   Or:       num=pl head=have tense=pres sem=possess(some(bonbon))
+   !: ! 
+   Attributes: sem=! head=!
+ROOT: have a bonbon ! 
+Attributes: head=have sem=Command(Speaker, possess(some(bonbon))(Hearer))
+---
+            a: a 
+            Attributes: sem=a head=a
+         Det: a 
+         Attributes: head=a num=sing sem=some
+               bonbon: bonbon 
+               Attributes: sem=bonbon head=bonbon
+            N: bonbon 
+            Attributes: num=sing head=bonbon sem=bonbon
+                  on: on 
+                  Attributes: sem=on head=on
+               P: on 
+               Attributes: sem=on head=on
+                     the: the 
+                     Attributes: head=the sem=the
+                  Det: the 
+                  Attributes: sem=the num=sing head=the
+                  Or:       sem=the_plural head=the num=pl
+                     spoon: spoon 
+                     Attributes: head=spoon sem=spoon
+                  N: spoon 
+                  Attributes: sem=spoon head=spoon num=sing
+               NP: the spoon 
+               Attributes: num=sing head=spoon sem=the(spoon)
+            PP: on the spoon 
+            Attributes: sem=%x on(the(spoon),x) head=on
+         N: bonbon on the spoon 
+         Attributes: head=bonbon num=sing sem=%x bonbon(x) ^ on(the(spoon),x)
+      NP: a bonbon on the spoon 
+      Attributes: num=sing head=bonbon sem=some(%x bonbon(x) ^ on(the(spoon),x))
+               entice: entice 
+               Attributes: head=entice sem=entice
+            V: entice 
+            Attributes: sem=%obj %subj entice(obj,subj) tense=stem head=entice arg=np num=sing
+            Or:       arg=none num=sing tense=stem head=entice sem=%subj entice(SOMETHING,subj)
+            -s: -s 
+            Attributes: sem=-s head=-s
+         V: entice -s 
+         Attributes: sem=%obj %subj entice(obj,subj) tense=pres head=entice num=sing arg=np
+         Or:       sem=%subj entice(SOMETHING,subj) head=entice tense=pres arg=none num=sing
+      VP: entice -s 
+      Attributes: num=sing tense=pres head=entice sem=%subj entice(SOMETHING,subj)
+   S: a bonbon on the spoon entice -s 
+   Attributes: sem=Pres(entice(SOMETHING,some(%x bonbon(x) ^ on(the(spoon),x)))) head=entice
+   .: . 
+   Attributes: head=. sem=.
+ROOT: a bonbon on the spoon entice -s . 
+Attributes: sem=Assert(Speaker, Pres(entice(SOMETHING,some(%x bonbon(x) ^ on(the(spoon),x))))) head=entice
+---
+            a: a 
+            Attributes: sem=a head=a
+         Det: a 
+         Attributes: num=sing head=a sem=some
+               bonbon: bonbon 
+               Attributes: head=bonbon sem=bonbon
+            N: bonbon 
+            Attributes: head=bonbon num=sing sem=bonbon
+                  on: on 
+                  Attributes: head=on sem=on
+               P: on 
+               Attributes: sem=on head=on
+                     the: the 
+                     Attributes: sem=the head=the
+                  Det: the 
+                  Attributes: num=sing head=the sem=the
+                  Or:       num=pl head=the sem=the_plural
+                     spoon: spoon 
+                     Attributes: head=spoon sem=spoon
+                  N: spoon 
+                  Attributes: sem=spoon head=spoon num=sing
+               NP: the spoon 
+               Attributes: num=sing head=spoon sem=the(spoon)
+            PP: on the spoon 
+            Attributes: head=on sem=%x on(the(spoon),x)
+         N: bonbon on the spoon 
+         Attributes: head=bonbon num=sing sem=%x bonbon(x) ^ on(the(spoon),x)
+      NP: a bonbon on the spoon 
+      Attributes: num=sing head=bonbon sem=some(%x bonbon(x) ^ on(the(spoon),x))
+               entice: entice 
+               Attributes: sem=entice head=entice
+            V: entice 
+            Attributes: sem=%obj %subj entice(obj,subj) head=entice tense=stem num=sing arg=np
+            Or:       arg=none num=sing head=entice tense=stem sem=%subj entice(SOMETHING,subj)
+            -0: -0 
+            Attributes: sem=-0 head=-0
+         V: entice -0 
+         Attributes: arg=np num=pl head=entice tense=pres sem=%obj %subj entice(obj,subj)
+         Or:       sem=%subj entice(SOMETHING,subj) arg=none num=pl head=entice tense=pres
+      VP: entice -0 
+      Attributes: num=pl tense=pres head=entice sem=%subj entice(SOMETHING,subj)
+   S: a bonbon on the spoon entice -0 
+   No consistent way to assign attributes!  (Maybe another parse?)
+   .: . 
+   Attributes: sem=. head=.
+ROOT: a bonbon on the spoon entice -0 . 
+No consistent way to assign attributes!  (Maybe another parse?)
+---
+            the: the 
+            Attributes: head=the sem=the
+         Det: the 
+         Attributes: sem=the head=the num=sing
+         Or:       sem=the_plural head=the num=pl
+                  bonbon: bonbon 
+                  Attributes: sem=bonbon head=bonbon
+               N: bonbon 
+               Attributes: sem=bonbon head=bonbon num=sing
+               -s: -s 
+               Attributes: sem=-s head=-s
+            N: bonbon -s 
+            Attributes: sem=bonbon num=pl head=bonbon
+                  on: on 
+                  Attributes: sem=on head=on
+               P: on 
+               Attributes: head=on sem=on
+                     the: the 
+                     Attributes: sem=the head=the
+                  Det: the 
+                  Attributes: num=sing head=the sem=the
+                  Or:       head=the num=pl sem=the_plural
+                     spoon: spoon 
+                     Attributes: sem=spoon head=spoon
+                  N: spoon 
+                  Attributes: num=sing head=spoon sem=spoon
+               NP: the spoon 
+               Attributes: head=spoon num=sing sem=the(spoon)
+            PP: on the spoon 
+            Attributes: sem=%x on(the(spoon),x) head=on
+         N: bonbon -s on the spoon 
+         Attributes: num=pl head=bonbon sem=%x bonbon(x) ^ on(the(spoon),x)
+      NP: the bonbon -s on the spoon 
+      Attributes: sem=the_plural(%x bonbon(x) ^ on(the(spoon),x)) num=pl head=bonbon
+               entice: entice 
+               Attributes: head=entice sem=entice
+            V: entice 
+            Attributes: arg=np num=sing head=entice tense=stem sem=%obj %subj entice(obj,subj)
+            Or:       sem=%subj entice(SOMETHING,subj) arg=none num=sing head=entice tense=stem
+            -0: -0 
+            Attributes: head=-0 sem=-0
+         V: entice -0 
+         Attributes: sem=%obj %subj entice(obj,subj) num=pl arg=np head=entice tense=pres
+         Or:       num=pl arg=none head=entice tense=pres sem=%subj entice(SOMETHING,subj)
+      VP: entice -0 
+      Attributes: num=pl head=entice tense=pres sem=%subj entice(SOMETHING,subj)
+   S: the bonbon -s on the spoon entice -0 
+   Attributes: sem=Pres(entice(SOMETHING,the_plural(%x bonbon(x) ^ on(the(spoon),x)))) head=entice
+   .: . 
+   Attributes: head=. sem=.
+ROOT: the bonbon -s on the spoon entice -0 . 
+Attributes: sem=Assert(Speaker, Pres(entice(SOMETHING,the_plural(%x bonbon(x) ^ on(the(spoon),x))))) head=entice
+---
+         George: George 
+         Attributes: head=George sem=George
+      NP: George 
+      Attributes: num=sing head=George sem=George
+               kiss: kiss 
+               Attributes: head=kiss sem=kiss
+            V: kiss 
+            Attributes: sem=%obj %subj kiss(obj,subj) head=kiss tense=stem arg=np
+            -ed: -ed 
+            Attributes: head=-ed sem=-ed
+         V: kiss -ed 
+         Attributes: arg=np tense=past head=kiss sem=%obj %subj kiss(obj,subj)
+         Or:       arg=np tense=pastp head=kiss sem=%obj %subj kiss(obj,subj)
+               every: every 
+               Attributes: head=every sem=every
+            Det: every 
+            Attributes: sem=all head=every num=sing
+               chief: chief 
+               Attributes: head=chief sem=chief
+               of: of 
+               Attributes: sem=of head=of
+               staff: staff 
+               Attributes: head=staff sem=staff
+            N: chief of staff 
+            Attributes: num=sing head=chief sem=chief_of_staff
+         NP: every chief of staff 
+         Attributes: num=sing head=chief sem=all(chief_of_staff)
+      VP: kiss -ed every chief of staff 
+      Attributes: sem=%subj kiss(all(chief_of_staff),subj) head=kiss tense=past
+      Or:       sem=%subj kiss(all(chief_of_staff),subj) head=kiss tense=pastp
+   S: George kiss -ed every chief of staff 
+   Attributes: head=kiss sem=Past(kiss(all(chief_of_staff),George))
+   .: . 
+   Attributes: head=. sem=.
+ROOT: George kiss -ed every chief of staff . 
+Attributes: sem=Assert(Speaker, Past(kiss(all(chief_of_staff),George))) head=kiss
+---
+         Laura: Laura 
+         Attributes: head=Laura sem=Laura
+      NP: Laura 
+      Attributes: head=Laura num=sing sem=Laura
+                  say: say 
+                  Attributes: head=say sem=say
+               V: say 
+               Attributes: arg=sbar tense=stem head=say sem=%prop %subj say(prop, subj)
+               -s: -s 
+               Attributes: sem=-s head=-s
+            V: say -s 
+            Attributes: sem=%prop %subj say(prop, subj) tense=pres head=say num=sing arg=sbar
+               that: that 
+               Attributes: sem=that head=that
+                     George: George 
+                     Attributes: head=George sem=George
+                  NP: George 
+                  Attributes: sem=George head=George num=sing
+                        might: might 
+                        Attributes: head=might sem=might
+                     Modal: might 
+                     Attributes: sem=might head=might
+                           sleep: sleep 
+                           Attributes: sem=sleep head=sleep
+                        V: sleep 
+                        Attributes: sem=%subj sleep(subj) tense=stem head=sleep arg=none
+                     VP: sleep 
+                     Attributes: head=sleep tense=stem sem=%subj sleep(subj)
+                  VP: might sleep 
+                  Attributes: sem=%subj might(sleep(subj)) tense=modal head=sleep
+               S: George might sleep 
+               Attributes: sem=might(sleep(George)) head=sleep
+            SBAR: that George might sleep 
+            Attributes: sem=might(sleep(George)) head=sleep
+         VP: say -s that George might sleep 
+         Attributes: sem=%subj say(might(sleep(George)), subj) head=say tense=pres num=sing
+               on: on 
+               Attributes: sem=on head=on
+            P: on 
+            Attributes: head=on sem=on
+                  the: the 
+                  Attributes: head=the sem=the
+               Det: the 
+               Attributes: sem=the num=sing head=the
+               Or:       sem=the_plural head=the num=pl
+                  floor: floor 
+                  Attributes: head=floor sem=floor
+               N: floor 
+               Attributes: num=sing head=floor sem=floor
+            NP: the floor 
+            Attributes: sem=the(floor) head=floor num=sing
+         PP: on the floor 
+         Attributes: head=on sem=%x on(the(floor),x)
+      VP: say -s that George might sleep on the floor 
+      Attributes: sem=%subj on(the(floor),say(might(sleep(George)), subj)) tense=pres head=say num=sing
+   S: Laura say -s that George might sleep on the floor 
+   Attributes: sem=Pres(on(the(floor),say(might(sleep(George)), Laura))) head=say
+   !: ! 
+   Attributes: head=! sem=!
+ROOT: Laura say -s that George might sleep on the floor ! 
+Attributes: head=say sem=Exclaim(Speaker, Pres(on(the(floor),say(might(sleep(George)), Laura))))
+---
+            the: the 
+            Attributes: sem=the head=the
+         Det: the 
+         Attributes: sem=the head=the num=sing
+         Or:       head=the num=pl sem=the_plural
+               perplexed: perplexed 
+               Attributes: sem=perplexed head=perplexed
+            Adj: perplexed 
+            Attributes: head=perplexed sem=perplexed
+               president: president 
+               Attributes: head=president sem=president
+            N: president 
+            Attributes: num=sing head=president sem=president
+         N: perplexed president 
+         Attributes: sem=%x president(x) ^ perplexed(x) num=sing head=president
+      NP: the perplexed president 
+      Attributes: sem=the(%x president(x) ^ perplexed(x)) head=president num=sing
+               eat: eat 
+               Attributes: sem=eat head=eat
+            V: eat 
+            Attributes: head=eat tense=stem arg=np sem=%obj %subj eat(obj,subj)
+            Or:       arg=none tense=stem head=eat sem=%subj eat(SOMETHING,subj)
+            -ed: -ed 
+            Attributes: sem=-ed head=-ed
+         V: eat -ed 
+         Attributes: sem=%obj %subj eat(obj,subj) arg=np tense=past head=eat
+         Or:       head=eat tense=pastp arg=np sem=%obj %subj eat(obj,subj)
+         Or:       arg=none head=eat tense=past sem=%subj eat(SOMETHING,subj)
+         Or:       sem=%subj eat(SOMETHING,subj) arg=none tense=pastp head=eat
+               a: a 
+               Attributes: sem=a head=a
+            Det: a 
+            Attributes: sem=some head=a num=sing
+               pickle: pickle 
+               Attributes: sem=pickle head=pickle
+            N: pickle 
+            Attributes: sem=pickle head=pickle num=sing
+         NP: a pickle 
+         Attributes: sem=some(pickle) num=sing head=pickle
+      VP: eat -ed a pickle 
+      Attributes: sem=%subj eat(some(pickle),subj) head=eat tense=past
+      Or:       tense=pastp head=eat sem=%subj eat(some(pickle),subj)
+   S: the perplexed president eat -ed a pickle 
+   Attributes: head=eat sem=Past(eat(some(pickle),the(%x president(x) ^ perplexed(x))))
+   .: . 
+   Attributes: head=. sem=.
+ROOT: the perplexed president eat -ed a pickle . 
+Attributes: sem=Assert(Speaker, Past(eat(some(pickle),the(%x president(x) ^ perplexed(x))))) head=eat
+---
+         Papa: Papa 
+         Attributes: sem=Papa head=Papa
+      NP: Papa 
+      Attributes: sem=Papa head=Papa num=sing
+            is: is 
+            Attributes: sem=is head=is
+         V: is 
+         Attributes: sem=%pred %subj pred(subj) num=sing arg=pred head=be tense=pres
+            perplexed: perplexed 
+            Attributes: sem=perplexed head=perplexed
+         Adj: perplexed 
+         Attributes: sem=perplexed head=perplexed
+      VP: is perplexed 
+      Attributes: head=be tense=pres num=sing sem=%subj perplexed(subj)
+   S: Papa is perplexed 
+   Attributes: head=be sem=Pres(perplexed(Papa))
+   .: . 
+   Attributes: sem=. head=.
+ROOT: Papa is perplexed . 
+Attributes: sem=Assert(Speaker, Pres(perplexed(Papa))) head=be
+---
+         Papa: Papa 
+         Attributes: sem=Papa head=Papa
+      NP: Papa 
+      Attributes: head=Papa num=sing sem=Papa
+            is: is 
+            Attributes: sem=is head=is
+         V: is 
+         Attributes: sem=%pred %subj pred(subj) tense=pres head=be num=sing arg=pred
+            chief: chief 
+            Attributes: sem=chief head=chief
+            of: of 
+            Attributes: head=of sem=of
+            staff: staff 
+            Attributes: head=staff sem=staff
+         N: chief of staff 
+         Attributes: sem=chief_of_staff head=chief num=sing
+      VP: is chief of staff 
+      Attributes: num=sing tense=pres head=be sem=%subj chief_of_staff(subj)
+   S: Papa is chief of staff 
+   Attributes: sem=Pres(chief_of_staff(Papa)) head=be
+   .: . 
+   Attributes: sem=. head=.
+ROOT: Papa is chief of staff . 
+Attributes: head=be sem=Assert(Speaker, Pres(chief_of_staff(Papa)))
+---
+         Papa: Papa 
+         Attributes: head=Papa sem=Papa
+      NP: Papa 
+      Attributes: sem=Papa num=sing head=Papa
+               want: want 
+               Attributes: head=want sem=want
+            V: want 
+            Attributes: sem=%obj %subj want(obj,subj) head=want tense=stem arg=np
+            Or:       sem=%pred %subj want(pred(subj), subj) head=want tense=stem arg=vpinf
+            Or:       head=want tense=stem arg=npvpinf sem=%obj %pred %subj want(pred(obj), subj)
+            -ed: -ed 
+            Attributes: sem=-ed head=-ed
+         V: want -ed 
+         Attributes: sem=%obj %subj want(obj,subj) head=want tense=past arg=np
+         Or:       sem=%obj %subj want(obj,subj) tense=pastp head=want arg=np
+         Or:       arg=vpinf head=want tense=past sem=%pred %subj want(pred(subj), subj)
+         Or:       sem=%pred %subj want(pred(subj), subj) tense=pastp head=want arg=vpinf
+         Or:       tense=past head=want arg=npvpinf sem=%obj %pred %subj want(pred(obj), subj)
+         Or:       head=want tense=pastp arg=npvpinf sem=%obj %pred %subj want(pred(obj), subj)
+               a: a 
+               Attributes: sem=a head=a
+            Det: a 
+            Attributes: head=a num=sing sem=some
+               sandwich: sandwich 
+               Attributes: head=sandwich sem=sandwich
+            N: sandwich 
+            Attributes: sem=sandwich num=sing head=sandwich
+         NP: a sandwich 
+         Attributes: num=sing head=sandwich sem=some(sandwich)
+      VP: want -ed a sandwich 
+      Attributes: sem=%subj want(some(sandwich),subj) head=want tense=past
+      Or:       tense=pastp head=want sem=%subj want(some(sandwich),subj)
+   S: Papa want -ed a sandwich 
+   Attributes: sem=Past(want(some(sandwich),Papa)) head=want
+   .: . 
+   Attributes: sem=. head=.
+ROOT: Papa want -ed a sandwich . 
+Attributes: sem=Assert(Speaker, Past(want(some(sandwich),Papa))) head=want
+---
+         Papa: Papa 
+         Attributes: head=Papa sem=Papa
+      NP: Papa 
+      Attributes: num=sing head=Papa sem=Papa
+               want: want 
+               Attributes: head=want sem=want
+            V: want 
+            Attributes: arg=np tense=stem head=want sem=%obj %subj want(obj,subj)
+            Or:       sem=%pred %subj want(pred(subj), subj) head=want tense=stem arg=vpinf
+            Or:       tense=stem head=want arg=npvpinf sem=%obj %pred %subj want(pred(obj), subj)
+            -ed: -ed 
+            Attributes: sem=-ed head=-ed
+         V: want -ed 
+         Attributes: tense=past head=want arg=np sem=%obj %subj want(obj,subj)
+         Or:       arg=np head=want tense=pastp sem=%obj %subj want(obj,subj)
+         Or:       head=want tense=past arg=vpinf sem=%pred %subj want(pred(subj), subj)
+         Or:       sem=%pred %subj want(pred(subj), subj) arg=vpinf head=want tense=pastp
+         Or:       arg=npvpinf tense=past head=want sem=%obj %pred %subj want(pred(obj), subj)
+         Or:       sem=%obj %pred %subj want(pred(obj), subj) arg=npvpinf head=want tense=pastp
+               to: to 
+               Attributes: sem=to head=to
+                  eat: eat 
+                  Attributes: sem=eat head=eat
+               V: eat 
+               Attributes: tense=stem head=eat arg=np sem=%obj %subj eat(obj,subj)
+               Or:       arg=none head=eat tense=stem sem=%subj eat(SOMETHING,subj)
+            V: to eat 
+            Attributes: head=eat tense=inf arg=np num=pl sem=%obj %subj eat(obj,subj)
+            Or:       tense=inf head=eat num=pl arg=none sem=%subj eat(SOMETHING,subj)
+                  a: a 
+                  Attributes: sem=a head=a
+               Det: a 
+               Attributes: sem=some num=sing head=a
+                  sandwich: sandwich 
+                  Attributes: head=sandwich sem=sandwich
+               N: sandwich 
+               Attributes: sem=sandwich head=sandwich num=sing
+            NP: a sandwich 
+            Attributes: sem=some(sandwich) head=sandwich num=sing
+         VP: to eat a sandwich 
+         Attributes: sem=%subj eat(some(sandwich),subj) num=pl tense=inf head=eat
+      VP: want -ed to eat a sandwich 
+      Attributes: tense=past head=want sem=%subj want(eat(some(sandwich),subj), subj)
+      Or:       sem=%subj want(eat(some(sandwich),subj), subj) head=want tense=pastp
+   S: Papa want -ed to eat a sandwich 
+   Attributes: sem=Past(want(eat(some(sandwich),Papa), Papa)) head=want
+   .: . 
+   Attributes: sem=. head=.
+ROOT: Papa want -ed to eat a sandwich . 
+Attributes: head=want sem=Assert(Speaker, Past(want(eat(some(sandwich),Papa), Papa)))
+---
+         Papa: Papa 
+         Attributes: head=Papa sem=Papa
+      NP: Papa 
+      Attributes: head=Papa num=sing sem=Papa
+               want: want 
+               Attributes: sem=want head=want
+            V: want 
+            Attributes: head=want tense=stem arg=np sem=%obj %subj want(obj,subj)
+            Or:       head=want tense=stem arg=vpinf sem=%pred %subj want(pred(subj), subj)
+            Or:       arg=npvpinf tense=stem head=want sem=%obj %pred %subj want(pred(obj), subj)
+            -ed: -ed 
+            Attributes: head=-ed sem=-ed
+         V: want -ed 
+         Attributes: sem=%obj %subj want(obj,subj) head=want tense=past arg=np
+         Or:       sem=%obj %subj want(obj,subj) arg=np tense=pastp head=want
+         Or:       sem=%pred %subj want(pred(subj), subj) arg=vpinf tense=past head=want
+         Or:       sem=%pred %subj want(pred(subj), subj) arg=vpinf head=want tense=pastp
+         Or:       sem=%obj %pred %subj want(pred(obj), subj) arg=npvpinf head=want tense=past
+         Or:       tense=pastp head=want arg=npvpinf sem=%obj %pred %subj want(pred(obj), subj)
+            George: George 
+            Attributes: head=George sem=George
+         NP: George 
+         Attributes: head=George num=sing sem=George
+               to: to 
+               Attributes: head=to sem=to
+                  eat: eat 
+                  Attributes: sem=eat head=eat
+               V: eat 
+               Attributes: sem=%obj %subj eat(obj,subj) arg=np head=eat tense=stem
+               Or:       sem=%subj eat(SOMETHING,subj) arg=none tense=stem head=eat
+            V: to eat 
+            Attributes: tense=inf head=eat arg=np num=pl sem=%obj %subj eat(obj,subj)
+            Or:       tense=inf head=eat num=pl arg=none sem=%subj eat(SOMETHING,subj)
+                  a: a 
+                  Attributes: head=a sem=a
+               Det: a 
+               Attributes: sem=some head=a num=sing
+                  pickle: pickle 
+                  Attributes: sem=pickle head=pickle
+               N: pickle 
+               Attributes: num=sing head=pickle sem=pickle
+            NP: a pickle 
+            Attributes: num=sing head=pickle sem=some(pickle)
+         VP: to eat a pickle 
+         Attributes: num=pl tense=inf head=eat sem=%subj eat(some(pickle),subj)
+      VP: want -ed George to eat a pickle 
+      Attributes: tense=past head=want sem=%subj want(eat(some(pickle),George), subj)
+      Or:       head=want tense=pastp sem=%subj want(eat(some(pickle),George), subj)
+   S: Papa want -ed George to eat a pickle 
+   Attributes: sem=Past(want(eat(some(pickle),George), Papa)) head=want
+   .: . 
+   Attributes: head=. sem=.
+ROOT: Papa want -ed George to eat a pickle . 
+Attributes: sem=Assert(Speaker, Past(want(eat(some(pickle),George), Papa))) head=want
+---
+         Papa: Papa 
+         Attributes: head=Papa sem=Papa
+      NP: Papa 
+      Attributes: sem=Papa num=sing head=Papa
+            would: would 
+            Attributes: sem=would head=would
+         Modal: would 
+         Attributes: head=would sem=would
+               have: have 
+               Attributes: sem=have head=have
+            V: have 
+            Attributes: sem=possess arg=np head=have tense=stem
+            Or:       num=pl arg=np head=have tense=pres sem=possess
+                     eat: eat 
+                     Attributes: sem=eat head=eat
+                  V: eat 
+                  Attributes: sem=%obj %subj eat(obj,subj) arg=np head=eat tense=stem
+                  Or:       sem=%subj eat(SOMETHING,subj) arg=none head=eat tense=stem
+                  -ed: -ed 
+                  Attributes: head=-ed sem=-ed
+               V: eat -ed 
+               Attributes: arg=np tense=past head=eat sem=%obj %subj eat(obj,subj)
+               Or:       tense=pastp head=eat arg=np sem=%obj %subj eat(obj,subj)
+               Or:       sem=%subj eat(SOMETHING,subj) tense=past head=eat arg=none
+               Or:       sem=%subj eat(SOMETHING,subj) arg=none head=eat tense=pastp
+                     his: his 
+                     Attributes: head=his sem=his
+                  Det: his 
+                  Attributes: sem=%n the(%x n(x)^possess(x,him)) num=sing head=his
+                  Or:       head=his num=pl sem=%n the_plural(%x n(x)^possess(x,him))
+                        sandwich: sandwich 
+                        Attributes: sem=sandwich head=sandwich
+                     N: sandwich 
+                     Attributes: head=sandwich num=sing sem=sandwich
+                     -s: -s 
+                     Attributes: sem=-s head=-s
+                  N: sandwich -s 
+                  Attributes: sem=sandwich head=sandwich num=pl
+               NP: his sandwich -s 
+               Attributes: num=pl head=sandwich sem=the_plural(%x sandwich(x)^possess(x,him))
+            VP: eat -ed his sandwich -s 
+            Attributes: sem=%subj eat(the_plural(%x sandwich(x)^possess(x,him)),subj) head=eat tense=past
+            Or:       sem=%subj eat(the_plural(%x sandwich(x)^possess(x,him)),subj) tense=pastp head=eat
+         VP: have eat -ed his sandwich -s 
+         Attributes: tense=stem head=eat arg=np sem=%subj Perf(eat(the_plural(%x sandwich(x)^possess(x,him)),subj))
+         Or:       sem=%subj Perf(eat(the_plural(%x sandwich(x)^possess(x,him)),subj)) head=eat tense=pres num=pl arg=np
+      VP: would have eat -ed his sandwich -s 
+      Attributes: arg=np head=eat tense=modal sem=%subj would(Perf(eat(the_plural(%x sandwich(x)^possess(x,him)),subj)))
+   S: Papa would have eat -ed his sandwich -s 
+   Attributes: head=eat arg=np sem=would(Perf(eat(the_plural(%x sandwich(x)^possess(x,him)),Papa)))
+   .: . 
+   Attributes: sem=. head=.
+ROOT: Papa would have eat -ed his sandwich -s . 
+Attributes: sem=Assert(Speaker, would(Perf(eat(the_plural(%x sandwich(x)^possess(x,him)),Papa)))) head=eat
+---
+            every: every 
+            Attributes: sem=every head=every
+         Det: every 
+         Attributes: sem=all num=sing head=every
+            sandwich: sandwich 
+            Attributes: head=sandwich sem=sandwich
+         N: sandwich 
+         Attributes: head=sandwich num=sing sem=sandwich
+      NP: every sandwich 
+      Attributes: sem=all(sandwich) num=sing head=sandwich
+            was: was 
+            Attributes: head=was sem=was
+         V: was 
+         Attributes: head=be tense=past arg=pred num=sing sem=%pred %subj pred(subj)
+                  go: go 
+                  Attributes: sem=go head=go
+               V: go 
+               Attributes: sem=%subj go(subj) arg=none head=go tense=stem
+               -ing: -ing 
+               Attributes: head=-ing sem=-ing
+            V: go -ing 
+            Attributes: arg=none tense=presp head=go sem=%subj go(subj)
+                  to: to 
+                  Attributes: head=to sem=to
+                     have: have 
+                     Attributes: sem=have head=have
+                  V: have 
+                  Attributes: sem=possess arg=np tense=stem head=have
+                  Or:       sem=possess tense=pres head=have num=pl arg=np
+               V: to have 
+               Attributes: arg=np num=pl tense=inf head=have sem=possess
+                     been: been 
+                     Attributes: sem=been head=been
+                  V: been 
+                  Attributes: sem=%pred %subj pred(subj) arg=pred head=be tense=pastp
+                     delicious: delicious 
+                     Attributes: head=delicious sem=delicious
+                  Adj: delicious 
+                  Attributes: head=delicious sem=delicious
+               VP: been delicious 
+               Attributes: tense=pastp head=be sem=%subj delicious(subj)
+            VP: to have been delicious 
+            Attributes: num=pl arg=np head=be tense=inf sem=%subj Perf(delicious(subj))
+         VP: go -ing to have been delicious 
+         Attributes: sem=%subj Will(Perf(delicious(subj))) arg=none tense=presp head=be
+      VP: was go -ing to have been delicious 
+      Attributes: arg=pred num=sing tense=past head=be sem=%subj Prog(Will(Perf(delicious(subj))))
+   S: every sandwich was go -ing to have been delicious 
+   Attributes: arg=pred head=be sem=Past(Prog(Will(Perf(delicious(all(sandwich))))))
+   .: . 
+   Attributes: sem=. head=.
+ROOT: every sandwich was go -ing to have been delicious . 
+Attributes: head=be sem=Assert(Speaker, Past(Prog(Will(Perf(delicious(all(sandwich)))))))
+---
+               the: the 
+               Attributes: sem=the head=the
+            Det: the 
+            Attributes: sem=the head=the num=sing
+            Or:       head=the num=pl sem=the_plural
+                     fine: fine 
+                     Attributes: head=fine sem=fine
+                  Adj: fine 
+                  Attributes: head=fine sem=fine
+                  and: and 
+                  Attributes: sem=and head=and
+                     blue: blue 
+                     Attributes: sem=blue head=blue
+                  Adj: blue 
+                  Attributes: head=blue sem=blue
+               Adj: fine and blue 
+               Attributes: sem=%x fine(x)^blue(x) head=and
+                  woman: woman 
+                  Attributes: sem=woman head=woman
+               N: woman 
+               Attributes: sem=woman head=woman num=sing
+            N: fine and blue woman 
+            Attributes: sem=%x woman(x) ^ (fine(x)^blue(x)) head=woman num=sing
+         NP: the fine and blue woman 
+         Attributes: sem=the(%x woman(x) ^ (fine(x)^blue(x))) num=sing head=woman
+         and: and 
+         Attributes: head=and sem=and
+               every: every 
+               Attributes: sem=every head=every
+            Det: every 
+            Attributes: sem=all head=every num=sing
+               man: man 
+               Attributes: head=man sem=man
+            N: man 
+            Attributes: num=sing head=man sem=man
+         NP: every man 
+         Attributes: num=sing head=man sem=all(man)
+      NP: the fine and blue woman and every man 
+      Attributes: num=pl head=and sem=and(the(%x woman(x) ^ (fine(x)^blue(x))),all(man))
+                  must: must 
+                  Attributes: head=must sem=must
+               Modal: must 
+               Attributes: sem=must head=must
+                     have: have 
+                     Attributes: head=have sem=have
+                  V: have 
+                  Attributes: sem=possess arg=np tense=stem head=have
+                  Or:       tense=pres head=have arg=np num=pl sem=possess
+                           eat: eat 
+                           Attributes: head=eat sem=eat
+                        V: eat 
+                        Attributes: arg=np tense=stem head=eat sem=%obj %subj eat(obj,subj)
+                        Or:       sem=%subj eat(SOMETHING,subj) tense=stem head=eat arg=none
+                        -ed: -ed 
+                        Attributes: sem=-ed head=-ed
+                     V: eat -ed 
+                     Attributes: sem=%obj %subj eat(obj,subj) arg=np tense=past head=eat
+                     Or:       arg=np head=eat tense=pastp sem=%obj %subj eat(obj,subj)
+                     Or:       sem=%subj eat(SOMETHING,subj) arg=none head=eat tense=past
+                     Or:       tense=pastp head=eat arg=none sem=%subj eat(SOMETHING,subj)
+                           two: two 
+                           Attributes: head=two sem=two
+                        Det: two 
+                        Attributes: sem=two num=pl head=two
+                              sandwich: sandwich 
+                              Attributes: sem=sandwich head=sandwich
+                           N: sandwich 
+                           Attributes: head=sandwich num=sing sem=sandwich
+                           -s: -s 
+                           Attributes: sem=-s head=-s
+                        N: sandwich -s 
+                        Attributes: sem=sandwich head=sandwich num=pl
+                     NP: two sandwich -s 
+                     Attributes: head=sandwich num=pl sem=two(sandwich)
+                  VP: eat -ed two sandwich -s 
+                  Attributes: sem=%subj eat(two(sandwich),subj) head=eat tense=past
+                  Or:       head=eat tense=pastp sem=%subj eat(two(sandwich),subj)
+               VP: have eat -ed two sandwich -s 
+               Attributes: head=eat tense=stem arg=np sem=%subj Perf(eat(two(sandwich),subj))
+               Or:       sem=%subj Perf(eat(two(sandwich),subj)) arg=np num=pl tense=pres head=eat
+            VP: must have eat -ed two sandwich -s 
+            Attributes: sem=%subj must(Perf(eat(two(sandwich),subj))) tense=modal head=eat arg=np
+            and: and 
+            Attributes: sem=and head=and
+                     sleep: sleep 
+                     Attributes: head=sleep sem=sleep
+                  V: sleep 
+                  Attributes: arg=none tense=stem head=sleep sem=%subj sleep(subj)
+                  -ed: -ed 
+                  Attributes: sem=-ed head=-ed
+               V: sleep -ed 
+               Attributes: head=sleep tense=past arg=none sem=%subj sleep(subj)
+               Or:       sem=%subj sleep(subj) head=sleep tense=pastp arg=none
+            VP: sleep -ed 
+            Attributes: head=sleep tense=past sem=%subj sleep(subj)
+            Or:       head=sleep tense=pastp sem=%subj sleep(subj)
+         VP: must have eat -ed two sandwich -s and sleep -ed 
+         No consistent way to assign attributes!  (Maybe another parse?)
+               on: on 
+               Attributes: sem=on head=on
+            P: on 
+            Attributes: head=on sem=on
+                  the: the 
+                  Attributes: sem=the head=the
+               Det: the 
+               Attributes: sem=the head=the num=sing
+               Or:       sem=the_plural head=the num=pl
+                  floor: floor 
+                  Attributes: head=floor sem=floor
+               N: floor 
+               Attributes: num=sing head=floor sem=floor
+            NP: the floor 
+            Attributes: sem=the(floor) num=sing head=floor
+         PP: on the floor 
+         Attributes: head=on sem=%x on(the(floor),x)
+      VP: must have eat -ed two sandwich -s and sleep -ed on the floor 
+      No consistent way to assign attributes!  (Maybe another parse?)
+   S: the fine and blue woman and every man must have eat -ed two sandwich -s and sleep -ed on the floor 
+   No consistent way to assign attributes!  (Maybe another parse?)
+   .: . 
+   Attributes: head=. sem=.
+ROOT: the fine and blue woman and every man must have eat -ed two sandwich -s and sleep -ed on the floor . 
+No consistent way to assign attributes!  (Maybe another parse?)
+---

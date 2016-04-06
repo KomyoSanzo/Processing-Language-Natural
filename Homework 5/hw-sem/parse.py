@@ -31,10 +31,10 @@ class Parser:
             if line == "\n":
                 #skip empty line
                 continue
-            sys.stdout.write("Processing: " + line)
+            #sys.stdout.write("Processing: " + line)
             self.parseSentence(line, grammar)
-            print "Time Elapsed: " + str(datetime.datetime.now()-startTime)
-            print "\n\n"
+            #print "Time Elapsed: " + str(datetime.datetime.now()-startTime)
+            #print "\n\n"
             
         
         
@@ -127,8 +127,9 @@ class Parser:
         #Begin recursion with the lowest found entry point
         
         if (sentenceEntry is not None):
-            self.formatPretty(self.printEntry(sentenceEntry))
-            print "\n" + str(lowestWeight)
+            #self.formatPretty(self.printEntry(sentenceEntry))
+            print self.printEntry(sentenceEntry)
+	    print "\n" + str(lowestWeight)
         return c
         
     def formatPretty(self, para):
@@ -153,7 +154,7 @@ class Parser:
         ret = ""
         if (entry.isComplete()):
             if ((entry.leftPointer is None) and (entry.upPointer is None)):
-                return entry.header
+                return entry.header + " "
 
             ret += "(" + entry.header + "\t"            
             if (not entry.leftPointer is None):

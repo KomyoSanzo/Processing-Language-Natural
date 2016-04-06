@@ -1,45 +1,26 @@
-Processing: 3
-(ROOT	(EXPR	(TERM	(FACTOR	(Num	3)))))
-8.45533299109
-Time Elapsed: 0:00:00.000391
-
-
-
-Processing: 3 *
-Time Elapsed: 0:00:00.000460
-
-
-
-Processing: 3 * 5
-(ROOT	(EXPR	(TERM	(TERM	(FACTOR	(Num	3)))
-			*
-			(FACTOR	(Num	5)))))
-15.3257020388
-Time Elapsed: 0:00:00.000529
-
-
-
-Processing: 3 * 5 + 6 * { 5 - 3 - 2 } + sqrt { 7 }
-(ROOT	(EXPR	(EXPR	(EXPR	(TERM	(TERM	(FACTOR	(Num	3)))
-					*
-					(FACTOR	(Num	5))))
-			+
-			(TERM	(TERM	(FACTOR	(Num	6)))
-				*
-				(FACTOR	{(EXPR	(EXPR	(EXPR	(TERM	(FACTOR	(Num	5))))
-							-
-							(TERM	(FACTOR	(Num	3))))
-						-
-						(TERM	(FACTOR	(Num	2))))
-					}
-					)))
-		+
-		(TERM	(FACTOR	sqrt{(EXPR	(TERM	(FACTOR	(Num	7))))
-				}
-				))))
-65.5271867113
-Time Elapsed: 0:00:00.002456
-
-
-
-Finished Time Elapsed: 0:00:00.002465
+(ROOT (EXPR (TERM (FACTOR (Num 3)))))
+8.455327
+NONE
+(ROOT (EXPR (TERM (TERM (FACTOR (Num 3)))
+                  *
+                  (FACTOR (Num 5)))))
+15.32569
+(ROOT (EXPR (EXPR (EXPR (TERM (TERM (FACTOR (Num 3)))
+                              *
+                              (FACTOR (Num 5))))
+                  +
+                  (TERM (TERM (FACTOR (Num 6)))
+                        *
+                        (FACTOR {
+                                (EXPR (EXPR (EXPR (TERM (FACTOR (Num 5))))
+                                            -
+                                            (TERM (FACTOR (Num 3))))
+                                      -
+                                      (TERM (FACTOR (Num 2))))
+                                })))
+            +
+            (TERM (FACTOR sqrt
+                          {
+                          (EXPR (TERM (FACTOR (Num 7))))
+                          }))))
+65.52714

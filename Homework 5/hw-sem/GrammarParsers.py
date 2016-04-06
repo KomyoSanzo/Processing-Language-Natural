@@ -95,7 +95,8 @@ if __name__ == '__main__':
         
         if ("-t" in sys.argv):
             output = prettyPrint('ROOT', "", gram)
-            formatPretty(output)
+	    print output            
+#formatPretty(output)
 
         #prettyprint here
 
