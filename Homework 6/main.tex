@@ -50,16 +50,16 @@ Before the restriction we made of $p(1 | H)$ = 0, the graph actually looks prett
 
 This is because after 10 iterations, this model should learn that the probability of one ice cream given that the day is hot is very low, regardless of our initial restriction. In fact, without this restriction, at the 10th iteration $p(1 | H)$ = 1.6E-04, which is basically 0.
 
-iii. With the change of $p(1|H)$ = 0, it still equals 0 after 10 iterations. Based on the excel, $p(1|H)$ = $p(->H, 1)$ / $p(->H)$ from the previous iteration. But if we initially had set $p(1|H)$ = 0, then $p(->H, 1)$ is also always 0, so this value is always 0.
+iii. With the change of $p(1|H)$ = 0, it still equals 0 after 10 iterations. Based on the excel, $p(1|H)$ = $p(\rightarrow H, 1)$ / $p(\rightarrow H)$ from the previous iteration. But if we initially had set $p(1|H)$ = 0, then $p(\rightarrow H, 1)$ is also always 0, so this value is always 0.
 
 \subsection{c}
 
 i. Since the backward algorithm is analogous to the inside algorithm and the inside algorithm finds the probability of a sentence by summing over all possible parses, this should mean that the $\beta$ probability of the EOS character sums all possible parses, therefore equaling the total probability of the sentence.
 
 ii. In the tree on the left, the H constituent means that the day is hot. The specific day corresponds to the depth at which the H is at in the tree.
-The probability of the rule H -> 1 C is equal to $p(1 | C)$ * $p(C | H)$. 
-The probability of H -> $\epsilon$ is equal to $p(STOP | H)$. 
-The tree on the right may be preferred because instead of having to calculate p(H -> 1 C) as stated above, we can instead get p(H -> EC C) from $p(C | H)$, which is already in our excel spreadsheet. Also, p(EC -> 1) = $p(1 | C)$, which is also in the spreadsheet.
+The probability of the rule H $\rightarrow$ 1 C is equal to $p(1 | C)$ * $p(C | H)$. 
+The probability of H $\rightarrow \epsilon$ is equal to $p(STOP | H)$. 
+The tree on the right may be preferred because instead of having to calculate p(H $\rightarrow$ 1 C) as stated above, we can instead get p(H $\rightarrow$ EC C) from $p(C | H)$, which is already in our excel spreadsheet. Also, p(EC $\rightarrow$ 1) = $p(1 | C)$, which is also in the spreadsheet.
 
 \section{vtag}
 
