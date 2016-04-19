@@ -1,7 +1,5 @@
 '''
 Problem 4, 5
-Created on Apr 18, 2016
-
 @author: Willis Wang and Hamster
 '''
 
@@ -49,32 +47,32 @@ def test(file_name):
     
     for i in range(len(data)-1, 0, -1):
         t[i-1] = backpointers[t[i] + "/" + str(i)]
-        totalProb += probabilities[t[i] + "/" + str(i)]
-    
-    novelCorrect = 0.0
-    novelTotal = 0.0
+        totalProb += probabilities[t[i] + "/" + str(i)]      
+
     knownCorrect = 0.0
     knownTotal = 0.0
+    
+    newCorrect = 0.0
+    newTotal = 0.0
     for i in range(len(words)):
         if words[i] == "###":
             continue
-        if tags[i] == t[i]:
-            if words[i] not in vocab:
-                novelCorrect += 1
-            else:
-                knownCorrect += 1
-        if words[i] not in vocab:
-            novelTotal += 1
+        if words[i] in vocab:
+            knownTotal +=1
         else:
-            knownTotal+= 1
+            newTotal += 1
         
-    # Print the results
-    # If no novel words encountered, we are vacuously 100% accuracy
-    print "Tagging accuracy (Viterbi decoding): %.2f%% (known: %.2f%% novel: %.2f%%)" % \
-          (100 * (novelCorrect + knownCorrect) / (novelTotal + knownTotal),
-           100 * knownCorrect / knownTotal, 0 if novelTotal == 0 else 100 * novelCorrect / novelTotal)
-    print "Perplexity per Viterbi-tagged test word: %.3f" % math.exp(- totalProb / (len(words) - 1))
+        if tags[i] == t[i]:
+            if words[i] in vocab:
+                knownCorrect +=1
+            else:
+                newCorrect += 1
+        
+    print "Tagging accuracy (Viterbi decoding): %.2f%% (known: %.2f%% novel: %.2f%%)" % (100 * (newCorrect + knownCorrect) / (newTotal + knownTotal),
+                                                                                         100 * knownCorrect / knownTotal, 0 if newTotal == 0 else 100 * newCorrect / newTotal)
+    print "Perplexity per Viterbi-tagged test word: %.3f" % math.exp(-totalProb/(len(words)-1))
                  
+        
 def forward_backward(file_name):
     test_data = file(file_name, 'r')
     data = test_data.readlines()
@@ -114,29 +112,26 @@ def forward_backward(file_name):
                 p = prob_tt(t_i, t_i_1) + prob_wt(words[i], t_i)
                 beta[t_i_1+"/"+str(i-1)] = logsumexp(beta.get(t_i_1+"/"+str(i-1),float('-inf')),
                                                      beta.get(t_i+"/"+str(i), float('-inf'))+p)
-                
-    novelCorrect = 0.0
-    novelTotal = 0.0
+    
     knownCorrect = 0.0
     knownTotal = 0.0
+                
+    newCorrect = 0.0
+    newTotal = 0.0
     for i in range(len(words)):
         if words[i] == "###":
             continue
         if tags[i] == probabilities[i].tag:
-            if words[i] not in vocab:
-                novelCorrect += 1
-            else:
+            if words[i] in vocab:
                 knownCorrect += 1
-        if words[i] not in vocab:
-            novelTotal += 1
-        else:
-            knownTotal+= 1
-        
-    # Print the results
-    # If no novel words encountered, we are vacuously 100% accuracy
-    print "Tagging accuracy (Viterbi decoding): %.2f%% (known: %.2f%% novel: %.2f%%)" % \
-          (100 * (novelCorrect + knownCorrect) / (novelTotal + knownTotal),
-           100 * knownCorrect / knownTotal, 0 if novelTotal == 0 else 100 * novelCorrect / novelTotal)
+            else:
+                newCorrect += 1
+        if words[i] in vocab:
+            knownTotal += 1
+        else:   
+            newTotal += 1
+    print "Tagging accuracy (Viterbi decoding): %.2f%% (known: %.2f%% novel: %.2f%%)" % (100 * (newCorrect + knownCorrect) / (newTotal + knownTotal),
+                                                                                         100 * knownCorrect / knownTotal, 0 if newTotal == 0 else 100 * newCorrect / newTotal)
 
 
 def logsumexp(x, y):

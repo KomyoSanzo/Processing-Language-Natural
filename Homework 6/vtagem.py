@@ -1,5 +1,4 @@
 '''
-Created on Apr 18, 2016
 question 6
 @author: Willis Wang and Hamster
 '''
@@ -51,37 +50,39 @@ def test(file_name):
         t[i-1] = backpointers[t[i] + "/" + str(i)]
         totalProb += probabilities[t[i] + "/" + str(i)]
     
-    novelCorrect = 0.0
-    novelTotal = 0.0
+    
     knownCorrect = 0.0
     knownTotal = 0.0
+    
+    newCorrect = 0.0
+    newTotal = 0.0
+    
     seenCorrect = 0.0
     seenTotal = 0.0
+    
     for i in range(len(words)):
         if words[i] == "###":
             continue
+        if vocab.get(words[i], 0)> 0:
+            knownTotal += 1
+        elif raw_vocab.get(words[i], 0)> 0:
+            seenTotal += 1
+        else:
+            newTotal += 1
+        
         if tags[i] == t[i]:
             if vocab.get(words[i],0) > 0:
                 knownCorrect += 1
             elif raw_vocab.get(words[i],0) > 0:
                 seenCorrect += 1
             else:
-                novelCorrect += 1
-        if vocab.get(words[i], 0)> 0:
-            knownTotal += 1
-        elif raw_vocab.get(words[i], 0)> 0:
-            seenTotal += 1
-        else:
-            novelTotal += 1
+                newCorrect += 1
         
-    # Print the results
-    # If no novel words encountered, we are vacuously 100% accuracy
-    print "Tagging accuracy (Viterbi decoding): %.2f%% (known: %.2f%% seen: %.2f%% novel: %.2f%%)" % \
-          (100 * (novelCorrect + seenCorrect + knownCorrect) / (novelTotal + seenCorrect + knownTotal),
-           100 * knownCorrect / knownTotal,
-           0 if seenTotal == 0 else 100 * seenCorrect / seenTotal,
-           0 if novelTotal == 0 else 100 * novelCorrect / novelTotal)
-    print "Perplexity per Viterbi-tagged test word: %.3f" % math.exp(- totalProb / (len(words) - 1))
+    print "Tagging accuracy (Viterbi decoding): %.2f%% (known: %.2f%% seen: %.2f%% novel: %.2f%%)" % (100 * (newCorrect + seenCorrect + knownCorrect) / (newTotal + seenCorrect + knownTotal),
+                                                                                                      100 * knownCorrect / knownTotal,
+                                                                                                      0 if seenTotal == 0 else 100 * seenCorrect / seenTotal,
+                                                                                                      0 if newTotal == 0 else 100 * newCorrect / newTotal)
+    print "Perplexity per Viterbi-tagged test word: %.3f" % math.exp(-totalProb /(len(words)-1))
             
 def forward_backward(file_name):
     test_data = file(file_name, 'r')
@@ -149,10 +150,10 @@ def forward_backward(file_name):
         else:
             tag_count_new[probabilities[i].tag] += 1
         
-    runningP = 0.0
+    totalProb = 0.0
     for tag in all_training_tags:
-        runningP = logsumexp(runningP, alpha.get(tag+"/1", 0) + beta.get(tag+"/1", 0))
-    perplexity = math.exp(-runningP/(len(words)-1.0))
+        totalProb = logsumexp(totalProb, alpha.get(tag+"/1", 0) + beta.get(tag+"/1", 0))
+    perplexity = math.exp(-totalProb/(len(words)-1.0))
     print "Iteration %d: Perplexity per untagged raw word: %.2f" % (iteration, perplexity)
     
     
@@ -312,7 +313,7 @@ raw_file = sys.argv[3]
 train(training_file, raw_file)
 
 
-for iteration in range(4):    
+for iteration in range(5):    
     test(test_file)
     forward_backward(raw_file)
 
