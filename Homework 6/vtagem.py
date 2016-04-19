@@ -1,6 +1,6 @@
 '''
 Created on Apr 18, 2016
-
+question 6
 @author: Willis Wang and Hamster
 '''
 
@@ -47,8 +47,7 @@ def test(file_name):
     t[len(data) - 1] = "###"
     totalProb = 0.0
     
-    for j in range(1, len(data)):
-        i = len(data) - j;
+    for i in range(len(data)-1, 0, -1):
         t[i-1] = backpointers[t[i] + "/" + str(i)]
         totalProb += probabilities[t[i] + "/" + str(i)]
     
@@ -139,7 +138,7 @@ def forward_backward(file_name):
             tt_count_new[probabilities[i].tag+"/"+bi_probabilities.get(t_i+"/"+str(i),BestTag("###", float('-inf'))).tag] = 1
         else:
             tt_count_new[probabilities[i].tag+"/"+bi_probabilities.get(t_i+"/"+str(i), BestTag("###",float('-inf'))).tag] += 1
-    
+        
         if words[i]+"/"+probabilities[i].tag not in tw_count_new:
             tw_count_new[words[i]+"/"+probabilities[i].tag] = 1
         else:
@@ -154,7 +153,7 @@ def forward_backward(file_name):
     for tag in all_training_tags:
         runningP = logsumexp(runningP, alpha.get(tag+"/1", 0) + beta.get(tag+"/1", 0))
     perplexity = math.exp(-runningP/(len(words)-1.0))
-    print "Iteration : Perplexity per untagged raw word: %.2f" % (perplexity)
+    print "Iteration %d: Perplexity per untagged raw word: %.2f" % (iteration, perplexity)
     
     
     global tt_count
@@ -312,9 +311,9 @@ raw_file = sys.argv[3]
 
 train(training_file, raw_file)
 
-for i in range(4):    
+
+for iteration in range(4):    
     test(test_file)
-    print "iteration: " + str(i)
     forward_backward(raw_file)
 
 

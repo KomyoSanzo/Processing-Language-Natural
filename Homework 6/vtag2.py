@@ -1,4 +1,5 @@
 '''
+Problem 4, 5
 Created on Apr 18, 2016
 
 @author: Willis Wang and Hamster
@@ -46,8 +47,7 @@ def test(file_name):
     t[len(data) - 1] = "###"
     totalProb = 0.0
     
-    for j in range(1, len(data)):
-        i = len(data) - j;
+    for i in range(len(data)-1, 0, -1):
         t[i-1] = backpointers[t[i] + "/" + str(i)]
         totalProb += probabilities[t[i] + "/" + str(i)]
     
