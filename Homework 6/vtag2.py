@@ -6,8 +6,7 @@ Created on Apr 18, 2016
 
 import sys
 import math
-from numpy.core.test_rational import denominator, numerator
-
+from collections import namedtuple
 
 def test(file_name):
     test_data = file(file_name, 'r')
@@ -17,9 +16,14 @@ def test(file_name):
     words = [None]*len(data)
     tags = [None]*len(data)
     probabilities = dict()
+    backpointers = dict()
+
+    mus = dict()
+    mus["###/0"] = 0.0
     
     words[0] = "###"
-    
+
+
     #VITERBI'S SHIT
     for i in range(1, len(data)):
         line = data[i].rstrip("\n")
@@ -71,8 +75,76 @@ def test(file_name):
            100 * knownCorrect / knownTotal, 0 if novelTotal == 0 else 100 * novelCorrect / novelTotal)
     print "Perplexity per Viterbi-tagged test word: %.3f" % math.exp(- totalProb / (len(words) - 1))
                  
+def forward_backward(file_name):
+    test_data = file(file_name, 'r')
+    data = test_data.readlines()
+    
+    global words 
+    words = [None]*len(data)
+    tags = [None]*len(data)
+    
+    
+    words[0] = "###"
+    
+    alpha = dict()
+    alpha["###/0"] = 0
+    for i in range(1, len(data)):
+        line = data[i].rstrip("\n")
+        line = line.split("/")
+        words[i] = line[0]
+        tags[i] = line[1]
         
+        for t_i in tag_set.get(words[i], all_training_tags):
+            for t_i_1 in tag_set.get(words[i-1], all_training_tags):
+                p = prob_tt(t_i, t_i_1) + prob_wt(words[i], t_i)
+                alpha[t_i+"/"+str(i)] = logsumexp(alpha.get(t_i+"/"+str(i), float('-inf')),
+                                                  alpha.get(t_i_1+"/"+str(i-1), float('-inf'))+p)
+    S = alpha["###"+"/"+str(len(words)-1)]
+    
+    BestTag = namedtuple("BestTag", "tag probability")
+    probabilities = [BestTag(None, float('-inf'))]*len(words)
+    
+    beta = dict()
+    beta["###"+"/"+str(len(words)-1)] = 0
+    for i in range(len(data)-1, -1, -1):
+        for t_i in tag_set.get(words[i], all_training_tags):
+            if probabilities[i].probability < alpha.get(t_i+"/"+str(i),float('-inf')) + beta.get(t_i+"/"+str(i),float('-inf')) - S:
+                probabilities[i] = BestTag(t_i, alpha.get(t_i+"/"+str(i),float('-inf')) + beta.get(t_i+"/"+str(i),float('-inf')) - S)
+            for t_i_1 in tag_set.get(words[i-1], all_training_tags):
+                p = prob_tt(t_i, t_i_1) + prob_wt(words[i], t_i)
+                beta[t_i_1+"/"+str(i-1)] = logsumexp(beta.get(t_i_1+"/"+str(i-1),float('-inf')),
+                                                     beta.get(t_i+"/"+str(i), float('-inf'))+p)
+                
+    novelCorrect = 0.0
+    novelTotal = 0.0
+    knownCorrect = 0.0
+    knownTotal = 0.0
+    for i in range(len(words)):
+        if words[i] == "###":
+            continue
+        if tags[i] == probabilities[i].tag:
+            if words[i] not in vocab:
+                novelCorrect += 1
+            else:
+                knownCorrect += 1
+        if words[i] not in vocab:
+            novelTotal += 1
+        else:
+            knownTotal+= 1
+        
+    # Print the results
+    # If no novel words encountered, we are vacuously 100% accuracy
+    print "Tagging accuracy (Viterbi decoding): %.2f%% (known: %.2f%% novel: %.2f%%)" % \
+          (100 * (novelCorrect + knownCorrect) / (novelTotal + knownTotal),
+           100 * knownCorrect / knownTotal, 0 if novelTotal == 0 else 100 * novelCorrect / novelTotal)
 
+
+def logsumexp(x, y):
+    if y <= x:
+        return x + math.log(1 + math.exp(y-x))
+    else:
+        return y + math.log(1 + math.exp(x-y))
+    
 def prob_tt(t_1, t_2):
     lbda = 1.0 + tt_singleton[t_2]
     numerator = tt_count.get(t_1+"/"+t_2,0) + lbda*prob_tt_backoff(t_1)
@@ -81,7 +153,7 @@ def prob_tt(t_1, t_2):
 
 def prob_tt_backoff(t):
     return tag_count[t]/(len(words)-1.0)
-    
+
 
 def prob_wt(w, t):
     
@@ -173,10 +245,6 @@ tw_count = dict()
 vocab = dict()
 tag_count = dict()
 tag_set = dict()
-backpointers = dict()
-mus = dict()
-mus["###/0"] = math.log(1)
-
 
 if len(sys.argv) < 2:
     print "PUT YO FILES IN HERE YO"
@@ -187,7 +255,7 @@ test_file = sys.argv[2]
 
 train(training_file)
 test(test_file)
-
+forward_backward(test_file)
 
 
 
