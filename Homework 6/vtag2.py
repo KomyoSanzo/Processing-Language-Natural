@@ -130,7 +130,7 @@ def forward_backward(file_name):
             knownTotal += 1
         else:   
             newTotal += 1
-    print "Tagging accuracy (Viterbi decoding): %.2f%% (known: %.2f%% novel: %.2f%%)" % (100 * (newCorrect + knownCorrect) / (newTotal + knownTotal),
+    print "Tagging accuracy (posterior decoding): %.2f%% (known: %.2f%% novel: %.2f%%)" % (100 * (newCorrect + knownCorrect) / (newTotal + knownTotal),
                                                                                          100 * knownCorrect / knownTotal, 0 if newTotal == 0 else 100 * newCorrect / newTotal)
 
 
