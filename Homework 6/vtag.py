@@ -1,6 +1,5 @@
 '''
 Created on Apr 18, 2016
-
 @author: Willis Wang and Hamster
 '''
 
@@ -75,19 +74,40 @@ def test(file_name):
 
 def prob_tt(t_1, t_2):
     if t_1 + "/" + t_2 in tt_count:
-        numerator = tt_count[t_1+ "/" + t_2]
+        numerator = tt_count[t_1+ "/" + t_2]+1
     else:
-        numerator = 0
-    denominator = tag_count[t_1]
-    
+        numerator = 1
+    denominator = tag_count[t_2] + len(all_training_tags)+1.0
+    '''
+    print "PROB_TT " + t_1
+    print denominator
+    denominator = 0.0
+    for t in ["###", "H", "C"]:
+        if t + "/" + t_2 in tt_count:
+            denominator += tt_count[t + "/" + t_2]
+    print denominator    
+    '''
     return math.log(float(numerator)/float(denominator))
 
 def prob_wt(w, t):
+    if w == "###" and t == "###":
+        return 0
+    
     if w + "/" + t in tw_count:
-        numerator = tw_count[w + "/" + t]
+        numerator = tw_count[w + "/" + t] + 1
     else:
-        numerator = 0
-    denominator = tag_count[t]
+        numerator = 1
+    denominator = tag_count[t] + len(vocab)
+    
+    '''
+    print "PROB_WT"
+    print denominator
+    denominator = 0.0
+    for word in vocab:
+        if word + "/" + t in tw_count:
+            denominator += tw_count[word + "/" + t]
+    print denominator
+    '''
     return math.log(float(numerator)/float(denominator))
 
 
@@ -127,7 +147,7 @@ def train(file_name):
         
         #CHECK IF EXISTS IN TT_COUNT AND INCREMENT
         if last_line != None:
-           hashed_tt = last_line + "/" + line[1]
+           hashed_tt = line[1] + "/" + last_line
            if hashed_tt not in tt_count:
                tt_count[hashed_tt] = 1
            else:
@@ -163,12 +183,3 @@ test_file = sys.argv[2]
 train(training_file)
 test(test_file)
 
-
-
-
-
-
-
-    
-    
-    
