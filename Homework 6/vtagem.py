@@ -6,6 +6,7 @@ Created on Apr 18, 2016
 
 import sys
 import math
+import copy
 from collections import namedtuple
 
 def test(file_name):
@@ -55,36 +56,48 @@ def test(file_name):
     novelTotal = 0.0
     knownCorrect = 0.0
     knownTotal = 0.0
+    seenCorrect = 0.0
+    seenTotal = 0.0
     for i in range(len(words)):
         if words[i] == "###":
             continue
         if tags[i] == t[i]:
-            if words[i] not in vocab:
-                novelCorrect += 1
-            else:
+            if vocab.get(words[i],0) > 0:
                 knownCorrect += 1
-        if words[i] not in vocab:
-            novelTotal += 1
+            elif raw_vocab.get(words[i],0) > 0:
+                seenCorrect += 1
+            else:
+                novelCorrect += 1
+        if vocab.get(words[i], 0)> 0:
+            knownTotal += 1
+        elif raw_vocab.get(words[i], 0)> 0:
+            seenTotal += 1
         else:
-            knownTotal+= 1
+            novelTotal += 1
         
     # Print the results
     # If no novel words encountered, we are vacuously 100% accuracy
-    print "Tagging accuracy (Viterbi decoding): %.2f%% (known: %.2f%% novel: %.2f%%)" % \
-          (100 * (novelCorrect + knownCorrect) / (novelTotal + knownTotal),
-           100 * knownCorrect / knownTotal, 0 if novelTotal == 0 else 100 * novelCorrect / novelTotal)
+    print "Tagging accuracy (Viterbi decoding): %.2f%% (known: %.2f%% seen: %.2f%% novel: %.2f%%)" % \
+          (100 * (novelCorrect + seenCorrect + knownCorrect) / (novelTotal + seenCorrect + knownTotal),
+           100 * knownCorrect / knownTotal,
+           0 if seenTotal == 0 else 100 * seenCorrect / seenTotal,
+           0 if novelTotal == 0 else 100 * novelCorrect / novelTotal)
     print "Perplexity per Viterbi-tagged test word: %.3f" % math.exp(- totalProb / (len(words) - 1))
-                 
+            
 def forward_backward(file_name):
     test_data = file(file_name, 'r')
     data = test_data.readlines()
     
     global words 
     words = [None]*len(data)
-    tags = [None]*len(data)
-    
     
     words[0] = "###"
+    
+    tt_count_new = copy.deepcopy(tt_count_orig)
+    tw_count_new = copy.deepcopy(tw_count_orig)
+    tag_count_new = copy.deepcopy(tag_count_orig)
+    
+    
     
     alpha = dict()
     alpha["###/0"] = 0
@@ -92,7 +105,6 @@ def forward_backward(file_name):
         line = data[i].rstrip("\n")
         line = line.split("/")
         words[i] = line[0]
-        tags[i] = line[1]
         
         for t_i in tag_set.get(words[i], all_training_tags):
             for t_i_1 in tag_set.get(words[i-1], all_training_tags):
@@ -103,6 +115,8 @@ def forward_backward(file_name):
     
     BestTag = namedtuple("BestTag", "tag probability")
     probabilities = [BestTag(None, float('-inf'))]*len(words)
+    bi_probabilities = dict()
+    
     
     beta = dict()
     beta["###"+"/"+str(len(words)-1)] = 0
@@ -114,31 +128,37 @@ def forward_backward(file_name):
                 p = prob_tt(t_i, t_i_1) + prob_wt(words[i], t_i)
                 beta[t_i_1+"/"+str(i-1)] = logsumexp(beta.get(t_i_1+"/"+str(i-1),float('-inf')),
                                                      beta.get(t_i+"/"+str(i), float('-inf'))+p)
-                
-    novelCorrect = 0.0
-    novelTotal = 0.0
-    knownCorrect = 0.0
-    knownTotal = 0.0
-    for i in range(len(words)):
-        if words[i] == "###":
-            continue
-        if tags[i] == probabilities[i].tag:
-            if words[i] not in vocab:
-                novelCorrect += 1
+                if (bi_probabilities.get(t_i+"/"+str(i), BestTag(None,float('-inf'))).probability < 
+                    alpha.get(t_i_1+"/"+str(i-1),float('-inf')) + p + beta.get(t_i+"/"+str(i), float('-inf')) - S):
+                    bi_probabilities[t_i+"/"+str(i)] = BestTag(t_i_1, alpha.get(t_i_1+"/"+str(i-1),float('-inf')) + p + beta.get(t_i+"/"+str(i), float('-inf')) - S)
+            
+            if t_i+"/"+str(i) in bi_probabilities:
+                if probabilities[i].tag+"/"+bi_probabilities[t_i+"/"+str(i)].tag not in tt_count_new:
+                    tt_count_new[probabilities[i].tag+"/"+bi_probabilities[t_i+"/"+str(i)].tag] = 1
+                else:
+                    tt_count_new[probabilities[i].tag+"/"+bi_probabilities[t_i+"/"+str(i)].tag] += 1
+            
+            if probabilities[i].tag+"/"+words[i] not in tw_count_new:
+                tw_count_new[probabilities[i].tag+"/"+words[i]] = 1
             else:
-                knownCorrect += 1
-        if words[i] not in vocab:
-            novelTotal += 1
-        else:
-            knownTotal+= 1
+                tw_count_new[probabilities[i].tag+"/"+words[i]] += 1
+                
+            if probabilities[i].tag not in tag_count_new:
+                tag_count_new[probabilities[i].tag] = 1
+            else:
+                tag_count_new[probabilities[i].tag] += 1
         
-    # Print the results
-    # If no novel words encountered, we are vacuously 100% accuracy
-    print "Tagging accuracy (Viterbi decoding): %.2f%% (known: %.2f%% novel: %.2f%%)" % \
-          (100 * (novelCorrect + knownCorrect) / (novelTotal + knownTotal),
-           100 * knownCorrect / knownTotal, 0 if novelTotal == 0 else 100 * novelCorrect / novelTotal)
+    runningP = 0.0
+    for tag in all_training_tags:
+        runningP = logsumexp(runningP, alpha.get(tag+"/1", 0) + beta.get(tag+"/1", 0))
+    perplexity = math.exp(-runningP/(len(words)-1))
+    print "Iteration : Perplexity per untagged raw word: %.2f" % (perplexity)
 
+                          
 
+    tt_count = copy.deepcopy(tt_count_new)
+    tw_count = copy.deepcopy(tw_count_new)
+    tag_count = copy.deepcopy(tag_count_new)
 def logsumexp(x, y):
     if y <= x:
         return x + math.log(1 + math.exp(y-x))
@@ -166,10 +186,10 @@ def prob_wt(w, t):
     return math.log(float(numerator)/float(denominator))
 
 def prob_wt_backoff(w):
-    return (vocab.get(w,0) + 1.0)/(len(vocab) + len(words) + 1.0)
+    return (vocab.get(w,0) + raw_vocab.get(w,0) + 1.0)/(len(vocab) + len(raw_vocab) + len(words) + 1.0)
 
 
-def train(file_name):
+def train(file_name, raw_file_name):
     last_line = None
     training_data = file(file_name, 'r')
     
@@ -231,8 +251,19 @@ def train(file_name):
             all_training_tags.add(line[1])
         
         last_line = line[1] 
+    tt_count_orig = copy.deepcopy(tt_count)
+    tw_count_orig = copy.deepcopy(tw_count)
+    tag_count_orig = copy.deepcopy(tag_count)
     
-
+    raw_data = file(raw_file_name, 'r')
+    for line in raw_data:
+        line = line.rstrip("\n")
+        line = line.split("/")
+        
+        if line[0] not in raw_vocab:
+            raw_vocab[line[0]] = 1
+        else:
+            raw_vocab[line[0]] += 1      
 
 
 all_training_tags = set([])
@@ -240,12 +271,23 @@ all_training_tags = set([])
 tw_singleton = dict()
 tt_singleton = dict()
 
+#current counts
 tt_count = dict()
 tw_count = dict()
+tag_count = dict()
 
+#new counts
+tt_count_new = dict()
+tw_count_new = dict()
+tag_count_new = dict()
+
+#original counts
+tt_count_orig = dict()
+tw_count_orig = dict()
+tag_count_orig = dict()
 
 vocab = dict()
-tag_count = dict()
+raw_vocab = dict()
 tag_set = dict()
 
 if len(sys.argv) < 2:
@@ -253,11 +295,14 @@ if len(sys.argv) < 2:
     exit()
 training_file = sys.argv[1]
 test_file = sys.argv[2]
+raw_file = sys.argv[3]
 
+train(training_file, raw_file)
 
-train(training_file)
-test(test_file)
-forward_backward(test_file)
+for i in range(4):    
+    test(test_file)
+    print "iteration: " + str(i)
+    forward_backward(raw_file)
 
 
 
