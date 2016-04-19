@@ -1,6 +1,6 @@
 '''
 question 6
-@author: Willis Wang and Hamster
+@author: Willis Wang and Katie Chang
 '''
 
 import sys
