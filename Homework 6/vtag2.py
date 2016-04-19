@@ -6,7 +6,7 @@ Created on Apr 18, 2016
 
 import sys
 import math
-from numpy.core.test_rational import denominator
+from numpy.core.test_rational import denominator, numerator
 
 
 def test(file_name):
@@ -74,42 +74,27 @@ def test(file_name):
         
 
 def prob_tt(t_1, t_2):
-    if t_1 + "/" + t_2 in tt_count:
-        numerator = tt_count[t_1+ "/" + t_2]+1
-    else:
-        numerator = 1
-    denominator = tag_count[t_2] + len(all_training_tags)+1.0
-    '''
-    print "PROB_TT " + t_1
-    print denominator
-    denominator = 0.0
-    for t in ["###", "H", "C"]:
-        if t + "/" + t_2 in tt_count:
-            denominator += tt_count[t + "/" + t_2]
-    print denominator    
-    '''
+    lbda = 1.0 + tt_singleton[t_2]
+    numerator = tt_count.get(t_1+"/"+t_2,0) + lbda*prob_tt_backoff(t_1)
+    denominator = tag_count.get(t_2, 0) + lbda
     return math.log(float(numerator)/float(denominator))
 
+def prob_tt_backoff(t):
+    return tag_count[t]/(len(words)-1.0)
+    
+
 def prob_wt(w, t):
+    
     if w == "###" and t == "###":
         return 0
+    lbda = 1 + tw_singleton[t]
+    numerator = tw_count.get(w+"/"+t,0) + lbda*prob_wt_backoff(w)
+    denominator = tag_count.get(t,0) + lbda
     
-    if w + "/" + t in tw_count:
-        numerator = tw_count[w + "/" + t] + 1
-    else:
-        numerator = 1
-    denominator = tag_count[t] + len(vocab)
-    
-    '''
-    print "PROB_WT"
-    print denominator
-    denominator = 0.0
-    for word in vocab:
-        if word + "/" + t in tw_count:
-            denominator += tw_count[word + "/" + t]
-    print denominator
-    '''
     return math.log(float(numerator)/float(denominator))
+
+def prob_wt_backoff(w):
+    return (vocab.get(w,0) + 1.0)/(len(vocab) + len(words) + 1.0)
 
 
 def train(file_name):
@@ -145,14 +130,30 @@ def train(file_name):
         else:
             tw_count[hashed_tw] += 1
         
+        #CHECK SINGLETONS FOR TW
+        if line[1] not in tw_singleton:
+            tw_singleton[line[1]] = 0
+            
+        if tw_count[hashed_tw] == 1:
+            tw_singleton[line[1]] += 1
+        elif tw_count[hashed_tw] == 2:
+            tw_singleton[line[1]] -= 1
         
         #CHECK IF EXISTS IN TT_COUNT AND INCREMENT
         if last_line != None:
-           hashed_tt = line[1] + "/" + last_line
-           if hashed_tt not in tt_count:
-               tt_count[hashed_tt] = 1
-           else:
-               tt_count[hashed_tt] += 1
+            hashed_tt = line[1] + "/" + last_line
+            if hashed_tt not in tt_count:
+                tt_count[hashed_tt] = 1
+            else:
+                tt_count[hashed_tt] += 1
+                
+            #CHECK SINGLETONS FOR TT
+            if last_line not in tt_singleton:
+                tt_singleton[last_line] = 0
+            if tt_count[hashed_tt] == 1:
+                tt_singleton[last_line] += 1
+            elif tt_count[hashed_tt] == 2:
+                tt_singleton[last_line] -= 1
         
         if line[1] != "###":
             all_training_tags.add(line[1])
@@ -163,6 +164,9 @@ def train(file_name):
 
 
 all_training_tags = set([])
+
+tw_singleton = dict()
+tt_singleton = dict()
 
 tt_count = dict()
 tw_count = dict()
