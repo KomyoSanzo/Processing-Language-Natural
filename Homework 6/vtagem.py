@@ -93,6 +93,9 @@ def forward_backward(file_name):
     
     words[0] = "###"
     
+    global tt_count_new
+    global tw_count_new
+    global tag_count_new
     tt_count_new = copy.deepcopy(tt_count_orig)
     tw_count_new = copy.deepcopy(tw_count_orig)
     tag_count_new = copy.deepcopy(tag_count_orig)
@@ -114,7 +117,7 @@ def forward_backward(file_name):
     S = alpha["###"+"/"+str(len(words)-1)]
     
     BestTag = namedtuple("BestTag", "tag probability")
-    probabilities = [BestTag(None, float('-inf'))]*len(words)
+    probabilities = [BestTag("###", float('-inf'))]*len(words)
     bi_probabilities = dict()
     
     
@@ -128,38 +131,45 @@ def forward_backward(file_name):
                 p = prob_tt(t_i, t_i_1) + prob_wt(words[i], t_i)
                 beta[t_i_1+"/"+str(i-1)] = logsumexp(beta.get(t_i_1+"/"+str(i-1),float('-inf')),
                                                      beta.get(t_i+"/"+str(i), float('-inf'))+p)
-                if (bi_probabilities.get(t_i+"/"+str(i), BestTag(None,float('-inf'))).probability < 
+                if (bi_probabilities.get(t_i+"/"+str(i), BestTag("###",float('-inf'))).probability < 
                     alpha.get(t_i_1+"/"+str(i-1),float('-inf')) + p + beta.get(t_i+"/"+str(i), float('-inf')) - S):
                     bi_probabilities[t_i+"/"+str(i)] = BestTag(t_i_1, alpha.get(t_i_1+"/"+str(i-1),float('-inf')) + p + beta.get(t_i+"/"+str(i), float('-inf')) - S)
             
-            if t_i+"/"+str(i) in bi_probabilities:
-                if probabilities[i].tag+"/"+bi_probabilities[t_i+"/"+str(i)].tag not in tt_count_new:
-                    tt_count_new[probabilities[i].tag+"/"+bi_probabilities[t_i+"/"+str(i)].tag] = 1
-                else:
-                    tt_count_new[probabilities[i].tag+"/"+bi_probabilities[t_i+"/"+str(i)].tag] += 1
+        if probabilities[i].tag+"/"+bi_probabilities.get(t_i+"/"+str(i),BestTag("###", float('-inf'))).tag not in tt_count_new:
+            tt_count_new[probabilities[i].tag+"/"+bi_probabilities.get(t_i+"/"+str(i),BestTag("###", float('-inf'))).tag] = 1
+        else:
+            tt_count_new[probabilities[i].tag+"/"+bi_probabilities.get(t_i+"/"+str(i), BestTag("###",float('-inf'))).tag] += 1
+    
+        if words[i]+"/"+probabilities[i].tag not in tw_count_new:
+            tw_count_new[words[i]+"/"+probabilities[i].tag] = 1
+        else:
+            tw_count_new[words[i]+"/"+probabilities[i].tag] += 1
             
-            if probabilities[i].tag+"/"+words[i] not in tw_count_new:
-                tw_count_new[probabilities[i].tag+"/"+words[i]] = 1
-            else:
-                tw_count_new[probabilities[i].tag+"/"+words[i]] += 1
-                
-            if probabilities[i].tag not in tag_count_new:
-                tag_count_new[probabilities[i].tag] = 1
-            else:
-                tag_count_new[probabilities[i].tag] += 1
+        if probabilities[i].tag not in tag_count_new:
+            tag_count_new[probabilities[i].tag] = 1
+        else:
+            tag_count_new[probabilities[i].tag] += 1
         
     runningP = 0.0
     for tag in all_training_tags:
         runningP = logsumexp(runningP, alpha.get(tag+"/1", 0) + beta.get(tag+"/1", 0))
-    perplexity = math.exp(-runningP/(len(words)-1))
+    perplexity = math.exp(-runningP/(len(words)-1.0))
     print "Iteration : Perplexity per untagged raw word: %.2f" % (perplexity)
-
-                          
-
+    
+    
+    global tt_count
+    global tw_count
+    global tag_count
+    
     tt_count = copy.deepcopy(tt_count_new)
     tw_count = copy.deepcopy(tw_count_new)
     tag_count = copy.deepcopy(tag_count_new)
+
 def logsumexp(x, y):
+    if y == 0:
+        return x
+    if x == 0:
+        return y
     if y <= x:
         return x + math.log(1 + math.exp(y-x))
     else:
@@ -186,7 +196,7 @@ def prob_wt(w, t):
     return math.log(float(numerator)/float(denominator))
 
 def prob_wt_backoff(w):
-    return (vocab.get(w,0) + raw_vocab.get(w,0) + 1.0)/(len(vocab) + len(raw_vocab) + len(words) + 1.0)
+    return (vocab.get(w,0) + raw_vocab.get(w,0) + 1.0)/(len(vocab) + len(raw_vocab) + len(words))
 
 
 def train(file_name, raw_file_name):
@@ -251,8 +261,11 @@ def train(file_name, raw_file_name):
             all_training_tags.add(line[1])
         
         last_line = line[1] 
+    global tt_count_orig 
     tt_count_orig = copy.deepcopy(tt_count)
+    global tw_count_orig
     tw_count_orig = copy.deepcopy(tw_count)
+    global tag_count_orig
     tag_count_orig = copy.deepcopy(tag_count)
     
     raw_data = file(raw_file_name, 'r')
