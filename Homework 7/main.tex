@@ -1,0 +1,63 @@
+\documentclass[12pt, letterpaper]{article}
+
+\usepackage{amsmath, amsthm, graphicx, float, verbatim, amssymb}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+\usepackage[]{algorithm2e}
+
+\title{Natural Language Processing Homework 7}
+
+\author{Katie Chang + Willis Wang}
+
+\begin{document}
+
+\maketitle
+
+README
+
+\section{Q2}
+
+\subsection{first}
+
+First accepts a language that starts with at least one 0 and ends with at least three 1s. There can be any combination of 0s and 1s in between the leading 0 and the trailing 111. Since the ? denotes optionality, the fourth 1 is not necessary for the string to be accepted in this language. 
+
+ii. This language is a subset of the language Bit*.
+
+The 0 and 1 are quoted in the .grm file because these two FSMs are defining specific strings that this language will use. Essentially, the quotes indicate the initializing of the  letters of the alphabet that this language will use.
+
+iii. There are 5 states and 9 arcs in this FST.
+
+\subsection{b. second}
+
+i. export Second = Optimize[Zero+ Bit* One One One];
+
+ii. If First and Second are equivalent, then Disagreements as a set should be empty. 
+
+Running fstinfo on Disagreements.fst, we can see that this FST has 0 states and 0 arcs, and in fact has a 0 count of everything. Therefore, it should be unable to accept any sort of string.
+
+\subsection{c}
+
+i. First.fst now has 20 states and 25 arcs. Second.fst now has 13 states and 17 arcs. Disagreements.fst has 68 states and 88 arcs (!!!). 
+
+%HERE DO ON UGRAD MACHINES
+ii. fstview does not work remotely, so I will do it later.
+
+%%I D E K WHAT SAME HERE???
+iii. The results are the same..>???
+
+\subsection{d}
+
+%I D K HERE EITHER???
+After creating Disagreements.fst, the number of states and arcs is the same as before. 
+
+\section{Q3}
+See binary.grm.
+
+\section{Q4}
+
+
+
+\begin{center}
+\textit{Used overleaf.com to generate LaTeX document.}
+\end{center}
+\end{document}

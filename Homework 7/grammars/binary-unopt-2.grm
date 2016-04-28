@@ -1,0 +1,10 @@
+Zero = "0";
+One = "1";
+Bit = Zero | One;
+export First = Zero Zero* Bit* One One One One?;
+
+export Second = Zero+ Bit* One One One;
+
+export Disagreements = Optimize[First - Second | Second - First];
+
+
