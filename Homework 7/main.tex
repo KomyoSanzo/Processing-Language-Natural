@@ -108,27 +108,55 @@ iii. TransformNP has 16 states and 20 arcs. MakeNmod has 36 states and 2331 arcs
 iv. The two FSTs are similar. At the end of these FSTs, NP accepts at least one "Noun". TransformNP instead takes these "Noun"s and turns them into "Nmod", except for the last one. 
 
 \subsection{d}
-%What is the difference? 
+Bracket1 divides NP chunks in more ways than Bracket2 does. It will output all possible NP chunks. Bracket2 will simply go as far as possible to find the longest NP chunk.
 
 \subsection{e}
 export BracketTransform = CDRewrite[BracketNP @ MakeNmod, "", "", SigmaStar, 'sim', 'obl'];
 
 \subsection{f}
-%not quite done tehe
+See chunker.grm.
 
 \section{7}
-lol do this question
+\subsection{a}
+Check out stress.grm!
+
+\subsection{b}
+Input string: ev'apor'ating
+Output string: ev'aporating
+Output string: ev'apor'ating
+
+Input string: 'incomm'unic'ado
+Output string: 'incommunic'ado
+Output string: 'incomm'unic'ado
+Output string: incomm'unicado
+Output string: 'incommunicado
+Output string: 'incomm'unicado
+Output string: incommunicado
+Output string: incommunic'ado
+Output string: incomm'unic'ado
+
+\subsection{c}
+see stress.grm.
+
+\subsection{d}
+Making some assumptions, we assume that if "y" is followed by a consonant, then it is probably a vowel. If it is followed by a vowel, then it is probably a consonant. 
 
 \section{8}
 \subsection{a}
-%The flight vs. site examples above demonstrated that words can rhyme even when they spell their endings differently. Conversely, can you give an example of words that don’t rhyme even when they spell their endings the same way?
-infinite
-bite
-
-... does that work lol
+Lead as a noun and read as a verb. They both end with the same ending, but don't sound the same. 
 
 \subsection{b}
-%In the two words above (academic, academy), what are all the different phonemic realizations of the letter a? Try focusing on what your tongue and mouth are doing (e.g. Is the tip of the tongue near the top or bottom of your mouth? How open is your mouth? What’s happening with your lips? Are they pulled back, or relaxed?).
+For "academic", the mouth opens more and in a more wide sense. The tongue seems to remain low in the mouth for this "a" sound.
+
+For "academy", the mouth opens less. The sound made is more like an "uh" sound, which means the tongue doesn't really move until the "d" sound. 
+
+\subsection{c}
+Results language: the words printed are words that start with a strong sound and go on to end with a weaker sound. A Dacytl is when a long syllable is followed by two short syllables. 
+
+\subsection{d}
+See dactyls.grm.
+
+\subsection{e}
 
 
 
