@@ -29,33 +29,60 @@ iii. There are 5 states and 9 arcs in this FST.
 
 \subsection{b. second}
 
-i. export Second = Optimize[Zero+ Bit* One One One];
+i. export Second = Optimize[Zero Bit* One One One];
 
-ii. If First and Second are equivalent, then Disagreements as a set should be empty. 
+ii. If First and Second are equivalent, then Disagreements should accept nothing.
 
-Running fstinfo on Disagreements.fst, we can see that this FST has 0 states and 0 arcs, and in fact has a 0 count of everything. Therefore, it should be unable to accept any sort of string.
+Running fstinfo on Disagreements.fst, we can see that this FST has 0 states and 0 arcs, and in fact has a 0 count of everything. The initial state value is -1. Therefore, it should be unable to accept any sort of string. 
 
 \subsection{c}
 
 i. First.fst now has 20 states and 25 arcs. Second.fst now has 13 states and 17 arcs. Disagreements.fst has 68 states and 88 arcs (!!!). 
 
-%HERE DO ON UGRAD MACHINES
-ii. fstview does not work remotely, so I will do it later.
+ii. The two separate sub-FSAs is because the Disagreement FST is taking the union of two FSTs, First - Second and Second - First.
 
-%%I D E K WHAT SAME HERE???
-iii. The results are the same..>???
+iii. The results are the same. The only difference there is is the size of the FST and topology.
 
 \subsection{d}
 
-%I D K HERE EITHER???
-After creating Disagreements.fst, the number of states and arcs is the same as before. 
+After creating Disagreements.fst, the number of states and arcs is the same as before. This shows that it doesn't matter whether or not we optimize the sub-FSTs, but there would be a lot of redundant work done. We should optimize if we want to avoid excessive overhead costs.
 
 \section{Q3}
 See binary.grm.
 
 \section{Q4}
+\subsection{a}
+Input language: "a"("b"* | "c"+ | "")"a"
 
+\subsection{b}
+"abca" has no outputs.
 
+"aba" has 1 output = "axa"
+
+"aa" has 2 outputs = "aa" and "africa"
+
+"aca" has more than 2 outputs.
+
+\subsection{c}
+Takes all strings that start and end with one a, as well as one of the following criteria:
+
+1. replaces all "b"s between the two "a"s with "x"s 
+
+2. replaces all "c"s between the "a"s with any number of "y"s
+
+3. replaces any "" between the "a"s with either the empty string or "fric". 
+
+\subsection{d}
+Consistent. 10 states and 16 arcs.
+
+\section{5}
+\subsection{c. Parity1}
+This particular transducer does not take into account the empty string. 
+
+\subsection{f. UnParity}
+UnParity inverts the transduction. The only acceptable strings are "0" and "1" / any number of 0s before one "1". The former refers to even binary numbers, and the output lists a bunch of random ones. The latter refers to odd binary numbers, and will list a bunch of them. 
+
+\section{6}
 
 \begin{center}
 \textit{Used overleaf.com to generate LaTeX document.}

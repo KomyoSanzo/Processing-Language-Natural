@@ -1,0 +1,25 @@
+Bit = "0" | "1";
+Digit = "0" | "1" | "2" | "3" | "4"|"5"|"6"|"7"|"8"|"9";
+
+export BitFlip1 = Optimize[(("1":"0") | ("0":"1"))*];
+
+export BitFlip2 =  CDRewrite[BitFlip1, "", "", Digit*, 'sim', 'obl'];
+
+export Parity1 = Optimize["0" | "1" | ("1" Bit* "0":"0") | ("1" Bit* "1":"1")];
+
+export Parity2 = CDRewrite[Parity1, "", "[EOS]", Bit*, 'sim', 'obl'];
+
+#export Parity3 = 
+
+export UnParity = Invert[Parity2];
+
+#export Split = CDRewrite["":" ", "", "", Bit*, 'sim', 'obl'];
+
+#export SplitThree = 
+
+
+# Q4
+export Cross = Optimize["a" (("b" : "x")* | ("c"+ : "y"*) | ("" : "fric")) "a"];
+
+
+
