@@ -82,7 +82,55 @@ This particular transducer does not take into account the empty string.
 \subsection{f. UnParity}
 UnParity inverts the transduction. The only acceptable strings are "0" and "1" / any number of 0s before one "1". The former refers to even binary numbers, and the output lists a bunch of random ones. The latter refers to odd binary numbers, and will list a bunch of them. 
 
+%STILL NEED TO FINISH PARITY3, SPLIT, SPLITTHREE
+
 \section{6}
+\subsection{a}
+i. With the given NP definition, the issue is that the strings are not in quotes. The program throws an error "Undefined symbol: Art". 
+What is accepted: The list of strings that optionally start with "Art" or "Quant", has 0 or more instances of "Adj", and 1 or more instance of "Noun". 
+
+ii. There are 13 states and 17 arcs. "Adj" is represented as three separate letters in the FST, and not as a unit. 
+
+\subsection{b}
+export MakeNmod = CDRewrite["Noun":"Nmod", "", "Noun", SigmaStar, 'sim', 'obl'];
+
+\subsection{c}
+i. This composition accepts only NP strings, and of those input strings, converts them with the MakeNmod rewrite FST. 
+
+ii. ArtAdjNounNounNoun -> ArtAdjNmodNmodNoun
+
+AdjNounNounNounVerb -> Rewrite failed.
+
+The second input failed because the input string is not in the NP form of (Adj*Noun+).
+
+iii. TransformNP has 16 states and 20 arcs. MakeNmod has 36 states and 2331 arcs. This makes sense, since TransformNP accepts a smaller set of strings. 
+
+iv. The two FSTs are similar. At the end of these FSTs, NP accepts at least one "Noun". TransformNP instead takes these "Noun"s and turns them into "Nmod", except for the last one. 
+
+\subsection{d}
+%What is the difference? 
+
+\subsection{e}
+export BracketTransform = CDRewrite[BracketNP @ MakeNmod, "", "", SigmaStar, 'sim', 'obl'];
+
+\subsection{f}
+%not quite done tehe
+
+\section{7}
+lol do this question
+
+\section{8}
+\subsection{a}
+%The flight vs. site examples above demonstrated that words can rhyme even when they spell their endings differently. Conversely, can you give an example of words that don’t rhyme even when they spell their endings the same way?
+infinite
+bite
+
+... does that work lol
+
+\subsection{b}
+%In the two words above (academic, academy), what are all the different phonemic realizations of the letter a? Try focusing on what your tongue and mouth are doing (e.g. Is the tip of the tongue near the top or bottom of your mouth? How open is your mouth? What’s happening with your lips? Are they pulled back, or relaxed?).
+
+
 
 \begin{center}
 \textit{Used overleaf.com to generate LaTeX document.}

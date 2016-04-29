@@ -6,3 +6,24 @@ SigmaStar = Optimize[Sigma*];
 
 # YOU WILL FILL IN THE REST
 
+export NP = Optimize[("Art"|"Quant")? "Adj"* "Noun"+];
+
+export MakeNmod = CDRewrite["Noun":"Nmod", "", "Noun", SigmaStar, 'sim', 'obl'];
+
+export TransformNP = Optimize[NP @ MakeNmod];
+
+# (d)
+# done here, writeup not done yet.
+export BracketNP = ("" : "<") NP ("" : ">");
+export Brackets1 = Optimize[SigmaStar (BracketNP SigmaStar)*];
+export Brackets2 = CDRewrite[BracketNP, "", "", SigmaStar, 'sim', 'obl'];
+
+# (e)
+export BracketTransform = CDRewrite[BracketNP @ MakeNmod, "", "", SigmaStar, 'sim', 'obl'];
+
+# (f)
+export BracketResults = Optimize[Project[BracketTransform, 'input']];
+
+
+
+

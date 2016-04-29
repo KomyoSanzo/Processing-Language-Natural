@@ -9,11 +9,13 @@ export Parity1 = Optimize["0" | "1" | ("1" Bit* "0":"0") | ("1" Bit* "1":"1")];
 
 export Parity2 = CDRewrite[Parity1, "", "[EOS]", Bit*, 'sim', 'obl'];
 
-#export Parity3 = 
+#wrong
+export Parity3 = Reverse[CDRewrite[Parity1, "[BOS]", "[EOS]", Bit*, 'ltr', 'obl']]; 
 
 export UnParity = Invert[Parity2];
 
-#export Split = CDRewrite["":" ", "", "", Bit*, 'sim', 'obl'];
+#wrong
+export Split = CDRewrite["":" ", "", "", Bit*, 'sim', 'obl'];
 
 #export SplitThree = 
 

@@ -6,3 +6,17 @@ Consonant = Letter - Vowel;
 Nucleus = Vowel+;
 
 # YOU WILL FILL IN THE REST
+
+# 7. (a)
+export Stress = CDRewrite[];
+
+# (b)
+export InvertStress = Invert[Stress];
+
+# (c)
+export StressWords = CDWrite[Stress, bytelib.kBytes];
+
+
+
+
+
