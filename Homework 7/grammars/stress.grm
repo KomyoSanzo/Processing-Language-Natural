@@ -8,15 +8,35 @@ Nucleus = Vowel+;
 # YOU WILL FILL IN THE REST
 
 # 7. (a)
-export Stress = CDRewrite[];
+
+AllSigma = bytelib.kGraph | bytelib.kSpace;
+
+#first nucleus. starts with [BOS] or with some consonant.
+BeforeNucleus = "[BOS]" | "[BOS]" Consonant+;
+
+#other nuclei preceded with either Consonant-Nucleus-Consonant or a BeforeNucleus-Nucleus-Consonant.
+BeforeNucleusLater = ((BeforeNucleus | Consonant+) Nucleus Consonant+);
+
+Before = (BeforeNucleus | BeforeNucleusLater);
+
+Later = Nucleus Consonant+ Nucleus;
+
+export temp1 = CDRewrite[("" : "'"), Before, Later, AllSigma*, 'ltr', 'obl'];
+export temp2 = CDRewrite[("" : "'"), "[BOS]" Consonant*, Nucleus Consonant* "[EOS]", AllSigma*, 'ltr', 'obl'];
+
+export Stress = Optimize[temp1 @ temp2];
 
 # (b)
 export InvertStress = Invert[Stress];
 
 # (c)
-export StressWords = CDWrite[Stress, bytelib.kBytes];
+export StressWords = CDRewrite[Stress, " " | "[BOS]", " " | "[EOS]", AllSigma*, 'ltr', 'obl'];
 
-
+# (d) extra credit
+Y = "y" | "Y";
+#"^" is vowel, "y" is consonant.
+export TransducedY = CDRewrite[(Y : "^"), "", Consonant | "[EOS]", AllSigma*, 'ltr', 'obl'];
+export Stressy = Optimize[TransducedY @ Stress @ Invert[TransducedY]];
 
 
 
