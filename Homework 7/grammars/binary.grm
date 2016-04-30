@@ -21,4 +21,10 @@ export NotPillars = Optimize[Sigma* - Pillars];
 OddOne = (One One)* One;
 export Oddlets = Optimize[Zero* (OddOne Zero+)* OddOne? Zero*];
 
+# Q9 (b)
+export WFlip = Optimize[((Zero : One <2>) | (Zero <1>)) ((Zero : Zero One <0.5>) | (One : Zero <0.4>))+ (One <0.5>)];
+
+# Q9 (c)
+export WeightedMultipath = (One : Zero <2>)* (One : Zero <1>)* (Zero <0.1>)+;
+export WeightedMultipathOpt = Optimize[WeightedMultipath];
 
