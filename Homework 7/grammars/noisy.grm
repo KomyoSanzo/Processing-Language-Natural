@@ -4,10 +4,20 @@ ByteSigmaStar = Optimize[ByteSigma*];
 
 export LM = LoadFst['entrain.fst'];  # load trigram language model (.fst)
 vocab = SymbolTable['entrain.sym'];  # load model's symbol table (.sym)
-Spell = Optimize[StringFile['entrain.alpha', vocab, byte]];
+
 
 # YOU WILL FILL IN THE REST
 
+
+#e
+
+RandomChar = bytelib.kGraph <4.54>;
+export RandomWord = Optimize[(RandomChar (RandomChar <0.1>)* ) <2.3>];
+SpellOOV = "<unk>".vocab : RandomWord;
+Spell = StringFile['entrain.alpha', vocab, byte] | SpellOOV;
+
+
+#Question 10
 export Words = Optimize[StringFile['entrain.alpha', byte, vocab]];
 
 # takes in the input and randomly completes word
@@ -18,3 +28,18 @@ export allPossible = Project[Spell, 'output'];
 
 export CompleteWord = Complete @ allPossible @ Words @ LM;
 
+
+
+
+#a
+export DelSpaces = CDRewrite[" ":"", "", "", ByteSigmaStar, 'sim', 'obl'];
+
+#c
+export SpellText = (Spell ("".vocab : " ".byte))*;
+
+
+#export Generate = LM @ SpellText @ DelSpaces;
+export InvertedLM = Invert[LM];
+export InvertedSpellText = Invert[SpellText];
+export InvertedDelSpaces = Invert[DelSpaces];
+export PrintText = (StringFile['entrain.alpha', vocab, byte]("".vocab : " ".byte) | ("<unk>".vocab:"<unk>") ("".vocab : " ".byte))*;
