@@ -156,9 +156,104 @@ Results language: the words printed are words that start with a strong sound and
 \subsection{d}
 See dactyls.grm.
 
-\subsection{e}
+\subsection{f}
+Domain is the left hand side of the dictionary (cmudict.txt) - the words.
 
+The range is the collection of syllables on the right side of the dictionary - the pronunciations of each syllable.
 
+\subsection{g}
+
+WordEnding @ Invert[WordEnding] gives all words with the same ending as a given input word. We can input x into WordEnding, get output y, and then use y as input into Invert[WordEnding] to get all the outputs z such that it would have the same word ending as x. 
+
+Input alphabet: Byte, Arpa
+Output: Byte
+
+\subsection{h}
+Memory allocation failed error arises. 
+Trying to make a web between every single word in the dictionary results in a large amount of overhead. 
+
+\subsection{i}
+
+This is more efficient because instead of composing the entire two FSTs together at once, we use one FST at a time. We basically make the roadmap through the FSTs rather than try to find our way through the FSTs while in the midst of it. 
+
+orange returns "orange" as the only rhyme.
+adventureland as a word isn't in the dictionary, and thus says "rewrite failed".
+But "adventure" and "land" separately have a lot of rhymes. 
+
+\section{Q9}
+\subsection{a}
+i. The min weight would be 1.7, and the string could be either '001' or '011'. 
+
+ii. (001, 1011) or (011, 1111) with a weight of 1.95.
+
+\subsection{b}
+see binary.grm
+
+\subsection{c}
+i. 
+
+(x,y) = (1100, 0000)
+
+export WeightedMultipath = (One : Zero <2>)* (One : Zero <1>)* (Zero <0.1>)+;
+
+Input string: 1100
+Output string: 0000 <cost=2.2>
+Output string: 0000 <cost=3.2>
+Output string: 0000 <cost=4.2>
+
+ii. WeightedMultipathOpt
+
+Input string: 1100
+Output string: 0000 <cost=2.2>
+Output string: 0000 <cost=3.2>
+
+Fewer paths because we are taking out redundant paths. 
+
+iii. 
+$T_out$: gives all of T's outputs.
+$xT_out$: gives all of x@T's outputs.
+$Ty_in$: gives all of T@y's possible inputs.
+$xTy$: T accepts x as input and output y.
+$exTye$: turns the empty input string into the empty output string.
+
+$exTye_opt$, since it's optimizing the FSM that turns $\epsilon$ to $\epsilon$, should only have two states and one arc. 
+
+The last three FSMs are important because they are optimizing components of the final FSM. $xT_out_opt$ optimizes the $x @ T$ part, and $Ty_in_opt$ optimizes the $T @ y$.
+
+\section{Q10}
+\subsection{b}
+%How long are the strings in both cases, and why? What do you notice about backoff?
+
+The sentences generated from ngramrandgen are anywhere from 2 words long to 30-ish words long. 
+
+fstshortestpath gives us only one output, ".". This is because it's not in the training data but is backed off. This is the shortest path, thus, it's given as output.
+
+\subsection{d}
+"Andy cherished the barrels each house made ."
+
+Output string: Andycherishedthebarrelseachhousemade. <cost=67.4284>
+Output string: Andycherishedthebarrelseachhousemade. <cost=69.3358>
+Output string: Andycherishedthebarrelseachhousemade. <cost=79.479>
+Output string: Andycherishedthebarrelseachhousemade. <cost=81.3864>
+
+"If only the reporters had been nice ."
+Output string: Ifonlythereportershadbeennice. <cost=49.2604>
+Output string: Ifonlythereportershadbeennice. <cost=49.5864>
+Output string: Ifonlythereportershadbeennice. <cost=50.0427>
+Output string: Ifonlythereportershadbeennice. <cost=50.3688>
+Output string: Ifonlythereportershadbeennice. <cost=55.2341>
+...
+There were a total of 31 output strings for this second input string.
+
+"Thank you"
+Unable to parse input string.
+
+Each input string with each of its potential output strings are pairs that are ends to paths in the FST that would accept these pairs. The differing costs are a result of using backoff (or not using it). 
+
+\section{Q11}
+%HERE
+
+\section{Q12}
 
 \begin{center}
 \textit{Used overleaf.com to generate LaTeX document.}
